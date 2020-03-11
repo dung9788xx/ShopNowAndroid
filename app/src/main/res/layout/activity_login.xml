@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background"
+    android:orientation="vertical"
+    tools:context=".LoginActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:baselineAligned="false">
+        <LinearLayout
+           android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/logo"
+                android:layout_width="100dp"
+                android:layout_height="150dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="50dp"
+            android:orientation="vertical">
+            <EditText
+                android:inputType="text"
+                android:maxLines="1"
+                android:fontFamily="sans-serif-light"
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/edit_rouded_bg"
+                android:hint="Tên đăng nhập"
+                android:textAlignment="center" />
+
+            <EditText
+                android:maxLines="1"
+                android:fontFamily="sans-serif-light"
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/edit_rouded_bg"
+                android:hint="Mật khẩu"
+                android:inputType="textPassword"
+                android:textAlignment="center" />
+
+            <Button
+                android:id="@+id/login"
+                android:fontFamily="sans-serif-light"
+                android:textColor="#FFFF"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp"
+                android:background="@drawable/button_rounded"
+                android:text="Đăng nhập" />
+            <TextView
+                android:id="@+id/register"
+                android:fontFamily="sans-serif-light"
+                android:textSize="18dp"
+                android:textColor="#1976D2"
+                android:gravity="center"
+                android:layout_marginTop="20dp"
+                android:text="Đăng ký ngay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <ProgressBar
+                android:visibility="invisible"
+                android:id="@+id/progress"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
