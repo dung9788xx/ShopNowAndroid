@@ -79,7 +79,7 @@ public class AdminActivity extends AppCompatActivity
            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content,new UserManagerFragment()).commit();
         }
         if(id==R.id.nav_stores){
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content,new StoreFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content,new StoreManagerFragment()).commit();
         }
         if(id==R.id.nav_logout){
             Intent intent = new Intent(AdminActivity.this,LoginActivity.class);

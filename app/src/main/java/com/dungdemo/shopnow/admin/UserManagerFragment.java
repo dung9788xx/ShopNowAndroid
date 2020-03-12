@@ -84,7 +84,6 @@ public class UserManagerFragment extends Fragment implements AsyncResponse {
           Type listType = new TypeToken<List<User>>() {}.getType();
 
      userList= new Gson().fromJson(json, listType);
-          Toast.makeText(getActivity(), userList.get(2).getUser_id()+"", Toast.LENGTH_SHORT).show();
           arrayAdapter=new ArrayAdapter<User>(getActivity(),R.layout.custom_listview_user,userList){
               @Override
               public View getView(final int position, View convertView, ViewGroup parent) {

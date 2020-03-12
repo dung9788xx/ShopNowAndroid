@@ -27,8 +27,10 @@ public class User implements Serializable {
     int blocked;
     @SerializedName("api_token")
     String api_token;
+    @SerializedName("store")
+    Store store;
 
-    public User(int user_id, String name, String username, String address, String phone, int level, int active, int blocked, String api_token) {
+    public User(int user_id, String name, String username, String address, String phone, int level, int active, int blocked, String api_token, Store store) {
         this.user_id = user_id;
         this.name = name;
         this.username = username;
@@ -38,6 +40,15 @@ public class User implements Serializable {
         this.active = active;
         this.blocked = blocked;
         this.api_token = api_token;
+        this.store = store;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
     }
 
     public int getUser_id() {
