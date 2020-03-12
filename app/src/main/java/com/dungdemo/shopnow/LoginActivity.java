@@ -117,6 +117,7 @@ public class LoginActivity extends Activity implements AsyncResponse {
                     JSONObject object = new JSONObject(s);
                     Gson gson = new Gson();
                     User user = gson.fromJson(object + "", User.class);
+                    user.saveToken(this);
                     Intent intent=new Intent(LoginActivity.this,AdminActivity.class);
                     intent.putExtra("user",user);
                    if(user.getLevel()==1){

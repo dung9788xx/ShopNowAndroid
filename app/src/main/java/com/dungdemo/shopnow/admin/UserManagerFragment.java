@@ -1,6 +1,7 @@
 package com.dungdemo.shopnow.admin;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -50,14 +51,17 @@ public class UserManagerFragment extends Fragment implements AsyncResponse {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Map<String,String > map=new HashMap<>(  );
+      loaddata();
 
+    }
+
+    private void loaddata() {
+        Map<String,String > map=new HashMap<>(  );
+        map.put("token",User.getSavedToken(getContext()));
         map.put("method","get");
         task=new TaskConnect(UserManagerFragment.this, HostName.host+"/user");
         task.setMap( map );
-//        progressBar.setVisibility( View.VISIBLE );
         task.execute();
-
     }
 
     @Override
@@ -80,9 +84,10 @@ public class UserManagerFragment extends Fragment implements AsyncResponse {
           Type listType = new TypeToken<List<User>>() {}.getType();
 
      userList= new Gson().fromJson(json, listType);
+          Toast.makeText(getActivity(), userList.get(2).getUser_id()+"", Toast.LENGTH_SHORT).show();
           arrayAdapter=new ArrayAdapter<User>(getActivity(),R.layout.custom_listview_user,userList){
               @Override
-              public View getView(int position, View convertView,  ViewGroup parent) {
+              public View getView(final int position, View convertView, ViewGroup parent) {
                   LayoutInflater layoutInflater=(LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                   View v=layoutInflater.inflate(R.layout.custom_listview_user,null);
                   TextView name=v.findViewById(R.id.tvName);
@@ -99,8 +104,14 @@ public class UserManagerFragment extends Fragment implements AsyncResponse {
                           active.setText("Đã bị khóa");
                           active.setTextColor(Color.RED);
                       }
-
-
+                      v.setOnClickListener(new View.OnClickListener() {
+                          @Override
+                          public void onClick(View v) {
+                              Intent t=new Intent(getActivity(),UserInfomationActivity.class);
+                              t.putExtra("user",userList.get(position));
+                              startActivityForResult(t,11);
+                          }
+                      });
                   return v;
 
               }
@@ -110,5 +121,12 @@ public class UserManagerFragment extends Fragment implements AsyncResponse {
       }else{
           Toast.makeText(getContext(), "Kiểm tra lại kết nối", Toast.LENGTH_SHORT).show();
       }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        loaddata();
+
     }
 }

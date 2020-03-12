@@ -1,11 +1,15 @@
 package com.dungdemo.shopnow.Model;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
 public class User implements Serializable {
-    @SerializedName("user_id")
+    @SerializedName("id")
     int user_id;
     @SerializedName("name")
     String name;
@@ -106,5 +110,20 @@ public class User implements Serializable {
 
     public void setApi_token(String api_token) {
         this.api_token = api_token;
+    }
+    public void saveToken(Context context){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("token","Bearer "+this.getApi_token());
+        editor.apply();
+    }
+    public static String  getSavedToken(Context context){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String token = preferences.getString("token", "");
+        if(!token.equalsIgnoreCase(""))
+        {
+           return token;
+        }
+        return "";
     }
 }

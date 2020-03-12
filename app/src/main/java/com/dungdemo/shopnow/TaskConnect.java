@@ -3,6 +3,8 @@ package com.dungdemo.shopnow;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.dungdemo.shopnow.Model.User;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,8 +22,6 @@ public class TaskConnect extends AsyncTask<Void,Void,Response> {
     public TaskConnect(AsyncResponse output, String url) {
         this.output=output;
         this.url=url;
-
-
     }
 
     @Override
@@ -38,8 +38,9 @@ public class TaskConnect extends AsyncTask<Void,Void,Response> {
                   .build();
       }
         if(map.get("method")=="get"){
+            String api_token= map.get("token");
             request= new Request.Builder()
-                    .url( url )
+                    .url( url ).addHeader("Authorization",api_token)
                     .get()
                     .build();
         }
