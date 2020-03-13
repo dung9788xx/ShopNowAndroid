@@ -23,14 +23,12 @@ public class User implements Serializable {
     int level;
     @SerializedName("active")
     int active;
-    @SerializedName("blocked")
-    int blocked;
     @SerializedName("api_token")
     String api_token;
     @SerializedName("store")
     Store store;
 
-    public User(int user_id, String name, String username, String address, String phone, int level, int active, int blocked, String api_token, Store store) {
+    public User(int user_id, String name, String username, String address, String phone, int level, int active, String api_token, Store store) {
         this.user_id = user_id;
         this.name = name;
         this.username = username;
@@ -38,7 +36,6 @@ public class User implements Serializable {
         this.phone = phone;
         this.level = level;
         this.active = active;
-        this.blocked = blocked;
         this.api_token = api_token;
         this.store = store;
     }
@@ -105,14 +102,6 @@ public class User implements Serializable {
 
     public void setActive(int active) {
         this.active = active;
-    }
-
-    public int getBlocked() {
-        return blocked;
-    }
-
-    public void setBlocked(int blocked) {
-        this.blocked = blocked;
     }
 
     public String getApi_token() {

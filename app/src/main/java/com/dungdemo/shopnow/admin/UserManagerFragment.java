@@ -3,7 +3,6 @@ package com.dungdemo.shopnow.admin;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,12 +15,10 @@ import android.widget.Toast;
 
 import com.dungdemo.shopnow.AsyncResponse;
 import com.dungdemo.shopnow.HostName;
-import com.dungdemo.shopnow.LoginActivity;
 import com.dungdemo.shopnow.Model.User;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
@@ -33,15 +30,13 @@ import java.util.Map;
 
 import okhttp3.Response;
 
-import static android.support.v4.content.ContextCompat.getSystemService;
-
 
 public class UserManagerFragment extends Fragment implements AsyncResponse {
     TaskConnect task;
     List<User> userList=new ArrayList<>();
     ListView userListView;
-
     ArrayAdapter<User> arrayAdapter;
+
     public UserManagerFragment() {
         // Required empty public constructor
     }
@@ -84,11 +79,11 @@ public class UserManagerFragment extends Fragment implements AsyncResponse {
           Type listType = new TypeToken<List<User>>() {}.getType();
 
      userList= new Gson().fromJson(json, listType);
-          arrayAdapter=new ArrayAdapter<User>(getActivity(),R.layout.custom_listview_user,userList){
+          arrayAdapter=new ArrayAdapter<User>(getActivity(),R.layout.custom_listview_usermanager_item,userList){
               @Override
               public View getView(final int position, View convertView, ViewGroup parent) {
                   LayoutInflater layoutInflater=(LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                  View v=layoutInflater.inflate(R.layout.custom_listview_user,null);
+                  View v=layoutInflater.inflate(R.layout.custom_listview_usermanager_item,null);
                   TextView name=v.findViewById(R.id.tvName);
                   TextView username=v.findViewById(R.id.tvUsername);
                   TextView active=v.findViewById(R.id.tvActive);
@@ -98,7 +93,7 @@ public class UserManagerFragment extends Fragment implements AsyncResponse {
                       username.setText(user.getUsername());
                       if(user.getActive()==1){
                           active.setText("Đang hoạt động");
-                          active.setTextColor(Color.GREEN);
+                          active.setTextColor(Color.BLUE);
                       }else {
                           active.setText("Đã bị khóa");
                           active.setTextColor(Color.RED);

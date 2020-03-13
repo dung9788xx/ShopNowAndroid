@@ -71,7 +71,7 @@ public class UserInfomationActivity extends Activity implements AsyncResponse {
         }else{
             active.setText("Đã bị khóa");
             active.setTextColor(Color.RED);
-            btActive.setBackgroundColor(Color.parseColor("#0288D1"));
+            btActive.setBackgroundColor(Color.parseColor("#00ACC1"));
             btActive.setText("Mở khóa");
         }
     }
@@ -80,7 +80,11 @@ public class UserInfomationActivity extends Activity implements AsyncResponse {
     public void whenfinish(Response output) {
         if(output!=null){
             if(output.code()==200){
-                user.setActive(user.getActive()==1?0:1);
+                if(user.getActive()==1){
+                    user.setActive(0);
+                }else{
+                    user.setActive(1);
+                }
                 loadActiveLayout();
                 Toast.makeText(this, "Thay đổi thành công!", Toast.LENGTH_SHORT).show();
             }else {

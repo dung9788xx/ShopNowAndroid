@@ -136,11 +136,10 @@
                 <Button
                     android:id="@+id/btActive"
                     android:layout_width="100dp"
-                    android:layout_height="30dp"
+                    android:layout_height="32dp"
                     android:layout_marginLeft="20dp"
-                    android:background="@drawable/button_rounded"
-                    android:backgroundTint="@color/colorAccent"
                     android:text="Khóa"
+                    android:textSize="10sp"
                     android:textColor="#FFF" />
             </LinearLayout>
         </LinearLayout>

@@ -1,5 +1,8 @@
 package com.dungdemo.shopnow.admin;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -7,6 +10,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,17 +23,23 @@ import com.dungdemo.shopnow.TaskConnect;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import okhttp3.Response;
 
+
 public class StoreManagerFragment extends Fragment implements AsyncResponse {
-    TextView tv;
     TaskConnect task;
+    List<User> userList=new ArrayList<>();
+    ListView storeListView;
+    ArrayAdapter<User> arrayAdapter;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,11 +55,12 @@ public class StoreManagerFragment extends Fragment implements AsyncResponse {
         task.execute();
     }
 
-    @Nullable
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_store_manager, container, false);
-        tv=view.findViewById(R.id.tv);
+        storeListView=view.findViewById(R.id.lvStore);
+
         return  view;
     }
 
@@ -62,9 +74,43 @@ public class StoreManagerFragment extends Fragment implements AsyncResponse {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+
                     Type listType = new TypeToken<List<User>>() {}.getType();
-                  List<User>  userList= new Gson().fromJson(json, listType);
-                    Toast.makeText(getActivity(), userList.get(1).getStore().getName()+"||"+userList.get(1).getStore().getLocation().getName(), Toast.LENGTH_SHORT).show();
+                userList= new Gson().fromJson(json, listType);
+                    arrayAdapter=new ArrayAdapter<User>(getActivity(),R.layout.custom_listview_usermanager_item,userList){
+                        @Override
+                        public View getView(final int position, View convertView, ViewGroup parent) {
+                            LayoutInflater layoutInflater=(LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            View v=layoutInflater.inflate(R.layout.custom_listview_storemanager_iten,null);
+                            TextView name=v.findViewById(R.id.tvName);
+                            TextView username=v.findViewById(R.id.tvUsername);
+                            TextView active=v.findViewById(R.id.tvActive);
+                            User user=userList.get(position);
+                            name.setText(user.getStore().getName());
+                            username.setText(user.getName());
+                            if(user.getStore().getApproval()==0){
+                                active.setText("Đang chờ phê duyệt");
+                                active.setTextColor(Color.YELLOW);
+                            }else if(user.getStore().getBlocked()==1){
+                                active.setText("Đã bị khóa");
+                                active.setTextColor(Color.RED);
+                            }else{
+                                active.setText("Đang hoạt động");
+                                active.setTextColor(Color.BLUE);
+                            }
+                            v.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent t=new Intent(getActivity(),UserInfomationActivity.class);
+                                    t.putExtra("user",userList.get(position));
+                                    startActivityForResult(t,11);
+                                }
+                            });
+                            return v;
+
+                        }
+                    };
+                    storeListView.setAdapter(arrayAdapter);
 
                 }else{
                     Toast.makeText(getActivity(), "Co loi xay ra", Toast.LENGTH_SHORT).show();
@@ -75,4 +121,6 @@ public class StoreManagerFragment extends Fragment implements AsyncResponse {
                 Toast.makeText(getActivity(), "Kiểm tra lại kết nối!", Toast.LENGTH_SHORT).show();
             }
     }
+
+
 }
