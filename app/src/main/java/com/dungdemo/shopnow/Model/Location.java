@@ -2,7 +2,9 @@ package com.dungdemo.shopnow.Model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Location {
+import java.io.Serializable;
+
+public class Location implements Serializable {
     @SerializedName("location_id")
     int location_id;
     @SerializedName("name")

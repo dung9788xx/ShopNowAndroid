@@ -2,7 +2,11 @@ package com.dungdemo.shopnow.Model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Store {
+import java.io.Serializable;
+
+public class Store implements Serializable {
+    @SerializedName("store_id")
+    int store_id;
     @SerializedName("name")
     String name;
     @SerializedName("description")
@@ -16,7 +20,8 @@ public class Store {
     @SerializedName("blocked")
     int blocked;
 
-    public Store(String name, String description, Location location, int approval, int notification, int blocked) {
+    public Store(int store_id,String name, String description, Location location, int approval, int notification, int blocked) {
+        this.store_id=store_id;
         this.name = name;
         this.description = description;
         this.location = location;
@@ -65,6 +70,14 @@ public class Store {
         this.description = description;
     }
 
+    public int getStore_id() {
+        return store_id;
+    }
+
+    public void setStore_id(int store_id) {
+        this.store_id = store_id;
+    }
+
     public Location getLocation() {
         return location;
     }
@@ -72,4 +85,5 @@ public class Store {
     public void setLocation(Location location) {
         this.location = location;
     }
+
 }

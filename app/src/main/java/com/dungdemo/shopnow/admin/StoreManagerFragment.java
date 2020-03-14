@@ -90,7 +90,7 @@ public class StoreManagerFragment extends Fragment implements AsyncResponse {
                             username.setText(user.getName());
                             if(user.getStore().getApproval()==0){
                                 active.setText("Đang chờ phê duyệt");
-                                active.setTextColor(Color.YELLOW);
+                                active.setTextColor(Color.parseColor("#D35400"));
                             }else if(user.getStore().getBlocked()==1){
                                 active.setText("Đã bị khóa");
                                 active.setTextColor(Color.RED);
@@ -101,9 +101,9 @@ public class StoreManagerFragment extends Fragment implements AsyncResponse {
                             v.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Intent t=new Intent(getActivity(),UserInfomationActivity.class);
+                                    Intent t=new Intent(getActivity(),StoreInfomationActivity.class);
                                     t.putExtra("user",userList.get(position));
-                                    startActivityForResult(t,11);
+                                    startActivityForResult(t,22);
                                 }
                             });
                             return v;
@@ -122,5 +122,9 @@ public class StoreManagerFragment extends Fragment implements AsyncResponse {
             }
     }
 
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        loadData();
+    }
 }
