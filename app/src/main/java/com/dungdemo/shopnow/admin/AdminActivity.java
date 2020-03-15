@@ -1,7 +1,9 @@
 package com.dungdemo.shopnow.admin;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -67,8 +70,6 @@ public class AdminActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-
      navigationView = (NavigationView) findViewById(R.id.nav_view);
         loadData();
         navigationView.setNavigationItemSelectedListener(this);
@@ -141,6 +142,7 @@ public class AdminActivity extends AppCompatActivity
                 TextView phone=headerView.findViewById(R.id.tvPhone);
                 phone.setText(user.getPhone());
             }
+
 
         }else{
             Toast.makeText(this, "Kiểm tra lại kết nối !", Toast.LENGTH_SHORT).show();
