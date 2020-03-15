@@ -69,49 +69,53 @@ public class UserManagerFragment extends Fragment implements AsyncResponse {
 
     @Override
     public void whenfinish(Response output) {
-      if(output!=null){
-          String json= null;
-          try {
-              json = output.body().string();
-          } catch (IOException e) {
-              e.printStackTrace();
-          }
-          Type listType = new TypeToken<List<User>>() {}.getType();
+      if(output!=null) {
+          if (output.code() == 200) {
 
-     userList= new Gson().fromJson(json, listType);
-          arrayAdapter=new ArrayAdapter<User>(getActivity(),R.layout.custom_listview_usermanager_item,userList){
-              @Override
-              public View getView(final int position, View convertView, ViewGroup parent) {
-                  LayoutInflater layoutInflater=(LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                  View v=layoutInflater.inflate(R.layout.custom_listview_usermanager_item,null);
-                  TextView name=v.findViewById(R.id.tvName);
-                  TextView username=v.findViewById(R.id.tvUsername);
-                  TextView active=v.findViewById(R.id.tvActive);
-                  User user=userList.get(position);
+              String json = null;
+              try {
+                  json = output.body().string() + "";
+              } catch (IOException e) {
+              }
+              Type listType = new TypeToken<List<User>>() {
+              }.getType();
+
+              userList = new Gson().fromJson(json, listType);
+              arrayAdapter = new ArrayAdapter<User>(getActivity(), R.layout.custom_listview_usermanager_item, userList) {
+                  @Override
+                  public View getView(final int position, View convertView, ViewGroup parent) {
+                      LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                      View v = layoutInflater.inflate(R.layout.custom_listview_usermanager_item, null);
+                      TextView name = v.findViewById(R.id.tvName);
+                      TextView username = v.findViewById(R.id.tvUsername);
+                      TextView active = v.findViewById(R.id.tvActive);
+                      User user = userList.get(position);
 
                       name.setText(user.getName());
                       username.setText(user.getUsername());
-                      if(user.getActive()==1){
+                      if (user.getActive() == 1) {
                           active.setText("Đang hoạt động");
                           active.setTextColor(Color.BLUE);
-                      }else {
+                      } else {
                           active.setText("Đã bị khóa");
                           active.setTextColor(Color.RED);
                       }
                       v.setOnClickListener(new View.OnClickListener() {
                           @Override
                           public void onClick(View v) {
-                              Intent t=new Intent(getActivity(),UserInfomationActivity.class);
-                              t.putExtra("user",userList.get(position));
-                              startActivityForResult(t,11);
+                              Intent t = new Intent(getActivity(), UserInfomationActivity.class);
+                              t.putExtra("user", userList.get(position));
+                              startActivityForResult(t, 11);
                           }
                       });
-                  return v;
+                      return v;
 
-              }
-          };
+                  }
+              };
           userListView.setAdapter(arrayAdapter);
-
+      }else {
+          Toast.makeText(getActivity(), "Có lỗi xảy ra, vui lòng đăng nhập lại", Toast.LENGTH_SHORT).show();
+      }
       }else{
           Toast.makeText(getContext(), "Kiểm tra lại kết nối", Toast.LENGTH_SHORT).show();
       }

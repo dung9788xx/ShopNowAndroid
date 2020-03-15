@@ -18,7 +18,7 @@
             android:name=".admin.AdminAlertService"
             android:enabled="true"
             android:exported="true"></service>
-        <receiver android:name=".admin.AlertReceiver"></receiver>
+
         <activity android:name=".admin.StoreInfomationActivity" />
         <activity android:name=".admin.UserInfomationActivity" />
         <activity

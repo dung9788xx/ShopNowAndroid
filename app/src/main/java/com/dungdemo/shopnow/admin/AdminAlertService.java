@@ -22,6 +22,9 @@ import com.dungdemo.shopnow.Model.User;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -81,6 +84,7 @@ public class AdminAlertService extends Service implements AsyncResponse {
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
         createNotificationChannel();
         Intent notificationIntent = new Intent(this, AdminActivity.class);
+        notificationIntent.putExtra("newStore",1);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, 0);
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
@@ -91,9 +95,8 @@ public class AdminAlertService extends Service implements AsyncResponse {
                 .build();
         startForeground(1, notification);
         }else {
-
-
             Intent intent = new Intent(this, AdminActivity.class);
+            intent.putExtra("newStore",1);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */,
                     intent, PendingIntent.FLAG_ONE_SHOT);
 
@@ -115,17 +118,15 @@ public class AdminAlertService extends Service implements AsyncResponse {
     }
     @Override
     public void whenfinish(Response output) {
-
         if(output!=null){
             if(output.code()==200){
                 try {
-                    if(Integer.parseInt(output.body().string()+"")>0){
-                       sendNotification("Cửa hàng cần phê duyệt","Shop Now",1);
-
-                    }else{
-                        Log.d("lol","KO");
+                    JSONObject object=new JSONObject(output.body().string());
+                    int count=object.getInt("count");
+                    if(count>0){
+                       sendNotification("Có "+count+"hàng cần phê duyệt","Shop Now",1);
                     }
-                } catch (IOException e) {
+                } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -135,9 +136,7 @@ public class AdminAlertService extends Service implements AsyncResponse {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         Log.d("lol","destory");
-
     }
 
 }

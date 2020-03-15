@@ -16,7 +16,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -73,8 +72,11 @@ public class AdminActivity extends AppCompatActivity
      navigationView = (NavigationView) findViewById(R.id.nav_view);
         loadData();
         navigationView.setNavigationItemSelectedListener(this);
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content,new UserManagerFragment()).commit();
+        if(getIntent().getIntExtra("newStore",0)==1){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content,new StoreManagerFragment()).commit();
+        }else {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content, new UserManagerFragment()).commit();
+        }
     }
 
     private void loadData() {
@@ -98,7 +100,7 @@ public class AdminActivity extends AppCompatActivity
 
 
 
-    @SuppressWarnings("StatementWithEmptyBody")
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -111,6 +113,7 @@ public class AdminActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content,new StoreManagerFragment()).commit();
         }
         if(id==R.id.nav_logout){
+            User.logout(this);
             Intent intent = new Intent(AdminActivity.this,LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
@@ -120,7 +123,6 @@ public class AdminActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
     @Override
     public void whenfinish(Response output) {
         if(output!=null){

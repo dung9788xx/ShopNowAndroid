@@ -116,7 +116,13 @@ public class User implements Serializable {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("token","Bearer "+this.getApi_token());
         editor.putInt("user_id",this.user_id);
+        editor.putInt("level",this.level);
         editor.apply();
+    }
+    public static  int getSavedLevel(Context context){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        int level = preferences.getInt("level", -1);
+        return level;
     }
     public static int getSavedUserId(Context context){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -131,5 +137,12 @@ public class User implements Serializable {
            return token;
         }
         return "";
+    }
+    public static void logout(Context context){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("token","");
+        editor.putInt("user_id",0);
+        editor.apply();
     }
 }

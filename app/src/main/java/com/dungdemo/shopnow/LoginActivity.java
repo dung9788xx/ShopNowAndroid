@@ -76,6 +76,12 @@ public class LoginActivity extends Activity implements AsyncResponse {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
+        if(!User.getSavedToken(this).isEmpty()){
+            if(User.getSavedLevel(this)==1){
+                startActivity(new Intent(this,AdminActivity.class));
+            }
+
+        }
         edtUsername=findViewById(R.id.username);
         edtPassword=findViewById(R.id.password);
         btnLogin=findViewById(R.id.login);
