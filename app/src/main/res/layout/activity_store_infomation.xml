@@ -185,12 +185,10 @@
 
     <Button
         android:id="@+id/btBack"
-        android:layout_width="100dp"
-        android:layout_height="35dp"
+        android:layout_width="75dp"
+        android:layout_height="30dp"
         android:layout_gravity="bottom"
         android:layout_margin="10dp"
-        android:background="@drawable/button_rounded"
-        android:fontFamily="sans-serif"
-        android:text="Quay lại"
-        android:textColor="#FFF" />
+        android:background="@drawable/back_arrow"
+        />
 </FrameLayout>

@@ -112,13 +112,11 @@
                     android:text="0914949671"
                     android:textColor="#039BE5" />
             </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal">
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -147,12 +145,10 @@
 
     <Button
         android:id="@+id/btBack"
-        android:layout_width="100dp"
-        android:layout_height="35dp"
+        android:layout_width="75dp"
+        android:layout_height="30dp"
         android:layout_gravity="bottom"
         android:layout_margin="10dp"
-        android:background="@drawable/button_rounded"
-        android:fontFamily="sans-serif"
-        android:text="Quay lại"
-        android:textColor="#FFF" />
+        android:background="@drawable/back_arrow"
+        />
 </FrameLayout>

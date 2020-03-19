@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +27,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,8 +60,44 @@ public class StoreManagerFragment extends Fragment implements AsyncResponse {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_store_manager, container, false);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Quản lý cửa hàng");
         storeListView=view.findViewById(R.id.lvStore);
-
+        view.findViewById(R.id.tvSortByActive).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               for(int i=1;i<userList.size();i++){
+                   if(userList.get(i).getStore().getBlocked()==0&&userList.get(i).getStore().getApproval()==1){
+                       userList.add(0,userList.get(i));
+                       userList.remove(i+1);
+                   }
+               }
+               arrayAdapter.notifyDataSetChanged();
+            }
+        });
+        view.findViewById(R.id.tvSortApproval).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for(int i=1;i<userList.size();i++){
+                    if(userList.get(i).getStore().getApproval()==0){
+                        userList.add(0,userList.get(i));
+                        userList.remove(i+1);
+                    }
+                }
+                arrayAdapter.notifyDataSetChanged();
+            }
+        });
+        view.findViewById(R.id.tvSortByBlocked).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for(int i=1;i<userList.size();i++){
+                    if(userList.get(i).getStore().getBlocked()==1){
+                        userList.add(0,userList.get(i));
+                        userList.remove(i+1);
+                    }
+                }
+                arrayAdapter.notifyDataSetChanged();
+            }
+        });
         return  view;
     }
 

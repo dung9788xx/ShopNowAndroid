@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,6 +68,31 @@ public class UserManagerFragment extends Fragment implements AsyncResponse {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_user_manager, container, false);
+        view.findViewById(R.id.tvSortByActive).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for(int i=1;i<userList.size();i++){
+                    if(userList.get(i).getActive()==1){
+                        userList.add(0,userList.get(i));
+                        userList.remove(i+1);
+                    }
+                }
+                arrayAdapter.notifyDataSetChanged();
+            }
+        });
+        view.findViewById(R.id.tvSortByBlocked).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for(int i=1;i<userList.size();i++){
+                    if(userList.get(i).getActive()==0){
+                        userList.add(0,userList.get(i));
+                        userList.remove(i+1);
+                    }
+                }
+                arrayAdapter.notifyDataSetChanged();
+            }
+        });
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Quản lý người dùng");
         userListView=view.findViewById(R.id.userListview);
         return view;
     }
@@ -118,7 +144,7 @@ public class UserManagerFragment extends Fragment implements AsyncResponse {
               };
           userListView.setAdapter(arrayAdapter);
       }else {
-                  AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+                  AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
                   builder1.setMessage("Phiên đăng nhập đã hết hạn !.");
                   builder1.setCancelable(true);
 

@@ -1,9 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
+    android:background="#FFFFFF"
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tvSortByActive"
+                    android:textStyle="bold"
+                    android:textSize="16dp"
+                    android:fontFamily="@font/font"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:text="Hoạt động"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/tvSortApproval"
+                    android:background="@drawable/text_border"
+                    android:textStyle="bold"
+                    android:textSize="16dp"
+                    android:fontFamily="@font/font"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:text="Chờ duyệt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/tvSortByBlocked"
+                    android:textStyle="bold"
+                    android:textSize="16dp"
+                    android:fontFamily="@font/font"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:text="Đã bị khóa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+        <View
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#978A8A"/>
         <ListView
+            android:layout_marginTop="10dp"
             android:id="@+id/lvStore"
             android:layout_width="match_parent"
             android:layout_height="match_parent"></ListView>
-</FrameLayout>
+</LinearLayout>
