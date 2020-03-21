@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import com.dungdemo.shopnow.Model.User;
 import com.dungdemo.shopnow.admin.AdminActivity;
+import com.dungdemo.shopnow.store.ShopkeeperMainActivity;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -79,6 +80,9 @@ public class LoginActivity extends Activity implements AsyncResponse {
         if(!User.getSavedToken(this).isEmpty()){
             if(User.getSavedLevel(this)==1){
                 startActivity(new Intent(this,AdminActivity.class));
+            }
+            if(User.getSavedLevel(this)==2){
+                startActivity(new Intent(this, ShopkeeperMainActivity.class));
             }
 
         }
@@ -124,11 +128,17 @@ public class LoginActivity extends Activity implements AsyncResponse {
                     Gson gson = new Gson();
                     User user = gson.fromJson(object + "", User.class);
                     user.saveToken(this);
-                    Intent intent=new Intent(LoginActivity.this,AdminActivity.class);
-                    intent.putExtra("user",user);
+
                    if(user.getLevel()==1){
+                       Intent intent=new Intent(LoginActivity.this,AdminActivity.class);
+
                        startActivity(intent);
                    }
+                    if(user.getLevel()==2){
+                        Intent intent=new Intent(LoginActivity.this,ShopkeeperMainActivity.class);
+                        startActivity(intent);
+
+                    }
                 } catch (IOException e) {
                     Log.d("LOL", e.toString());
                 } catch (JSONException e) {

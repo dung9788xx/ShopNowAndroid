@@ -54,7 +54,7 @@ public class AdminActivity extends AppCompatActivity
         } else {
             startService(myIntent);
         }
-        user=(User)getIntent().getSerializableExtra("user");
+//        user=(User)getIntent().getSerializableExtra("user");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
