@@ -39,6 +39,7 @@ import android.widget.Toast;
 import com.dungdemo.shopnow.Model.User;
 import com.dungdemo.shopnow.admin.AdminActivity;
 import com.dungdemo.shopnow.store.ShopkeeperMainActivity;
+import com.dungdemo.shopnow.utils.ResponeFromServer;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -118,12 +119,13 @@ public class LoginActivity extends Activity implements AsyncResponse {
     }
 
     @Override
-    public void whenfinish(Response output) {
-        progressBar.setVisibility(View.INVISIBLE);
+    public void whenfinish(ResponeFromServer output) {
+     progressBar.setVisibility(View.INVISIBLE);
+
         if (output != null) {
             if(output.code()==200){
                 try {
-                    String s = output.body().string();
+                    String s = output.getBody();
                     JSONObject object = new JSONObject(s);
                     Gson gson = new Gson();
                     User user = gson.fromJson(object + "", User.class);
@@ -139,8 +141,7 @@ public class LoginActivity extends Activity implements AsyncResponse {
                         startActivity(intent);
 
                     }
-                } catch (IOException e) {
-                    Log.d("LOL", e.toString());
+
                 } catch (JSONException e) {
 
                 }
@@ -152,7 +153,7 @@ public class LoginActivity extends Activity implements AsyncResponse {
         } else {
             Toast.makeText(this, "Kiểm tra lại kết nối", Toast.LENGTH_SHORT).show();
         }
-    }
+   }
 
 }
 

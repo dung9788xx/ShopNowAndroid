@@ -14,6 +14,7 @@ import com.dungdemo.shopnow.HostName;
 import com.dungdemo.shopnow.Model.User;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
+import com.dungdemo.shopnow.utils.ResponeFromServer;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -92,11 +93,10 @@ public class StoreInfomationActivity extends Activity implements AsyncResponse {
         }
     }
     @Override
-    public void whenfinish(Response output) {
+    public void whenfinish(ResponeFromServer output) {
         if(output!=null){
             if(output.code()==200){
-                try {
-                    String responeBody=output.body().string();
+                    String responeBody=output.getBody();
                     if(responeBody.contains("approval")){
                         user.getStore().setApproval(1);
                         Toast.makeText(this, "Phê duyệt thành công!", Toast.LENGTH_SHORT).show();
@@ -109,9 +109,7 @@ public class StoreInfomationActivity extends Activity implements AsyncResponse {
                         Toast.makeText(this, "Thay đổi thành công!", Toast.LENGTH_SHORT).show();
                     }
                     loadActiveLayout();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
 
             }else {
 

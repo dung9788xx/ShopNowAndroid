@@ -21,6 +21,7 @@ import com.dungdemo.shopnow.HostName;
 import com.dungdemo.shopnow.Model.User;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
+import com.dungdemo.shopnow.utils.ResponeFromServer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -117,16 +118,16 @@ public class AdminAlertService extends Service implements AsyncResponse {
         }
     }
     @Override
-    public void whenfinish(Response output) {
+    public void whenfinish(ResponeFromServer output) {
         if(output!=null){
             if(output.code()==200){
                 try {
-                    JSONObject object=new JSONObject(output.body().string());
+                    JSONObject object=new JSONObject(output.getBody());
                     int count=object.getInt("count");
                     if(count>0){
                        sendNotification("Có "+count+"hàng cần phê duyệt","Shop Now",1);
                     }
-                } catch (IOException | JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }

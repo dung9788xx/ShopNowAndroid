@@ -20,6 +20,7 @@ import com.dungdemo.shopnow.HostName;
 import com.dungdemo.shopnow.Model.User;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
+import com.dungdemo.shopnow.utils.ResponeFromServer;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -102,16 +103,12 @@ public class StoreManagerFragment extends Fragment implements AsyncResponse {
     }
 
     @Override
-    public void whenfinish(Response output) {
+    public void whenfinish(ResponeFromServer output) {
             if(output!=null){
                 if (output.code()==200){
                     String json= null;
-                    try {
-                        json = output.body().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
 
+                        json = output.getBody();
                     Type listType = new TypeToken<List<User>>() {}.getType();
                 userList= new Gson().fromJson(json, listType);
                     arrayAdapter=new ArrayAdapter<User>(getActivity(),R.layout.custom_listview_usermanager_item,userList){

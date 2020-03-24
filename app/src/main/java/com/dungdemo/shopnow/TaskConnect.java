@@ -2,8 +2,10 @@ package com.dungdemo.shopnow;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.dungdemo.shopnow.Model.User;
+import com.dungdemo.shopnow.utils.ResponeFromServer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,10 +17,10 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class TaskConnect extends AsyncTask<Void,Void,Response> {
+public class TaskConnect extends AsyncTask<Void,Void,ResponeFromServer> {
     private Map<String,String> map=new HashMap<>(  );
     AsyncResponse output;
-
+    Response response;
     String url;
     public TaskConnect(AsyncResponse output, String url) {
         this.output=output;
@@ -26,28 +28,32 @@ public class TaskConnect extends AsyncTask<Void,Void,Response> {
     }
 
     @Override
-    protected Response doInBackground(Void... voids) {
+    protected ResponeFromServer doInBackground(Void... voids) {
         String error;
         OkHttpClient client = new OkHttpClient().newBuilder().build();
+        
         RequestBody formBody = makeBuilderFromMap( map )
                 .build();
+        String api_token= map.get("token");
         Request request=null;
       if(map.get("method")=="post"){
+          if(api_token==null) api_token="";
       request= new Request.Builder()
-                  .url( url )
+                  .url( url ).addHeader("Authorization",api_token)
                   .post( formBody )
                   .build();
       }
         if(map.get("method")=="get"){
-            String api_token= map.get("token");
             request= new Request.Builder()
                     .url( url ).addHeader("Authorization",api_token)
                     .get()
                     .build();
         }
         try {
-            Response response = client.newCall(request).execute();
-            return response;
+            response = client.newCall(request).execute();
+              return  new ResponeFromServer(response.code(),response.body().string());
+
+
         }catch (Exception e){
             e.printStackTrace();
             error=e.toString();
@@ -58,7 +64,7 @@ public class TaskConnect extends AsyncTask<Void,Void,Response> {
     }
 
     @Override
-    protected void onPostExecute(Response s) {
+    protected void onPostExecute(ResponeFromServer s) {
         super.onPostExecute( s );
         output.whenfinish( s );
 

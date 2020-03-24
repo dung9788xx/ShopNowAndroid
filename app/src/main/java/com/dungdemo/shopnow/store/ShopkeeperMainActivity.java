@@ -23,6 +23,7 @@ import com.dungdemo.shopnow.TaskConnect;
 import com.dungdemo.shopnow.admin.AdminActivity;
 import com.dungdemo.shopnow.admin.StoreManagerFragment;
 import com.dungdemo.shopnow.admin.UserManagerFragment;
+import com.dungdemo.shopnow.utils.ResponeFromServer;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -100,15 +101,12 @@ public class ShopkeeperMainActivity extends AppCompatActivity implements Navigat
     }
 
     @Override
-    public void whenfinish(Response output) {
+    public void whenfinish(ResponeFromServer output) {
         if(output!=null){
             if(output.code()==200){
                 String json="";
-                try {
-                    json=output.body().string();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                    json=output.getBody();
+
                 Gson gson=new Gson();
                 user=gson.fromJson(json,User.class);
                 View headerView=navigationView.getHeaderView(0);

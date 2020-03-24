@@ -30,6 +30,7 @@ import com.dungdemo.shopnow.LoginActivity;
 import com.dungdemo.shopnow.Model.User;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
+import com.dungdemo.shopnow.utils.ResponeFromServer;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -126,15 +127,12 @@ public class AdminActivity extends AppCompatActivity
         return true;
     }
     @Override
-    public void whenfinish(Response output) {
+    public void whenfinish(ResponeFromServer output) {
         if(output!=null){
             if(output.code()==200){
                 String json="";
-                try {
-                  json=output.body().string();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                  json=output.getBody();
+
                 Gson gson=new Gson();
                 user=gson.fromJson(json,User.class);
                 View headerView=navigationView.getHeaderView(0);
