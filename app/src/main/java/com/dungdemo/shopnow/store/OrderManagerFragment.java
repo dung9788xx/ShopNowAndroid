@@ -15,7 +15,6 @@ public class OrderManagerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_order_manager, container, false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Quản lý đơn hàng");
-
         return  view;
     }
 

@@ -16,7 +16,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,12 +54,19 @@ public class ActivityAddProduct extends AppCompatActivity implements AsyncRespon
     ArrayAdapter<ProductCategory> arrayAdapter;
     int category_selected_id = -1;
     List<ProductCategory> productCategories;
+    EditText edtName,edtDescription,edtPrice,edtAmount;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_product);
         setTitle("Thêm sản phẩm");
+        progressBar=findViewById(R.id.progress);
+        edtName=findViewById(R.id.edtName);
+        edtDescription=findViewById(R.id.edtDescription);
+        edtPrice=findViewById(R.id.edtPrice);
+        edtAmount=findViewById(R.id.edtAmount);
         imageView1 = findViewById(R.id.img1);
         imageView2 = findViewById(R.id.img2);
         imageView3 = findViewById(R.id.img3);
@@ -82,22 +91,42 @@ public class ActivityAddProduct extends AppCompatActivity implements AsyncRespon
             @Override
             public void onClick(View view) {
                 if (thumbnail1 != null) {
-                    Map<String, String> map = new HashMap<>();
-                    map.put("token", User.getSavedToken(getApplication()));
-                    map.put("method", "post");
-                    map.put("img1", ImageUtil.convert(thumbnail1));
-                    if (thumbnail2 != null) {
-                        map.put("img2", ImageUtil.convert(thumbnail2));
+                    if(edtName.getText().toString().isEmpty()){
+                       edtName.setError("Tên không được bỏ trống!");
+                    }else{
+                        if(edtPrice.getText().toString().isEmpty()){
+                            edtPrice.setError("Giá không được bỏ trống!");
+                        }else{
+                            if(edtAmount.getText().toString().isEmpty()){
+                                edtAmount.setError("Số lượng sản phẩm không được bỏ trống!");
+                            }else{
+                                Map<String, String> map = new HashMap<>();
+                                map.put("token", User.getSavedToken(getApplication()));
+                                map.put("method", "post");
+                                map.put("name",edtName.getText().toString());
+                                map.put("description",edtDescription.getText().toString());
+                                map.put("price",edtPrice.getText().toString());
+                                map.put("amount",edtAmount.getText().toString());
+                                map.put("category_id",category_selected_id+"");
+
+                                map.put("img1", ImageUtil.convert(thumbnail1));
+                                if (thumbnail2 != null) {
+                                    map.put("img2", ImageUtil.convert(thumbnail2));
+                                }
+                                if (thumbnail3 != null) {
+                                    map.put("img3", ImageUtil.convert(thumbnail3));
+                                }
+                                if (thumbnail4 != null) {
+                                    map.put("img4", ImageUtil.convert(thumbnail4));
+                                }
+                                TaskConnect task = new TaskConnect(ActivityAddProduct.this, HostName.host + "/product");
+                                task.setMap(map);
+                                task.execute();
+                                progressBar.setVisibility(View.VISIBLE);
+                                findViewById(R.id.btnAdd).setEnabled(false);
+                            }
+                        }
                     }
-                    if (thumbnail3 != null) {
-                        map.put("img3", ImageUtil.convert(thumbnail3));
-                    }
-                    if (thumbnail4 != null) {
-                        map.put("img4", ImageUtil.convert(thumbnail4));
-                    }
-                    TaskConnect task = new TaskConnect(ActivityAddProduct.this, HostName.host + "/product");
-                    task.setMap(map);
-                    task.execute();
                 } else {
                     Toast.makeText(ActivityAddProduct.this, "Vui lòng chọn ít nhất một ảnh !", Toast.LENGTH_SHORT).show();
                 }
@@ -210,14 +239,16 @@ public class ActivityAddProduct extends AppCompatActivity implements AsyncRespon
             }
         };
         spinner.setAdapter(arrayAdapter);
+        spinner.setSelection(1);
     }
 
 
     private void loadCategory() {
         OkHttpClient client = new OkHttpClient();
         String url = HostName.host + "/category";
+
         Request request = new Request.Builder()
-                .url(url)
+                .url(url).addHeader("Authorization",User.getSavedToken(this))
                 .build();
 
         Call call = client.newCall(request);
@@ -233,8 +264,6 @@ public class ActivityAddProduct extends AppCompatActivity implements AsyncRespon
                 if (response.isSuccessful()) {
                     String json = null;
                     json = response.body().string() + "";
-
-
                     Type listType = new TypeToken<List<ProductCategory>>() {
                     }.getType();
                     productCategories = new Gson().fromJson(json, listType);
@@ -319,12 +348,14 @@ public class ActivityAddProduct extends AppCompatActivity implements AsyncRespon
 
     @Override
     public void whenfinish(ResponeFromServer output) {
-
+        findViewById(R.id.btnAdd).setEnabled(true);
+        progressBar.setVisibility(View.INVISIBLE);
         if (output != null) {
             if (output.code() == 200) {
-
                 Toast.makeText(this, "LOL" + output.getBody(), Toast.LENGTH_LONG).show();
 
+            }else{
+                Toast.makeText(this, "Kiểm tra lại kết nối !", Toast.LENGTH_SHORT).show();
             }
 
         }

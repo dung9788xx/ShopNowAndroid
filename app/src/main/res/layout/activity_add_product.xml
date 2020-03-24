@@ -66,7 +66,7 @@
              android:layout_width="match_parent"
              android:layout_height="wrap_content">
              <EditText
-                 android:id="@+id/edtGia"
+                 android:id="@+id/edtPrice"
                  android:inputType="number"
                  android:layout_weight="4"
                  android:layout_width="match_parent"
@@ -177,12 +177,20 @@
          </LinearLayout>
      </LinearLayout>
  </LinearLayout>
+    <ProgressBar
+        android:visibility="invisible"
+        android:id="@+id/progress"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
     <Button
         android:id="@+id/btnAdd"
+        android:fontFamily="@font/font"
         android:textColor="#FFFF"
         android:text="Thêm"
         android:background="@drawable/button_rounded"
         android:layout_gravity="center|bottom"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="40dp"/>
 </FrameLayout>
