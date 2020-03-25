@@ -352,7 +352,7 @@ public class ActivityAddProduct extends AppCompatActivity implements AsyncRespon
         progressBar.setVisibility(View.INVISIBLE);
         if (output != null) {
             if (output.code() == 200) {
-                Toast.makeText(this, "LOL" + output.getBody(), Toast.LENGTH_LONG).show();
+               finish();
 
             }else{
                 Toast.makeText(this, "Kiểm tra lại kết nối !", Toast.LENGTH_SHORT).show();

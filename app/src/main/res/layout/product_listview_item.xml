@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:padding="10dp"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:gravity="center"
+            android:layout_weight="7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/thumbnail"
+                android:src="@drawable/ic_order_black_24dp"
+                android:layout_width="80dp"
+                android:layout_height="75dp"/>
+        </LinearLayout>
+        <FrameLayout
+            android:layout_weight="3"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_marginTop="5dp"
+                android:layout_weight="3"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:maxLength="25"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/font"
+                    android:id="@+id/tvName"
+                    android:text="Dien thoai"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/tvPrive"
+                    android:text="12500"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+                <TextView
+                    android:layout_gravity="right|center"
+                    android:id="@+id/tvStatus"
+                    android:text="Con lai:300"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>
