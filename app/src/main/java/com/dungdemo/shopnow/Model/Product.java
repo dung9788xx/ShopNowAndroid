@@ -2,9 +2,10 @@ package com.dungdemo.shopnow.Model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Product {
+public class Product implements Serializable {
     @SerializedName("product_id")
     int product_id;
     @SerializedName("name")

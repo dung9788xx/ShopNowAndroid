@@ -8,9 +8,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -28,6 +30,7 @@ import com.dungdemo.shopnow.utils.ImageUtil;
 import com.dungdemo.shopnow.utils.ResponeFromServer;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -52,7 +55,14 @@ public class ProductManagerFragment extends Fragment implements AsyncResponse {
         View view=inflater.inflate(R.layout.fragment_product_manage, container, false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Quản lý sản phẩm");
         lvProduct=view.findViewById(R.id.lvProduct);
-
+        lvProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent=new Intent(getActivity(),ActivityEditProduct.class);
+                intent.putExtra("product",products.get(i));
+                startActivityForResult(intent,1);
+            }
+        });
         view.findViewById(R.id.addProductButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,9 +93,8 @@ public class ProductManagerFragment extends Fragment implements AsyncResponse {
                         TextView price=v.findViewById(R.id.tvPrive);
                         TextView tvStatus=v.findViewById(R.id.tvStatus);
                         Product product=products.get(position);
-                        if(product.getImages().size()>0){
-                            thumbnail.setImageBitmap(ImageUtil.convert(product.getImages().get(0).getBase64()));
-                        }
+                        String url=HostName.imgurl+product.getProduct_id()+"/"+product.getImages().get(0).getImage_name();
+                        Picasso.get().load(url).resize(100,100).into(thumbnail);
                         name.setText(product.getName());
                         price.setText(product.getPrice()+" VND");
                         if(product.getIsSelling()==1){

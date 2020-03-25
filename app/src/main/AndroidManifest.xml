@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".store.ActivityAddProduct"></activity>
+        <activity android:name=".store.ActivityEditProduct"></activity>
+        <activity android:name=".store.ActivityAddProduct" />
         <activity
             android:name=".store.ShopkeeperMainActivity"
             android:theme="@style/AppTheme.NoActionBar" />

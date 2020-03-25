@@ -2,15 +2,17 @@ package com.dungdemo.shopnow.Model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ProductImage {
+import java.io.Serializable;
+
+public class ProductImage implements Serializable {
     @SerializedName("image_id")
     int image_id;
-    @SerializedName("base64")
-    String base64;
+    @SerializedName("image_name")
+    String image_name;
 
-    public ProductImage(int image_id, String base64) {
+    public ProductImage(int image_id, String image_name) {
         this.image_id = image_id;
-        this.base64 = base64;
+        this.image_name = image_name;
     }
 
     public int getImage_id() {
@@ -21,11 +23,11 @@ public class ProductImage {
         this.image_id = image_id;
     }
 
-    public String getBase64() {
-        return base64;
+    public String getImage_name() {
+        return image_name;
     }
 
-    public void setBase64(String base64) {
-        this.base64 = base64;
+    public void setImage_name(String image_name) {
+        this.image_name = image_name;
     }
 }

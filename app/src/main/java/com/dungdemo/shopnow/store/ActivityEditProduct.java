@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 
 import com.dungdemo.shopnow.AsyncResponse;
 import com.dungdemo.shopnow.HostName;
+import com.dungdemo.shopnow.Model.Product;
 import com.dungdemo.shopnow.Model.ProductCategory;
 import com.dungdemo.shopnow.Model.User;
 import com.dungdemo.shopnow.R;
@@ -33,6 +35,8 @@ import com.dungdemo.shopnow.utils.ImageUtil;
 import com.dungdemo.shopnow.utils.ResponeFromServer;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -47,21 +51,22 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class ActivityAddProduct extends AppCompatActivity implements AsyncResponse {
+public class ActivityEditProduct extends AppCompatActivity implements AsyncResponse {
     ImageView imageView1, imageView2, imageView3, imageView4;
     Bitmap thumbnail1, thumbnail2, thumbnail3, thumbnail4;
     Spinner spinner;
     ArrayAdapter<ProductCategory> arrayAdapter;
-    int category_selected_id = -1;
+    int category_selected_id = 0;
     List<ProductCategory> productCategories;
     EditText edtName,edtDescription,edtPrice,edtAmount;
     ProgressBar progressBar;
-
+    Product product;
+    int loadedAllImage=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_product);
-        setTitle("Thêm sản phẩm");
+        setContentView(R.layout.activity_edit_product);
+        setTitle("Sửa sản phẩm");
         progressBar=findViewById(R.id.progress);
         edtName=findViewById(R.id.edtName);
         edtDescription=findViewById(R.id.edtDescription);
@@ -92,13 +97,14 @@ public class ActivityAddProduct extends AppCompatActivity implements AsyncRespon
 
             }
         });
+        setData();
 
         findViewById(R.id.btnAdd).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (thumbnail1 != null) {
                     if(edtName.getText().toString().isEmpty()){
-                       edtName.setError("Tên không được bỏ trống!");
+                        edtName.setError("Tên không được bỏ trống!");
                     }else{
                         if(edtPrice.getText().toString().isEmpty()){
                             edtPrice.setError("Giá không được bỏ trống!");
@@ -108,7 +114,7 @@ public class ActivityAddProduct extends AppCompatActivity implements AsyncRespon
                             }else{
                                 Map<String, String> map = new HashMap<>();
                                 map.put("token", User.getSavedToken(getApplication()));
-                                map.put("method", "post");
+                                map.put("method", "put");
                                 map.put("name",edtName.getText().toString());
                                 map.put("description",edtDescription.getText().toString());
                                 map.put("price",edtPrice.getText().toString());
@@ -125,7 +131,7 @@ public class ActivityAddProduct extends AppCompatActivity implements AsyncRespon
                                 if (thumbnail4 != null) {
                                     map.put("img4", ImageUtil.convert(thumbnail4));
                                 }
-                                TaskConnect task = new TaskConnect(ActivityAddProduct.this, HostName.host + "/product");
+                                TaskConnect task = new TaskConnect(ActivityEditProduct.this, HostName.host + "/product/"+product.getProduct_id());
                                 task.setMap(map);
                                 task.execute();
                                 progressBar.setVisibility(View.VISIBLE);
@@ -134,7 +140,7 @@ public class ActivityAddProduct extends AppCompatActivity implements AsyncRespon
                         }
                     }
                 } else {
-                    Toast.makeText(ActivityAddProduct.this, "Vui lòng chọn ít nhất một ảnh !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ActivityEditProduct.this, "Vui lòng chọn ít nhất một ảnh !", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -223,8 +229,97 @@ public class ActivityAddProduct extends AppCompatActivity implements AsyncRespon
         });
     }
 
+    private void setData() {
+        product=(Product)getIntent().getSerializableExtra("product");
+        edtName.setText(product.getName());
+        edtDescription.setText(product.getDescription());
+        edtPrice.setText(product.getPrice()+"");
+        edtAmount.setText(product.getAmount()+"");
+        if(product.getImages().size()>0){
+            String url=HostName.imgurl+product.getProduct_id()+"/"+product.getImages().get(0).getImage_name();
+            Picasso.get().load(url).into(imageView1, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+                    thumbnail1=((BitmapDrawable)imageView1.getDrawable()).getBitmap();;
+                    imageView1.setVisibility(View.VISIBLE);
+                    loadedAllImage++;
+                    if(loadedAllImage==product.getImages().size()){
+                        loadImagePosition();
+                    }
+                }
+
+                @Override
+                public void onError(Exception e) {
+
+                }
+            });
+
+        }
+        if(product.getImages().size()>1){
+            String url=HostName.imgurl+product.getProduct_id()+"/"+product.getImages().get(1).getImage_name();
+            Picasso.get().load(url).into(imageView2, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+                    thumbnail2=((BitmapDrawable)imageView2.getDrawable()).getBitmap();;
+                    imageView2.setVisibility(View.VISIBLE);
+                    loadedAllImage++;
+                    if(loadedAllImage==product.getImages().size()){
+                        loadImagePosition();
+                    }
+                }
+
+                @Override
+                public void onError(Exception e) {
+
+                }
+            });
+
+        }
+        if(product.getImages().size()>2){
+            String url=HostName.imgurl+product.getProduct_id()+"/"+product.getImages().get(2).getImage_name();
+            Picasso.get().load(url).into(imageView3, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+                    thumbnail3=((BitmapDrawable)imageView3.getDrawable()).getBitmap();;
+                    imageView3.setVisibility(View.VISIBLE);
+                    loadedAllImage++;
+                    if(loadedAllImage==product.getImages().size()){
+                        loadImagePosition();
+                    }
+                }
+
+                @Override
+                public void onError(Exception e) {
+
+                }
+            });
+
+        }
+        if(product.getImages().size()>3){
+            String url=HostName.imgurl+product.getProduct_id()+"/"+product.getImages().get(3).getImage_name();
+            Picasso.get().load(url).into(imageView4, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+                    thumbnail4=((BitmapDrawable)imageView4.getDrawable()).getBitmap();;
+                    imageView4.setVisibility(View.VISIBLE);
+                    loadedAllImage++;
+                    if(loadedAllImage==product.getImages().size()){
+                        loadImagePosition();
+                    }
+                }
+
+                @Override
+                public void onError(Exception e) {
+
+                }
+            });
+
+        }
+
+    }
+
     private void loadSpinner() {
-        arrayAdapter = new ArrayAdapter<ProductCategory>(ActivityAddProduct.this, R.layout.category_item_spinner, productCategories) {
+        arrayAdapter = new ArrayAdapter<ProductCategory>(ActivityEditProduct.this, R.layout.category_item_spinner, productCategories) {
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -245,7 +340,7 @@ public class ActivityAddProduct extends AppCompatActivity implements AsyncRespon
             }
         };
         spinner.setAdapter(arrayAdapter);
-        spinner.setSelection(1);
+        spinner.setSelection(product.getCategory().getCategory_id()-1);
     }
 
 
@@ -273,10 +368,11 @@ public class ActivityAddProduct extends AppCompatActivity implements AsyncRespon
                     Type listType = new TypeToken<List<ProductCategory>>() {
                     }.getType();
                     productCategories = new Gson().fromJson(json, listType);
-                    ActivityAddProduct.this.runOnUiThread(new Runnable() {
+                    ActivityEditProduct.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             loadSpinner();
+
                         }
                     });
 //
@@ -361,9 +457,10 @@ public class ActivityAddProduct extends AppCompatActivity implements AsyncRespon
                finish();
 
             }else{
-                Toast.makeText(this, "Kiểm tra lại kết nối !", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Kiểm tra lại kết nối !", Toast.LENGTH_LONG).show();
             }
 
         }
     }
 }
+

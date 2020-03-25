@@ -185,6 +185,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <Button
+        android:layout_marginLeft="50dp"
         android:id="@+id/btnAdd"
         android:fontFamily="@font/font"
         android:textColor="#FFFF"
@@ -193,4 +194,15 @@
         android:layout_gravity="center|bottom"
         android:layout_width="wrap_content"
         android:layout_height="40dp"/>
+
+    <Button
+        android:layout_marginRight="50dp"
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_gravity="center|bottom"
+        android:background="@drawable/button_rounded"
+        android:fontFamily="@font/font"
+        android:text="Quay lại"
+        android:textColor="#FFFF" />
 </FrameLayout>

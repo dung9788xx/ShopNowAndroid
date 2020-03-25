@@ -49,6 +49,12 @@ public class TaskConnect extends AsyncTask<Void,Void,ResponeFromServer> {
                     .get()
                     .build();
         }
+        if(map.get("method")=="put"){
+            request= new Request.Builder()
+                    .url( url ).addHeader("Authorization",api_token)
+                    .put(formBody)
+                    .build();
+        }
         try {
             response = client.newCall(request).execute();
               return  new ResponeFromServer(response.code(),response.body().string());
