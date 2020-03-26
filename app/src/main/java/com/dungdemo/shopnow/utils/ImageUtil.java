@@ -14,9 +14,9 @@ public class ImageUtil
         );
         return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
     }
-
     public static String convert(Bitmap bitmap)
     {
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
         return "data:image/png;base64,"+Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);

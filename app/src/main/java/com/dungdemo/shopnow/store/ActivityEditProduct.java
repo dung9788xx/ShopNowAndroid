@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -38,7 +39,9 @@ import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,6 +55,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class ActivityEditProduct extends AppCompatActivity implements AsyncResponse {
+    int imageQuality=4;
     ImageView imageView1, imageView2, imageView3, imageView4;
     Bitmap thumbnail1, thumbnail2, thumbnail3, thumbnail4;
     Spinner spinner;
@@ -112,6 +116,8 @@ public class ActivityEditProduct extends AppCompatActivity implements AsyncRespo
                             if(edtAmount.getText().toString().isEmpty()){
                                 edtAmount.setError("Số lượng sản phẩm không được bỏ trống!");
                             }else{
+                                progressBar.setVisibility(View.VISIBLE);
+                                findViewById(R.id.btnAdd).setEnabled(false);
                                 Map<String, String> map = new HashMap<>();
                                 map.put("token", User.getSavedToken(getApplication()));
                                 map.put("method", "put");
@@ -121,21 +127,35 @@ public class ActivityEditProduct extends AppCompatActivity implements AsyncRespo
                                 map.put("amount",edtAmount.getText().toString());
                                 map.put("category_id",(category_selected_id+1)+"");
 
-                                map.put("img1", ImageUtil.convert(thumbnail1));
-                                if (thumbnail2 != null) {
-                                    map.put("img2", ImageUtil.convert(thumbnail2));
-                                }
-                                if (thumbnail3 != null) {
-                                    map.put("img3", ImageUtil.convert(thumbnail3));
-                                }
-                                if (thumbnail4 != null) {
-                                    map.put("img4", ImageUtil.convert(thumbnail4));
-                                }
-                                TaskConnect task = new TaskConnect(ActivityEditProduct.this, HostName.host + "/product/"+product.getProduct_id());
-                                task.setMap(map);
-                                task.execute();
-                                progressBar.setVisibility(View.VISIBLE);
-                                findViewById(R.id.btnAdd).setEnabled(false);
+
+                                new AsyncTask<Void,Void,Void>(){
+                                    @Override
+                                    protected Void doInBackground(Void... voids) {
+                                        map.put("img1", ImageUtil.convert(thumbnail1));
+                                        if (thumbnail2 != null) {
+                                            map.put("img2", ImageUtil.convert(thumbnail2));
+                                        }
+                                        if (thumbnail3 != null) {
+                                            map.put("img3", ImageUtil.convert(thumbnail3));
+                                        }
+                                        if (thumbnail4 != null) {
+                                            map.put("img4", ImageUtil.convert(thumbnail4));
+                                        }
+                                        return null;
+                                    }
+
+                                    @Override
+                                    protected void onPostExecute(Void aVoid) {
+                                        super.onPostExecute(aVoid);
+                                        TaskConnect task = new TaskConnect(ActivityEditProduct.this, HostName.host + "/product/"+product.getProduct_id());
+                                        task.setMap(map);
+                                        task.execute();
+
+                                    }
+                                }.execute();
+
+
+
                             }
                         }
                     }
@@ -413,46 +433,75 @@ public class ActivityEditProduct extends AppCompatActivity implements AsyncRespo
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
             if (data != null) {
-                Uri selectedImageUri = data.getData();
-                String filestring = selectedImageUri.getPath();
-                thumbnail1 = BitmapFactory.decodeFile(filestring, new BitmapFactory.Options());
-                imageView1.setImageBitmap(thumbnail1);
-                imageView2.setVisibility(View.VISIBLE);
+
+                try {
+                    Uri selectedImageUri = data.getData();
+                    InputStream inputStream=getContentResolver().openInputStream(selectedImageUri);
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inSampleSize=imageQuality;
+                    thumbnail1 = BitmapFactory.decodeStream(inputStream,null,options);
+                    Log.d("lol",thumbnail1.getByteCount()+"");
+                    imageView1.setImageBitmap(thumbnail1);
+                    imageView2.setVisibility(View.VISIBLE);
+                } catch (FileNotFoundException e) {
+
+                }
+
             }
         }
         if (requestCode == 2) {
             if (data != null) {
-                Uri selectedImageUri = data.getData();
-                String filestring = selectedImageUri.getPath();
-                thumbnail2 = BitmapFactory.decodeFile(filestring, new BitmapFactory.Options());
-                imageView2.setImageBitmap(thumbnail2);
-                imageView3.setVisibility(View.VISIBLE);
+                try {
+                    Uri selectedImageUri = data.getData();
+                    InputStream inputStream=getContentResolver().openInputStream(selectedImageUri);
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inSampleSize=imageQuality;
+                    thumbnail2 = BitmapFactory.decodeStream(inputStream,null,options);
+                    imageView2.setImageBitmap(thumbnail2);
+                    imageView3.setVisibility(View.VISIBLE);
+                } catch (FileNotFoundException e) {
+
+                }
             }
         }
         if (requestCode == 3) {
             if (data != null) {
-                Uri selectedImageUri = data.getData();
-                String filestring = selectedImageUri.getPath();
-                thumbnail3 = BitmapFactory.decodeFile(filestring, new BitmapFactory.Options());
-                imageView3.setImageBitmap(thumbnail3);
-                imageView4.setVisibility(View.VISIBLE);
+                try {
+                    Uri selectedImageUri = data.getData();
+                    InputStream inputStream=getContentResolver().openInputStream(selectedImageUri);
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inSampleSize=imageQuality;
+                    thumbnail3 = BitmapFactory.decodeStream(inputStream,null,options);
+                    imageView3.setImageBitmap(thumbnail3);
+                    imageView4.setVisibility(View.VISIBLE);
+                } catch (FileNotFoundException e) {
+
+                }
             }
         }
         if (requestCode == 4) {
             if (data != null) {
-                Uri selectedImageUri = data.getData();
-                String filestring = selectedImageUri.getPath();
-                thumbnail4 = BitmapFactory.decodeFile(filestring, new BitmapFactory.Options());
-                imageView4.setImageBitmap(thumbnail4);
+                try {
+                    Uri selectedImageUri = data.getData();
+                    InputStream inputStream=getContentResolver().openInputStream(selectedImageUri);
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inSampleSize=imageQuality;
+                    thumbnail4 = BitmapFactory.decodeStream(inputStream,null,options);
+                    imageView4.setImageBitmap(thumbnail4);
+
+                } catch (FileNotFoundException e) {
+
+                }
             }
         }
-    }
 
+    }
     @Override
     public void whenfinish(ResponeFromServer output) {
         findViewById(R.id.btnAdd).setEnabled(true);
         progressBar.setVisibility(View.INVISIBLE);
         if (output != null) {
+            Log.d("lol",output.getBody());
             if (output.code() == 200) {
                finish();
 
@@ -460,6 +509,8 @@ public class ActivityEditProduct extends AppCompatActivity implements AsyncRespo
                 Toast.makeText(this, "Kiểm tra lại kết nối !", Toast.LENGTH_LONG).show();
             }
 
+        }else{
+            Toast.makeText(this, "NULL", Toast.LENGTH_SHORT).show();
         }
     }
 }

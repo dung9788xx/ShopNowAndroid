@@ -9,6 +9,7 @@ import com.dungdemo.shopnow.utils.ResponeFromServer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.FormBody;
 import okhttp3.MultipartBody;
@@ -63,9 +64,9 @@ public class TaskConnect extends AsyncTask<Void,Void,ResponeFromServer> {
         }catch (Exception e){
             e.printStackTrace();
             error=e.toString();
-            Log.d( "loi",error );
+            Log.d( "loltask",error );
         }
-        return null;
+        return  new ResponeFromServer(0,error);
 
     }
 

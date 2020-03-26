@@ -1,6 +1,10 @@
 package com.dungdemo.shopnow.store;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -114,6 +118,27 @@ public class ShopkeeperMainActivity extends AppCompatActivity implements Navigat
                 name.setText(user.getName());
                 TextView phone=headerView.findViewById(R.id.tvPhone);
                 phone.setText(user.getPhone());
+            }
+            if(output.code()==401){
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(getApplicationContext());
+                builder1.setMessage("Phiên đăng nhập đã hết hạn !.");
+                builder1.setCancelable(true);
+
+                builder1.setPositiveButton(
+                        "Đăng nhập lại",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                User.logout(getApplicationContext());
+                                Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                dialog.cancel();
+                            }
+                        });
+
+
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
             }
 
 
