@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -32,6 +34,7 @@ import com.dungdemo.shopnow.Model.ProductCategory;
 import com.dungdemo.shopnow.Model.User;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
+import com.dungdemo.shopnow.admin.StoreInfomationActivity;
 import com.dungdemo.shopnow.utils.ImageUtil;
 import com.dungdemo.shopnow.utils.ResponeFromServer;
 import com.google.gson.Gson;
@@ -63,8 +66,10 @@ public class ActivityEditProduct extends AppCompatActivity implements AsyncRespo
     int category_selected_id = 0;
     List<ProductCategory> productCategories;
     EditText edtName,edtDescription,edtPrice,edtAmount;
+    TextView tvStatus;
     ProgressBar progressBar;
     Product product;
+    Button btnStatus;
     int loadedAllImage=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +85,8 @@ public class ActivityEditProduct extends AppCompatActivity implements AsyncRespo
         imageView2 = findViewById(R.id.img2);
         imageView3 = findViewById(R.id.img3);
         imageView4 = findViewById(R.id.img4);
+        tvStatus=findViewById(R.id.tvStatus);
+        btnStatus=findViewById(R.id.btnStatus);
         findViewById(R.id.btnBack).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -165,6 +172,14 @@ public class ActivityEditProduct extends AppCompatActivity implements AsyncRespo
 
             }
         });
+
+        btnStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               sendActiveRequest();
+            }
+        });
+
         imageView1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -249,12 +264,48 @@ public class ActivityEditProduct extends AppCompatActivity implements AsyncRespo
         });
     }
 
+    private void sendActiveRequest() {
+        OkHttpClient client = new OkHttpClient();
+        String url = HostName.host + "/product/deactive/"+product.getProduct_id();
+
+        Request request = new Request.Builder()
+                .url(url).addHeader("Authorization",User.getSavedToken(this))
+                .build();
+
+        Call call = client.newCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                   if(response.code()==200) {
+                       ActivityEditProduct.this.runOnUiThread(new Runnable() {
+                           @Override
+                           public void run() {
+                              product.setIsSelling(product.getIsSelling()==1?0:1);
+                              loadActiveLayout();
+                           }
+                       });
+                   }
+//
+                }
+            }
+        });
+    }
+
     private void setData() {
         product=(Product)getIntent().getSerializableExtra("product");
         edtName.setText(product.getName());
         edtDescription.setText(product.getDescription());
         edtPrice.setText(product.getPrice()+"");
         edtAmount.setText(product.getAmount()+"");
+        loadActiveLayout();
+
         if(product.getImages().size()>0){
             String url=HostName.imgurl+product.getProduct_id()+"/"+product.getImages().get(0).getImage_name();
             Picasso.get().load(url).into(imageView1, new com.squareup.picasso.Callback() {
@@ -336,6 +387,20 @@ public class ActivityEditProduct extends AppCompatActivity implements AsyncRespo
 
         }
 
+    }
+
+    private void loadActiveLayout() {
+        if(product.getIsSelling()==1){
+            tvStatus.setTextColor(Color.BLUE);
+            tvStatus.setText("Đang bán");
+            btnStatus.setBackgroundColor(Color.parseColor("#D81B60"));
+            btnStatus.setText("Tạm dừng bán");
+        }else{
+            tvStatus.setTextColor(Color.RED);
+            tvStatus.setText("Đã tạm dừng bán");
+            btnStatus.setBackgroundColor(Color.parseColor("#00ACC1"));
+            btnStatus.setText("Bán lại");
+        }
     }
 
     private void loadSpinner() {
@@ -501,7 +566,6 @@ public class ActivityEditProduct extends AppCompatActivity implements AsyncRespo
         findViewById(R.id.btnAdd).setEnabled(true);
         progressBar.setVisibility(View.INVISIBLE);
         if (output != null) {
-            Log.d("lol",output.getBody());
             if (output.code() == 200) {
                finish();
 
