@@ -1,10 +1,13 @@
 package com.dungdemo.shopnow.Model;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Order {
+public class Order implements Serializable {
     @SerializedName("order_id")
     int order_id;
     @SerializedName("store")
@@ -21,7 +24,7 @@ public class Order {
     String date;
     @SerializedName("status")
     OrderStatus status;
-    @SerializedName("order_detail")
+    @SerializedName("detail")
     List<Order_Detail> order_details;
 
     public Order(int order_id, Store store, User user, String shipping_address, String shipping_phone, int isNotification, String date, OrderStatus status, List<Order_Detail> order_details) {
@@ -106,5 +109,20 @@ public class Order {
 
     public void setOrder_details(List<Order_Detail> order_details) {
         this.order_details = order_details;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "order_id=" + order_id +
+                ", store=" + store +
+                ", user=" + user +
+                ", shipping_address='" + shipping_address + '\'' +
+                ", shipping_phone='" + shipping_phone + '\'' +
+                ", isNotification=" + isNotification +
+                ", date='" + date + '\'' +
+                ", status=" + status +
+                ", order_details=" + order_details +
+                '}';
     }
 }

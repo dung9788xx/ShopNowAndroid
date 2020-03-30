@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-</android.support.constraint.ConstraintLayout>
+    <ListView
+        android:paddingTop="10dp"
+        android:dividerHeight="5sp"
+        android:id="@+id/lvOrder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:visibility="invisible"
+        android:id="@+id/noItem"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="Không có đơn hàng nào"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </TextView>
+</FrameLayout>

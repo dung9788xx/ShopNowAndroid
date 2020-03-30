@@ -41,7 +41,7 @@ import java.util.Map;
 public class ProductManagerFragment extends Fragment implements AsyncResponse {
     ListView lvProduct;
     TaskConnect task;
-    List<Product> products=new ArrayList<>();
+    List<Product> products = new ArrayList<>();
     ArrayAdapter<Product> arrayAdapter;
 
     @Override
@@ -52,54 +52,54 @@ public class ProductManagerFragment extends Fragment implements AsyncResponse {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_product_manage, container, false);
+        View view = inflater.inflate(R.layout.fragment_product_manage, container, false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Quản lý sản phẩm");
-        lvProduct=view.findViewById(R.id.lvProduct);
+        lvProduct = view.findViewById(R.id.lvProduct);
         lvProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent=new Intent(getActivity(),ActivityEditProduct.class);
-                intent.putExtra("product",products.get(i));
-                startActivityForResult(intent,1);
+                Intent intent = new Intent(getActivity(), ActivityEditProduct.class);
+                intent.putExtra("product", products.get(i));
+                startActivityForResult(intent, 1);
             }
         });
         view.findViewById(R.id.addProductButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivityForResult(new Intent(getActivity(),ActivityAddProduct.class),1);
+                startActivityForResult(new Intent(getActivity(), ActivityAddProduct.class), 1);
             }
         });
 
-        return  view;
+        return view;
     }
 
     @Override
     public void whenfinish(ResponeFromServer output) {
-        if(output!=null){
-            if(output.code()==200){
+        if (output != null) {
+            if (output.code() == 200) {
                 String json = null;
                 json = output.getBody() + "";
                 Type listType = new TypeToken<List<Product>>() {
                 }.getType();
                 products = new Gson().fromJson(json, listType);
-                arrayAdapter=new ArrayAdapter<Product>(getContext(),R.layout.product_listview_item,products){
+                arrayAdapter = new ArrayAdapter<Product>(getContext(), R.layout.product_listview_item, products) {
                     @NonNull
                     @Override
                     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                         LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                         View v = layoutInflater.inflate(R.layout.product_listview_item, null);
-                        ImageView thumbnail =v.findViewById(R.id.thumbnail);
-                        TextView name=v.findViewById(R.id.tvName);
-                        TextView price=v.findViewById(R.id.tvPrive);
-                        TextView tvStatus=v.findViewById(R.id.tvStatus);
-                        Product product=products.get(position);
-                        String url=HostName.imgurl+product.getProduct_id()+"/"+product.getImages().get(0).getImage_name();
-                        Picasso.get().load(url).resize(100,100).into(thumbnail);
+                        ImageView thumbnail = v.findViewById(R.id.thumbnail);
+                        TextView name = v.findViewById(R.id.tvName);
+                        TextView price = v.findViewById(R.id.tvPrive);
+                        TextView tvStatus = v.findViewById(R.id.tvStatus);
+                        Product product = products.get(position);
+                        String url = HostName.imgurl + product.getProduct_id() + "/" + product.getImages().get(0).getImage_name();
+                        Picasso.get().load(url).resize(100, 100).into(thumbnail);
                         name.setText(product.getName());
-                        price.setText(product.getPrice()+" VND");
-                        if(product.getIsSelling()==1){
-                            tvStatus.setText("Còn lại :"+product.getAmount()+" sp");
-                        }else{
+                        price.setText(product.getPrice() + " VND");
+                        if (product.getIsSelling() == 1) {
+                            tvStatus.setText("Còn lại :" + product.getAmount() + " sp");
+                        } else {
                             tvStatus.setTextColor(Color.RED);
                             tvStatus.setText("Đã tạm dừng bán");
                         }
@@ -120,11 +120,11 @@ public class ProductManagerFragment extends Fragment implements AsyncResponse {
     }
 
     private void loaddata() {
-        Map<String,String > map=new HashMap<>(  );
+        Map<String, String> map = new HashMap<>();
         map.put("token", User.getSavedToken(getContext()));
-        map.put("method","get");
-        task=new TaskConnect(ProductManagerFragment.this, HostName.host+"/product");
-        task.setMap( map );
+        map.put("method", "get");
+        task = new TaskConnect(ProductManagerFragment.this, HostName.host + "/product");
+        task.setMap(map);
         task.execute();
     }
 }

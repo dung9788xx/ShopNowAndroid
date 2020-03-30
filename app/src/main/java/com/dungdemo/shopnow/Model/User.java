@@ -3,6 +3,7 @@ package com.dungdemo.shopnow.Model;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -144,5 +145,20 @@ public class User implements Serializable {
         editor.putString("token","");
         editor.putInt("user_id",0);
         editor.apply();
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "user_id=" + user_id +
+                ", name='" + name + '\'' +
+                ", username='" + username + '\'' +
+                ", address='" + address + '\'' +
+                ", phone='" + phone + '\'' +
+                ", level=" + level +
+                ", active=" + active +
+                ", api_token='" + api_token + '\'' +
+                ", store=" + store +
+                '}';
     }
 }

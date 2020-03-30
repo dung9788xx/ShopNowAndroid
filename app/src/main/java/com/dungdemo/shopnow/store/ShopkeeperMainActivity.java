@@ -5,8 +5,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -25,6 +27,7 @@ import com.dungdemo.shopnow.Model.User;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
 import com.dungdemo.shopnow.admin.AdminActivity;
+import com.dungdemo.shopnow.admin.AdminAlertService;
 import com.dungdemo.shopnow.admin.StoreManagerFragment;
 import com.dungdemo.shopnow.admin.UserManagerFragment;
 import com.dungdemo.shopnow.utils.ResponeFromServer;
@@ -44,6 +47,15 @@ public class ShopkeeperMainActivity extends AppCompatActivity implements Navigat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopkeeper_main);
+    //AlertService
+        Intent myIntent = new Intent(ShopkeeperMainActivity.this, ShopkeeperAlertService.class);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            ContextCompat.startForegroundService(this, myIntent);
+            startService(myIntent);
+        } else {
+            startService(myIntent);
+        }
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -55,6 +67,11 @@ public class ShopkeeperMainActivity extends AppCompatActivity implements Navigat
         navigationView = (NavigationView) findViewById(R.id.shopkeeper_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         loadData();
+        if(getIntent().getIntExtra("newOrder",0)==1){
+            Toast.makeText(this, "OK", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(this, "Not", Toast.LENGTH_SHORT).show();
+        }
 
     }
 

@@ -25,6 +25,10 @@
             android:name=".admin.AdminAlertService"
             android:enabled="true"
             android:exported="true" />
+        <service
+            android:name=".store.ShopkeeperAlertService"
+            android:enabled="true"
+            android:exported="true" />
 
         <activity android:name=".admin.StoreInfomationActivity" />
         <activity android:name=".admin.UserInfomationActivity" />
