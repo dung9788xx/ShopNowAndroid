@@ -1,6 +1,8 @@
 package com.dungdemo.shopnow.store;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 import com.dungdemo.shopnow.AsyncResponse;
 import com.dungdemo.shopnow.HostName;
 import com.dungdemo.shopnow.Model.Product;
+import com.dungdemo.shopnow.Model.ProductCategory;
 import com.dungdemo.shopnow.Model.User;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
@@ -30,13 +33,22 @@ import com.dungdemo.shopnow.utils.ImageUtil;
 import com.dungdemo.shopnow.utils.ResponeFromServer;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class ProductManagerFragment extends Fragment implements AsyncResponse {
     ListView lvProduct;
@@ -63,6 +75,26 @@ public class ProductManagerFragment extends Fragment implements AsyncResponse {
                 startActivityForResult(intent, 1);
             }
         });
+        lvProduct.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                new AlertDialog.Builder(getContext())
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle("")
+                        .setMessage("Xóa sản phẩm này?")
+                        .setPositiveButton("Xóa", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                deleteProduct(products.get(i).getProduct_id());
+                            }
+
+                        })
+                        .setNegativeButton("Không", null)
+                        .show();
+                return true;
+            }
+        });
         view.findViewById(R.id.addProductButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,6 +103,58 @@ public class ProductManagerFragment extends Fragment implements AsyncResponse {
         });
 
         return view;
+    }
+
+    private void deleteProduct(int product_id) {
+        OkHttpClient client = new OkHttpClient();
+        String url = HostName.host + "/product/" + product_id;
+
+        Request request = new Request.Builder()
+                .url(url).addHeader("Authorization", User.getSavedToken(getContext())).delete()
+                .build();
+
+        Call call = client.newCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    if (response.code() == 200) {
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getContext(), "Xóa thành công", Toast.LENGTH_SHORT).show();
+
+                                for(int i=0;i<products.size();i++){
+                                    if(products.get(i).getProduct_id()==product_id){
+                                        products.remove(i);
+                                        break;
+                                    }
+                                }
+                                arrayAdapter.notifyDataSetChanged();
+                            }
+                        });
+                    } else {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getContext(), "Xảy ra lỗi !", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                    }
+                } else {
+                    Log.d("lol", "cc" + response.message());
+                }
+            }
+        });
+
     }
 
     @Override
@@ -94,7 +178,8 @@ public class ProductManagerFragment extends Fragment implements AsyncResponse {
                         TextView tvStatus = v.findViewById(R.id.tvStatus);
                         Product product = products.get(position);
                         String url = HostName.imgurl + product.getProduct_id() + "/" + product.getImages().get(0).getImage_name();
-                        Picasso.get().load(url).resize(100, 100).into(thumbnail);
+                        Picasso.get().load(url).networkPolicy(NetworkPolicy.NO_CACHE)
+                                .resize(100, 100).into(thumbnail);
                         name.setText(product.getName());
                         price.setText(product.getPrice() + " VND");
                         if (product.getIsSelling() == 1) {

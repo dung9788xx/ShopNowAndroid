@@ -67,12 +67,7 @@ public class ShopkeeperMainActivity extends AppCompatActivity implements Navigat
         navigationView = (NavigationView) findViewById(R.id.shopkeeper_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         loadData();
-        if(getIntent().getIntExtra("newOrder",0)==1){
-            Toast.makeText(this, "OK", Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(this, "Not", Toast.LENGTH_SHORT).show();
-        }
-
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content,new OrderManagerFragment()).commit();
     }
 
     @Override

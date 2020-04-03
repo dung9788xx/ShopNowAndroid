@@ -1,6 +1,7 @@
 package com.dungdemo.shopnow.store;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -86,16 +87,31 @@ public class OrderManagerFragment extends Fragment implements AsyncResponse {
                             TextView name=v.findViewById(R.id.tvOrderUserName);
                             TextView orderId=v.findViewById(R.id.tvOrderId);
                             TextView phone=v.findViewById(R.id.tvPhone);
-
+                            TextView tvStatus=v.findViewById(R.id.tvStatus);
                             Order order=orders.get(position);
-                            if(order!=null) {
                                 tvYear.setText(order.getDate().split("/")[2]);
                                 tvDay.setText(order.getDate().split("/")[0]);
                                 tvMonth.setText(order.getDate().split("/")[1]);
                                 name.setText(order.getUser().getName());
-                                orderId.setText(order.getOrder_id() + "");
+                                orderId.setText("#"+order.getOrder_id());
                                 phone.setText(order.getShipping_phone());
-                            }else Log.d("lol","NULL");
+                                if(order.getStatus().getStatus_id()==1){
+                                    tvStatus.setText("Đơn mới");
+                                    tvStatus.setTextColor(Color.parseColor("#FF009688"));
+                                }else
+                                if(order.getStatus().getStatus_id()==2){
+                                    tvStatus.setText("Đang giao");
+                                    tvStatus.setTextColor(Color.parseColor("#FFFFC107"));
+
+                                }else
+                                if(order.getStatus().getStatus_id()==3){
+                                    tvStatus.setText("Đã nhận hàng");
+                                    tvStatus.setTextColor(Color.parseColor("#FF673AB7"));
+                                }else{
+                                    tvStatus.setText("Đã hủy");
+                                    tvStatus.setTextColor(Color.parseColor("#FFF44336"));
+                                }
+
                             return v;
                         }
                     };

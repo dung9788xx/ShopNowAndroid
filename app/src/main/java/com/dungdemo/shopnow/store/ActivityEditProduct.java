@@ -1,6 +1,8 @@
 package com.dungdemo.shopnow.store;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -39,6 +41,8 @@ import com.dungdemo.shopnow.utils.ImageUtil;
 import com.dungdemo.shopnow.utils.ResponeFromServer;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -308,7 +312,8 @@ public class ActivityEditProduct extends AppCompatActivity implements AsyncRespo
 
         if(product.getImages().size()>0){
             String url=HostName.imgurl+product.getProduct_id()+"/"+product.getImages().get(0).getImage_name();
-            Picasso.get().load(url).into(imageView1, new com.squareup.picasso.Callback() {
+            Picasso.get().load(url).networkPolicy(NetworkPolicy.NO_CACHE)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE).into(imageView1, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
                     thumbnail1=((BitmapDrawable)imageView1.getDrawable()).getBitmap();;
@@ -328,7 +333,8 @@ public class ActivityEditProduct extends AppCompatActivity implements AsyncRespo
         }
         if(product.getImages().size()>1){
             String url=HostName.imgurl+product.getProduct_id()+"/"+product.getImages().get(1).getImage_name();
-            Picasso.get().load(url).into(imageView2, new com.squareup.picasso.Callback() {
+            Picasso.get().load(url).networkPolicy(NetworkPolicy.NO_CACHE)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE).into(imageView2, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
                     thumbnail2=((BitmapDrawable)imageView2.getDrawable()).getBitmap();;
@@ -348,7 +354,8 @@ public class ActivityEditProduct extends AppCompatActivity implements AsyncRespo
         }
         if(product.getImages().size()>2){
             String url=HostName.imgurl+product.getProduct_id()+"/"+product.getImages().get(2).getImage_name();
-            Picasso.get().load(url).into(imageView3, new com.squareup.picasso.Callback() {
+            Picasso.get().load(url).networkPolicy(NetworkPolicy.NO_CACHE)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE).into(imageView3, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
                     thumbnail3=((BitmapDrawable)imageView3.getDrawable()).getBitmap();;
@@ -368,7 +375,8 @@ public class ActivityEditProduct extends AppCompatActivity implements AsyncRespo
         }
         if(product.getImages().size()>3){
             String url=HostName.imgurl+product.getProduct_id()+"/"+product.getImages().get(3).getImage_name();
-            Picasso.get().load(url).into(imageView4, new com.squareup.picasso.Callback() {
+            Picasso.get().load(url).networkPolicy(NetworkPolicy.NO_CACHE)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE).into(imageView4, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
                     thumbnail4=((BitmapDrawable)imageView4.getDrawable()).getBitmap();;
@@ -388,7 +396,6 @@ public class ActivityEditProduct extends AppCompatActivity implements AsyncRespo
         }
 
     }
-
     private void loadActiveLayout() {
         if(product.getIsSelling()==1){
             tvStatus.setTextColor(Color.BLUE);
