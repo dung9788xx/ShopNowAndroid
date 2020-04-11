@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -118,11 +119,11 @@ public class ShopkeeperMainActivity extends AppCompatActivity implements Navigat
 
     @Override
     public void whenfinish(ResponeFromServer output) {
+        Log.d("lol",output.code()+""+output.getBody());
         if(output!=null){
             if(output.code()==200){
                 String json="";
                     json=output.getBody();
-
                 Gson gson=new Gson();
                 user=gson.fromJson(json,User.class);
                 View headerView=navigationView.getHeaderView(0);
@@ -132,7 +133,7 @@ public class ShopkeeperMainActivity extends AppCompatActivity implements Navigat
                 phone.setText(user.getPhone());
             }
             if(output.code()==401){
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(getApplicationContext());
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(ShopkeeperMainActivity.this);
                 builder1.setMessage("Phiên đăng nhập đã hết hạn !.");
                 builder1.setCancelable(true);
 
@@ -152,10 +153,12 @@ public class ShopkeeperMainActivity extends AppCompatActivity implements Navigat
                 AlertDialog alert11 = builder1.create();
                 alert11.show();
             }
+            if(output.code()==0){
 
+                    Toast.makeText(this, "Kiểm tra lại kết nối !", Toast.LENGTH_SHORT).show();
 
-        }else{
-            Toast.makeText(this, "Kiểm tra lại kết nối !", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 }

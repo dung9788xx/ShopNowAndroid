@@ -35,6 +35,7 @@ import java.util.Map;
 
 public class OrderManagerFragment extends Fragment implements AsyncResponse {
     List<Order> orders;
+    ArrayAdapter<Order> arrayAdapter;
     TaskConnect task;
     ListView orderListView;
     TextView tvNoItem;
@@ -59,8 +60,48 @@ public class OrderManagerFragment extends Fragment implements AsyncResponse {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Quản lý đơn hàng");
         orderListView=view.findViewById(R.id.lvOrder);
         tvNoItem=view.findViewById(R.id.noItem);
-
-
+        view.findViewById(R.id.tvDonMoi).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(orders.size()>0){
+                    for(int i=0;i<orders.size();i++){
+                        if(orders.get(i).getStatus().getStatus_id()==1){
+                            orders.add(0,orders.get(i));
+                            orders.remove(i+1);
+                        }
+                    }
+                    arrayAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+        view.findViewById(R.id.tvDangGiao).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(orders.size()>0){
+                    for(int i=0;i<orders.size();i++){
+                        if(orders.get(i).getStatus().getStatus_id()==2){
+                            orders.add(0,orders.get(i));
+                            orders.remove(i+1);
+                        }
+                    }
+                    arrayAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+        view.findViewById(R.id.tvDaNhan).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(orders.size()>0){
+                    for(int i=0;i<orders.size();i++){
+                        if(orders.get(i).getStatus().getStatus_id()==3){
+                            orders.add(0,orders.get(i));
+                            orders.remove(i+1);
+                        }
+                    }
+                    arrayAdapter.notifyDataSetChanged();
+                }
+            }
+        });
         return  view;
     }
 
@@ -75,7 +116,7 @@ public class OrderManagerFragment extends Fragment implements AsyncResponse {
                 }.getType();
                 orders = new Gson().fromJson(json, listType);
                 if(orders.size()>0){
-                    ArrayAdapter<Order> arrayAdapter=new ArrayAdapter<Order>(getContext(),R.layout.order_listview_item,orders){
+                    arrayAdapter=new ArrayAdapter<Order>(getContext(),R.layout.order_listview_item,orders){
                         @NonNull
                         @Override
                         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

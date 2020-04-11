@@ -40,13 +40,13 @@ public class TaskConnect extends AsyncTask<Void,Void,ResponeFromServer> {
       if(map.get("method")=="post"){
           if(api_token==null) api_token="";
       request= new Request.Builder()
-                  .url( url ).addHeader("Authorization",api_token)
+                  .url( url ).addHeader("Content-Type","application/json").addHeader("Authorization",api_token)
                   .post( formBody )
                   .build();
       }
         if(map.get("method")=="get"){
             request= new Request.Builder()
-                    .url( url ).addHeader("Authorization",api_token)
+                    .url( url ).addHeader("Accept","application/json").addHeader("Authorization",api_token)
                     .get()
                     .build();
         }

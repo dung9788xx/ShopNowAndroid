@@ -30,6 +30,7 @@ import com.dungdemo.shopnow.LoginActivity;
 import com.dungdemo.shopnow.Model.User;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
+import com.dungdemo.shopnow.customer.CustomerMainActivity;
 import com.dungdemo.shopnow.utils.ResponeFromServer;
 import com.google.gson.Gson;
 
@@ -130,9 +131,9 @@ public class AdminActivity extends AppCompatActivity
     public void whenfinish(ResponeFromServer output) {
         if(output!=null){
             if(output.code()==200){
-                String json="";
-                  json=output.getBody();
 
+                String json="";
+                json=output.getBody();
                 Gson gson=new Gson();
                 user=gson.fromJson(json,User.class);
                 View headerView=navigationView.getHeaderView(0);
@@ -141,10 +142,31 @@ public class AdminActivity extends AppCompatActivity
                 TextView phone=headerView.findViewById(R.id.tvPhone);
                 phone.setText(user.getPhone());
             }
+            if(output.code()==401){
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(AdminActivity.this);
+                builder1.setMessage("Phiên đăng nhập đã hết hạn !.");
+                builder1.setCancelable(true);
+
+                builder1.setPositiveButton(
+                        "Đăng nhập lại",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                User.logout(getApplicationContext());
+                                Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                dialog.cancel();
+                            }
+                        });
 
 
-        }else{
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
+            }
+        if (output.code()==0){
             Toast.makeText(this, "Kiểm tra lại kết nối !", Toast.LENGTH_SHORT).show();
+        }
+
         }
 
     }

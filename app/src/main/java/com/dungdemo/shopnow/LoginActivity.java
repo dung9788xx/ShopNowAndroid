@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import com.dungdemo.shopnow.Model.User;
 import com.dungdemo.shopnow.admin.AdminActivity;
+import com.dungdemo.shopnow.customer.CustomerMainActivity;
 import com.dungdemo.shopnow.store.ShopkeeperMainActivity;
 import com.dungdemo.shopnow.utils.ResponeFromServer;
 import com.google.gson.Gson;
@@ -67,10 +68,11 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 public class LoginActivity extends Activity implements AsyncResponse {
     TextView register;
-    EditText edtUsername,edtPassword;
+    EditText edtUsername, edtPassword;
     Button btnLogin;
     TaskConnect task;
     ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,39 +80,43 @@ public class LoginActivity extends Activity implements AsyncResponse {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
-        if(!User.getSavedToken(this).isEmpty()){
-            if(User.getSavedLevel(this)==1){
-                startActivity(new Intent(this,AdminActivity.class));
+        if (!User.getSavedToken(this).isEmpty()) {
+            if (User.getSavedLevel(this) == 1) {
+                startActivity(new Intent(this, AdminActivity.class));
             }
-            if(User.getSavedLevel(this)==2){
+            if (User.getSavedLevel(this) == 2) {
                 startActivity(new Intent(this, ShopkeeperMainActivity.class));
+            }
+            if (User.getSavedLevel(this) == 3) {
+                startActivity(new Intent(this, CustomerMainActivity.class));
             }
 
         }
-        edtUsername=findViewById(R.id.username);
-        edtPassword=findViewById(R.id.password);
-        btnLogin=findViewById(R.id.login);
-        progressBar=findViewById(R.id.progress);
+        edtUsername = findViewById(R.id.username);
+        edtPassword = findViewById(R.id.password);
+        btnLogin = findViewById(R.id.login);
+        progressBar = findViewById(R.id.progress);
         btnLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean isValidate=true;
-                if("".equals(edtUsername.getText().toString())){
+                boolean isValidate = true;
+                if ("".equals(edtUsername.getText().toString())) {
                     edtUsername.setError("Không được bỏ trống");
-                    isValidate=false;
+                    isValidate = false;
                 }
-                if("".equals(edtPassword.getText().toString())){
+                if ("".equals(edtPassword.getText().toString())) {
                     edtUsername.setError("Không được bỏ trống");
-                    isValidate=false;
+                    isValidate = false;
                 }
-                if(isValidate){
-                    Map<String,String > map=new HashMap<>(  );
-                    map.put( "username",edtUsername.getText().toString() );
-                    map.put( "password",edtPassword.getText().toString() );
-                    map.put("method","post");
-                    task=new TaskConnect(LoginActivity.this,HostName.host+"/login");
-                    task.setMap( map );
-                    progressBar.setVisibility( View.VISIBLE );
+                if (isValidate) {
+                    Map<String, String> map = new HashMap<>();
+                    map.put("username", edtUsername.getText().toString());
+                    map.put("password", edtPassword.getText().toString());
+                    map.put("method", "post");
+                    task = new TaskConnect(LoginActivity.this, HostName.host + "/login");
+                    task.setMap(map);
+                    progressBar.setVisibility(View.VISIBLE);
+                    btnLogin.setEnabled(false);
                     task.execute();
                 }
             }
@@ -120,10 +126,11 @@ public class LoginActivity extends Activity implements AsyncResponse {
 
     @Override
     public void whenfinish(ResponeFromServer output) {
-     progressBar.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
+        btnLogin.setEnabled(true);
 
-        if (output != null) {
-            if(output.code()==200){
+        if (output != null) {   
+            if (output.code() == 200) {
                 try {
                     String s = output.getBody();
                     JSONObject object = new JSONObject(s);
@@ -131,13 +138,18 @@ public class LoginActivity extends Activity implements AsyncResponse {
                     User user = gson.fromJson(object + "", User.class);
                     user.saveToken(this);
 
-                   if(user.getLevel()==1){
-                       Intent intent=new Intent(LoginActivity.this,AdminActivity.class);
+                    if (user.getLevel() == 1) {
+                        Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
 
-                       startActivity(intent);
-                   }
-                    if(user.getLevel()==2){
-                        Intent intent=new Intent(LoginActivity.this,ShopkeeperMainActivity.class);
+                        startActivity(intent);
+                    }
+                    if (user.getLevel() == 2) {
+                        Intent intent = new Intent(LoginActivity.this, ShopkeeperMainActivity.class);
+                        startActivity(intent);
+
+                    }
+                    if (user.getLevel() == 3) {
+                        Intent intent = new Intent(LoginActivity.this, CustomerMainActivity.class);
                         startActivity(intent);
 
                     }
@@ -146,14 +158,17 @@ public class LoginActivity extends Activity implements AsyncResponse {
 
                 }
 
-            }else{
-                Toast.makeText(this, "Kiểm tra lại thông tin tài khoản !", Toast.LENGTH_SHORT).show();
+            }
+            if(output.code()==401){
+                Toast.makeText(this, "Kiểm tra lại thông tin tài khoản" , Toast.LENGTH_LONG).show();
+            }
+            if (output.code() == 0) {
+                Toast.makeText(this, "Kiểm tra lại kết nối" , Toast.LENGTH_LONG).show();
             }
 
-        } else {
-            Toast.makeText(this, "Kiểm tra lại kết nối", Toast.LENGTH_SHORT).show();
+
         }
-   }
+    }
 
 }
 
