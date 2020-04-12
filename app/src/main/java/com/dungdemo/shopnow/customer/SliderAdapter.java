@@ -1,6 +1,7 @@
 package com.dungdemo.shopnow.customer;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,12 +20,15 @@ public class SliderAdapter extends
         SliderViewAdapter<SliderAdapter.SliderAdapterVH> {
 
     private Context context;
+    private boolean onClickable=true;
     private List<SliderItem> mSliderItems = new ArrayList<>();
 
     public SliderAdapter(Context context) {
         this.context = context;
     }
-
+    public void setOnClickable(boolean clickable){
+        onClickable=clickable;
+    }
     public void renewItems(List<SliderItem> sliderItems) {
         this.mSliderItems = sliderItems;
         notifyDataSetChanged();
@@ -62,11 +66,14 @@ public class SliderAdapter extends
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Product id " + mSliderItems.get(position).getProductName(), Toast.LENGTH_SHORT).show();
+                if(onClickable) {
+                    Intent intent = new Intent(context, ProductDetailActivity.class);
+                    intent.putExtra("product_id", sliderItem.getProduct_id());
+                    context.startActivity(intent);
+                }
             }
         });
     }
-
     @Override
     public int getCount() {
         //slider view count could be dynamic size
@@ -74,12 +81,10 @@ public class SliderAdapter extends
     }
 
     class SliderAdapterVH extends SliderViewAdapter.ViewHolder {
-
         View itemView;
         ImageView imageViewBackground;
         ImageView imageGifContainer;
         TextView textViewDescription;
-
         public SliderAdapterVH(View itemView) {
             super(itemView);
             imageViewBackground = itemView.findViewById(R.id.iv_auto_image_slider);

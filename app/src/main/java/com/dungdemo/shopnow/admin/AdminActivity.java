@@ -44,13 +44,14 @@ public class AdminActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AsyncResponse {
     User user;
     NavigationView navigationView;
-    int checkExit=0;
+    int checkExit = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
         Intent myIntent = new Intent(AdminActivity.this, AdminAlertService.class);
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             ContextCompat.startForegroundService(this, myIntent);
             startService(myIntent);
         } else {
@@ -66,22 +67,22 @@ public class AdminActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-     navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         loadData();
         navigationView.setNavigationItemSelectedListener(this);
-        if(getIntent().getIntExtra("newStore",0)==1){
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content,new StoreManagerFragment()).commit();
-        }else {
+        if (getIntent().getIntExtra("newStore", 0) == 1) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content, new StoreManagerFragment()).commit();
+        } else {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content, new UserManagerFragment()).commit();
         }
     }
 
     private void loadData() {
-        Map<String,String > map=new HashMap<>(  );
-        map.put("token",User.getSavedToken(getApplication()));
-        map.put("method","get");
-        TaskConnect task=new TaskConnect(AdminActivity.this, HostName.host+"/user/"+User.getSavedUserId(this));
-        task.setMap( map );
+        Map<String, String> map = new HashMap<>();
+        map.put("token", User.getSavedToken(getApplication()));
+        map.put("method", "get");
+        TaskConnect task = new TaskConnect(AdminActivity.this, HostName.host + "/user/" + User.getSavedUserId(this));
+        task.setMap(map);
         task.execute();
     }
 
@@ -93,7 +94,7 @@ public class AdminActivity extends AppCompatActivity
         } else {
 //            super.onBackPressed();
             checkExit++;
-            if(checkExit==2){
+            if (checkExit == 2) {
                 finishAffinity();
             }
             Toast.makeText(this, "Ấn lại để thoát !", Toast.LENGTH_SHORT).show();
@@ -102,23 +103,21 @@ public class AdminActivity extends AppCompatActivity
     }
 
 
-
-
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-             int id = item.getItemId();
+        int id = item.getItemId();
 
         if (id == R.id.nav_userlist) {
-           getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content,new UserManagerFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content, new UserManagerFragment()).commit();
 
         }
-        if(id==R.id.nav_stores){
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content,new StoreManagerFragment()).commit();
+        if (id == R.id.nav_stores) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content, new StoreManagerFragment()).commit();
         }
-        if(id==R.id.nav_logout){
+        if (id == R.id.nav_logout) {
             User.logout(this);
-            Intent intent = new Intent(AdminActivity.this,LoginActivity.class);
+            Intent intent = new Intent(AdminActivity.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
@@ -127,22 +126,23 @@ public class AdminActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     @Override
     public void whenfinish(ResponeFromServer output) {
-        if(output!=null){
-            if(output.code()==200){
+        if (output != null) {
+            if (output.code() == 200) {
 
-                String json="";
-                json=output.getBody();
-                Gson gson=new Gson();
-                user=gson.fromJson(json,User.class);
-                View headerView=navigationView.getHeaderView(0);
-                TextView name=headerView.findViewById(R.id.tvName);
+                String json = "";
+                json = output.getBody();
+                Gson gson = new Gson();
+                user = gson.fromJson(json, User.class);
+                View headerView = navigationView.getHeaderView(0);
+                TextView name = headerView.findViewById(R.id.tvName);
                 name.setText(user.getName());
-                TextView phone=headerView.findViewById(R.id.tvPhone);
+                TextView phone = headerView.findViewById(R.id.tvPhone);
                 phone.setText(user.getPhone());
             }
-            if(output.code()==401){
+            if (output.code() == 401) {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(AdminActivity.this);
                 builder1.setMessage("Phiên đăng nhập đã hết hạn !.");
                 builder1.setCancelable(true);
@@ -163,9 +163,9 @@ public class AdminActivity extends AppCompatActivity
                 AlertDialog alert11 = builder1.create();
                 alert11.show();
             }
-        if (output.code()==0){
-            Toast.makeText(this, "Kiểm tra lại kết nối !", Toast.LENGTH_SHORT).show();
-        }
+            if (output.code() == 0) {
+                Toast.makeText(this, "Kiểm tra lại kết nối !", Toast.LENGTH_SHORT).show();
+            }
 
         }
 

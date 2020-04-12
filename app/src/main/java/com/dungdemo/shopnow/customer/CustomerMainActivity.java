@@ -1,6 +1,7 @@
 package com.dungdemo.shopnow.customer;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -12,9 +13,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +35,7 @@ import com.dungdemo.shopnow.Model.User;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
 import com.dungdemo.shopnow.admin.AdminActivity;
+import com.dungdemo.shopnow.admin.StoreInfomationActivity;
 import com.dungdemo.shopnow.admin.StoreManagerFragment;
 import com.dungdemo.shopnow.admin.UserManagerFragment;
 import com.dungdemo.shopnow.store.ActivityAddProduct;
@@ -36,6 +45,7 @@ import com.google.gson.reflect.TypeToken;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -56,15 +66,21 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
     SliderView sliderView;
     SliderAdapter adapter;
     List<SliderItem> sliderItemList = new ArrayList<>();
+    List<ProductCategory> productCategories=new ArrayList<>();
+    ListView lvCategory;
+    ArrayAdapter<ProductCategory> arrayAdapter;
     User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_main);
+        lvCategory=findViewById(R.id.lvCategory);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
         loadUserInfo();
+        loadCategory();
         findViewById(R.id.imgTogle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,6 +106,68 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         sliderView.startAutoCycle();
 
 
+
+    }
+    private void loadCategory() {
+        OkHttpClient client = new OkHttpClient();
+        String url = HostName.host + "/category";
+
+        Request request = new Request.Builder()
+                .url(url).addHeader("Authorization",User.getSavedToken(this))
+                .build();
+
+        Call call = client.newCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String json = null;
+                    json = response.body().string() + "";
+                    Type listType = new TypeToken<List<ProductCategory>>() {
+                    }.getType();
+                    productCategories = new Gson().fromJson(json, listType);
+                    CustomerMainActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                           loadCategoryListView();
+                        }
+                    });
+//
+                }
+            }
+        });
+    }
+
+    private void loadCategoryListView() {
+        arrayAdapter=new ArrayAdapter<ProductCategory>(CustomerMainActivity.this,R.layout.category_listview_item,productCategories){
+            @Override
+            public View getView(final int position, View convertView, ViewGroup parent) {
+                LayoutInflater layoutInflater=(LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View v=layoutInflater.inflate(R.layout.category_listview_item,null);
+                TextView tvCategoryName=v.findViewById(R.id.tvCategoryName);
+                TextView tvCategoryDetail=v.findViewById(R.id.tvCategoryDetail);
+                ImageView imageView=v.findViewById(R.id.imgCategory);
+                ProductCategory productCategory=productCategories.get(position);
+                tvCategoryName.setText(productCategory.getName());
+                tvCategoryDetail.setText(productCategory.getDetail());
+                Picasso.get().load(HostName.categoryImageUrl+productCategory.getCategory_id()+".png").into(imageView);
+
+                return v;
+
+            }
+        };
+        lvCategory.setAdapter(arrayAdapter);
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) lvCategory.getLayoutParams();
+        float factor = getApplicationContext().getResources().getDisplayMetrics().density;
+        lp.height = (int)(120* factor)*productCategories.size();
+
+        lvCategory.setLayoutParams(lp);
 
     }
 
@@ -130,10 +208,8 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
                         @Override
                         public void run() {
                             adapter.renewItems(sliderItemList);
-                            Toast.makeText(CustomerMainActivity.this, "A"+sliderItemList.size(), Toast.LENGTH_SHORT).show();
                         }
                     });
-//
                 }
             }
         });

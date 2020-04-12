@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context=".customer.ProductDetailActivity">
+    <com.smarteist.autoimageslider.SliderView
+        android:id="@+id/imageSlider"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="@drawable/slider_bg_rounded"
+        app:sliderAnimationDuration="600"
+        app:sliderAutoCycleDirection="back_and_forth"
+        app:sliderAutoCycleEnabled="true"
+        app:sliderIndicatorAnimationDuration="600"
+        app:sliderIndicatorGravity="center_horizontal|bottom"
+        app:sliderIndicatorMargin="15dp"
+        app:sliderIndicatorOrientation="horizontal"
+        app:sliderIndicatorPadding="3dp"
+        app:sliderIndicatorRadius="2dp"
+        app:sliderIndicatorSelectedColor="#5A5A5A"
+        app:sliderIndicatorUnselectedColor="#FFF"
+        app:sliderScrollTimeInSec="1"
+        app:sliderStartAutoCycle="true" />
+
+    <RelativeLayout
+        android:padding="10dp"
+        android:background="@drawable/linearlayout_rouded_bg"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tvPrice"
+            android:textColor="#009688"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:fontFamily="@string/font"
+            android:text="125000 VND"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:background="@drawable/linearlayout_rouded_bg"
+            android:orientation="horizontal"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="Còn lại :"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/tvAmount"
+                android:textColor="#009688"
+                android:textSize="20sp"
+                android:text="50"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:text=" sản phẩm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </RelativeLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        android:padding="10dp"
+        android:background="@drawable/linearlayout_rouded_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:fontFamily="@string/fontlight"
+            android:text="Mô tả"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:textSize="18sp"
+            android:id="@+id/tvDescription"
+            android:lineHeight="24dp"
+            android:paddingLeft="3dp"
+            android:layout_marginTop="5dp"
+            android:text="Mẫu mới nhất của điện thoại samsung được ra mắt vào đầu năm 2020 với thiết kế trẻ trung đầy phong độ."
+            android:fontFamily="@string/font"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <LinearLayout
+        android:padding="10dp"
+        android:paddingLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical"
+        android:background="@drawable/linearlayout_rouded_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textSize="13sp"
+            android:fontFamily="@string/fontlight"
+            android:text="Được bán bởi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+
+            android:paddingLeft="3dp"
+            android:fontFamily="@string/font"
+            android:textSize="16sp"
+            android:text="Thien Huong Shop"
+            android:id="@+id/tvShopName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+</LinearLayout>

@@ -9,10 +9,13 @@ public class ProductCategory implements Serializable {
     int category_id;
     @SerializedName("name")
     String name;
+    @SerializedName("detail")
+    String detail;
 
-    public ProductCategory(int category_id, String name) {
+    public ProductCategory(int category_id, String name, String detail) {
         this.category_id = category_id;
         this.name = name;
+        this.detail = detail;
     }
 
     public int getCategory_id() {
@@ -29,5 +32,13 @@ public class ProductCategory implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 }

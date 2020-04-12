@@ -22,7 +22,20 @@ public class Product implements Serializable {
     ProductCategory category;
     @SerializedName("images")
     List<ProductImage> images;
+    @SerializedName("store")
+    Store store;
 
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
+    }
+
+    public Product(){
+
+    };
     public Product(int product_id, String name, String description, int price, int amount, int isSelling, ProductCategory category, List<ProductImage> images) {
         this.product_id = product_id;
         this.name = name;
@@ -92,6 +105,20 @@ public class Product implements Serializable {
 
     public List<ProductImage> getImages() {
         return images;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "product_id=" + product_id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", amount=" + amount +
+                ", isSelling=" + isSelling +
+                ", category=" + category +
+                ", images=" + images +
+                '}';
     }
 
     public void setImages(List<ProductImage> images) {

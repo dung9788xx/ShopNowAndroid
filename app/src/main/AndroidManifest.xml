@@ -15,8 +15,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".customer.CustomerMainActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".customer.ProductDetailActivity"></activity>
+        <activity
+            android:name=".customer.CustomerMainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".store.ActivityEditProduct" />
         <activity android:name=".store.ActivityAddProduct" />
         <activity

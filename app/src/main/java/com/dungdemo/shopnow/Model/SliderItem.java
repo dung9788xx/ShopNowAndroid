@@ -29,6 +29,12 @@ public class SliderItem {
         this.productName = productName;
     }
 
+    public SliderItem(int product_id, String productName, String imageUrl) {
+        this.product_id = product_id;
+        this.productName = productName;
+        this.imageUrl = imageUrl;
+    }
+
     public String getImageUrl() {
         return HostName.imgurl+product_id+"/"+imageUrl;
     }
