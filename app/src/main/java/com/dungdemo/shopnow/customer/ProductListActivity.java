@@ -49,8 +49,6 @@ public class ProductListActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.product_list_toolbar);
         toolbarView=getSupportActionBar().getCustomView();
-        TextView tvName=findViewById(R.id.tvName);
-        tvName.setText(getIntent().getStringExtra("title"));
         toolbarView.findViewById(R.id.backImg).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,7 +73,6 @@ public class ProductListActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams layoutParams = searchView.getLayoutParams();
                 layoutParams.width=80;
                 searchView.setLayoutParams(layoutParams);
-
                 recycleViewAdapter.getFilter().filter("");
                 return false;
             }
@@ -84,6 +81,10 @@ public class ProductListActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 recycleViewAdapter.getFilter().filter(query);
+                if(recycleViewAdapter.getItemCount()==0){
+                    Toast.makeText(ProductListActivity.this, "Không tìm thấy sản phẩm!", Toast.LENGTH_SHORT).show();
+
+                }
                 return false;
             }
             @Override
@@ -105,14 +106,23 @@ public class ProductListActivity extends AppCompatActivity {
             }
         });
         recyclerView.setAdapter(recycleViewAdapter);
+      loadProduct();
 
-        loadProduct();
 
     }
 
     private void loadProduct() {
+        TextView tvName=toolbarView.findViewById(R.id.tvName);
         OkHttpClient client = new OkHttpClient();
-        String url = HostName.host + "/product/getProductByCategory/"+getIntent().getIntExtra("category_id",-1);
+        String url="";
+        if(getIntent().getStringExtra("search")!=null){
+            url = HostName.host + "/product/getProductByName/"+getIntent().getStringExtra("search");
+            tvName.setText("Tìm kiếm: "+getIntent().getStringExtra("search"));
+        }else{
+            tvName.setText(getIntent().getStringExtra("title"));
+            url = HostName.host + "/product/getProductByCategory/"+getIntent().getIntExtra("category_id",-1);
+        }
+
 
         Request request = new Request.Builder()
                 .url(url).addHeader("Authorization", User.getSavedToken(this))
@@ -138,8 +148,13 @@ public class ProductListActivity extends AppCompatActivity {
                     ProductListActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            recycleViewAdapter.setProducts(products);
-                            recycleViewAdapter.notifyDataSetChanged();
+                            if(products.size()==0){
+                                findViewById(R.id.tvNotFound).setVisibility(View.VISIBLE);
+                            }else {
+                                recycleViewAdapter.setProducts(products);
+                                recycleViewAdapter.notifyDataSetChanged();
+                            }
+                            findViewById(R.id.progress).setVisibility(View.INVISIBLE);
 
                         }
                     });

@@ -89,9 +89,7 @@ implements Filterable {
 
                 FilterResults filterResults = new FilterResults();
                 filterResults.values = productsFiltered;
-                if(productsFiltered.size()==0){
-                    Toast.makeText(context, "Không tìm thấy sản phẩm!", Toast.LENGTH_SHORT).show();
-                }
+
                 return filterResults;
             }
 

@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -63,16 +64,30 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
     List<ProductCategory> productCategories=new ArrayList<>();
     ListView lvCategory;
     ArrayAdapter<ProductCategory> arrayAdapter;
+    EditText edtSearch;
     User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_main);
         lvCategory=findViewById(R.id.lvCategory);
+        edtSearch=findViewById(R.id.edtSearch);
+        findViewById(R.id.imgSearch).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!"".equals(edtSearch.getText().toString())){
+                    Intent t=new Intent(CustomerMainActivity.this,ProductListActivity.class);
+                    t.putExtra("search",edtSearch.getText().toString());
+                    startActivity(t);
+                }else{
+                    Toast.makeText(CustomerMainActivity.this, "Vui lòng nhập từ khóa!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
         loadUserInfo();
         loadCategory();
         findViewById(R.id.imgTogle).setOnClickListener(new View.OnClickListener() {
