@@ -103,6 +103,7 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent t =new Intent(CustomerMainActivity.this,ProductListActivity.class);
+                t.putExtra("title",productCategories.get(i).getName());
                 t.putExtra("category_id",productCategories.get(i).getCategory_id());
                 startActivity(t);
             }

@@ -1,12 +1,20 @@
 package com.dungdemo.shopnow.customer;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dungdemo.shopnow.HostName;
 import com.dungdemo.shopnow.R;
@@ -32,16 +40,62 @@ public class ProductListActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     RecycleViewAdapter recycleViewAdapter;
     List<Product> products=new ArrayList<>();
+    View toolbarView;
+    SearchView searchView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_list);
-        recyclerView=findViewById(R.id.recycleview);
-        recycleViewAdapter=new RecycleViewAdapter(products);
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-//        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.product_list_toolbar);
+        toolbarView=getSupportActionBar().getCustomView();
+        TextView tvName=findViewById(R.id.tvName);
+        tvName.setText(getIntent().getStringExtra("title"));
+        toolbarView.findViewById(R.id.backImg).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, true));
+        searchView = (SearchView) findViewById(R.id.searchView);
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ViewGroup.LayoutParams layoutParams = searchView.getLayoutParams();
+                WindowManager mWinMgr = (WindowManager)getSystemService(WINDOW_SERVICE);
+                int displayWidth = mWinMgr.getDefaultDisplay().getWidth();
+                layoutParams.width = displayWidth;
+                searchView.setLayoutParams(layoutParams);
+            }
+        });
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                ViewGroup.LayoutParams layoutParams = searchView.getLayoutParams();
+                layoutParams.width=80;
+                searchView.setLayoutParams(layoutParams);
+
+                recycleViewAdapter.getFilter().filter("");
+                return false;
+            }
+        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                recycleViewAdapter.getFilter().filter(query);
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String query) {
+                return false;
+            }
+        });
+
+
+        recyclerView=findViewById(R.id.recycleview);
+        recycleViewAdapter=new RecycleViewAdapter(products,ProductListActivity.this);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false));
         recycleViewAdapter.setOnItemClickedListener(new RecycleViewAdapter.OnItemClickedListener() {
             @Override
             public void onItemClick(int product_id) {
@@ -78,16 +132,15 @@ public class ProductListActivity extends AppCompatActivity {
                     String json = null;
 
                     json = response.body().string() + "";
-                    Log.d("lol",json+"");
                     Type listType = new TypeToken<List<Product>>() {
                     }.getType();
                     products = new Gson().fromJson(json, listType);
                     ProductListActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Log.d("lol",products.size()+"");
                             recycleViewAdapter.setProducts(products);
                             recycleViewAdapter.notifyDataSetChanged();
+
                         }
                     });
 

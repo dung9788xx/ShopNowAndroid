@@ -1,5 +1,7 @@
 package com.dungdemo.shopnow.model;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -120,6 +122,7 @@ public class Product implements Serializable {
                 ", images=" + images +
                 '}';
     }
+
 
     public void setImages(List<ProductImage> images) {
         this.images = images;
