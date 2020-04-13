@@ -9,16 +9,13 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,16 +26,13 @@ import android.widget.Toast;
 import com.dungdemo.shopnow.AsyncResponse;
 import com.dungdemo.shopnow.HostName;
 import com.dungdemo.shopnow.LoginActivity;
-import com.dungdemo.shopnow.Model.ProductCategory;
-import com.dungdemo.shopnow.Model.SliderItem;
-import com.dungdemo.shopnow.Model.User;
+import com.dungdemo.shopnow.model.ProductCategory;
+import com.dungdemo.shopnow.model.SliderItem;
+import com.dungdemo.shopnow.model.User;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
-import com.dungdemo.shopnow.admin.AdminActivity;
-import com.dungdemo.shopnow.admin.StoreInfomationActivity;
 import com.dungdemo.shopnow.admin.StoreManagerFragment;
 import com.dungdemo.shopnow.admin.UserManagerFragment;
-import com.dungdemo.shopnow.store.ActivityAddProduct;
 import com.dungdemo.shopnow.utils.ResponeFromServer;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -105,7 +99,14 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         sliderView.setScrollTimeInSec(4); //set scroll delay in seconds :
         sliderView.startAutoCycle();
 
-
+        lvCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent t =new Intent(CustomerMainActivity.this,ProductListActivity.class);
+                t.putExtra("category_id",productCategories.get(i).getCategory_id());
+                startActivity(t);
+            }
+        });
 
     }
     private void loadCategory() {

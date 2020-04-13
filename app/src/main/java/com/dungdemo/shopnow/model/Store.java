@@ -1,4 +1,4 @@
-package com.dungdemo.shopnow.Model;
+package com.dungdemo.shopnow.model;
 
 import com.google.gson.annotations.SerializedName;
 

@@ -1,6 +1,4 @@
-package com.dungdemo.shopnow.Model;
-
-import android.util.Log;
+package com.dungdemo.shopnow.model;
 
 import com.dungdemo.shopnow.HostName;
 import com.google.gson.annotations.SerializedName;

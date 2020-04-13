@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -18,7 +17,7 @@ import android.util.Log;
 
 import com.dungdemo.shopnow.AsyncResponse;
 import com.dungdemo.shopnow.HostName;
-import com.dungdemo.shopnow.Model.User;
+import com.dungdemo.shopnow.model.User;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
 import com.dungdemo.shopnow.utils.ResponeFromServer;
@@ -26,15 +25,8 @@ import com.dungdemo.shopnow.utils.ResponeFromServer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class AdminAlertService extends Service implements AsyncResponse {
     Handler handler;

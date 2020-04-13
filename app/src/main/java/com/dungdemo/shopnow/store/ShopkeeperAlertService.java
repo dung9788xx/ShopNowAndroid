@@ -18,7 +18,7 @@ import android.util.Log;
 
 import com.dungdemo.shopnow.AsyncResponse;
 import com.dungdemo.shopnow.HostName;
-import com.dungdemo.shopnow.Model.User;
+import com.dungdemo.shopnow.model.User;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
 import com.dungdemo.shopnow.utils.ResponeFromServer;

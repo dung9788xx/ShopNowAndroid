@@ -1,6 +1,4 @@
-package com.dungdemo.shopnow.Model;
-
-import android.support.annotation.NonNull;
+package com.dungdemo.shopnow.model;
 
 import com.google.gson.annotations.SerializedName;
 

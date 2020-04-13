@@ -8,9 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
-import com.dungdemo.shopnow.Model.SliderItem;
+import com.dungdemo.shopnow.model.SliderItem;
 import com.dungdemo.shopnow.R;
 import com.smarteist.autoimageslider.SliderViewAdapter;
 import java.util.ArrayList;

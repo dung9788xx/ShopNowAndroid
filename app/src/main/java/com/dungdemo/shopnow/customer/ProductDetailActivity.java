@@ -4,26 +4,22 @@ import android.graphics.Color;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dungdemo.shopnow.HostName;
-import com.dungdemo.shopnow.Model.Product;
-import com.dungdemo.shopnow.Model.ProductImage;
-import com.dungdemo.shopnow.Model.SliderItem;
-import com.dungdemo.shopnow.Model.User;
+import com.dungdemo.shopnow.model.Product;
+import com.dungdemo.shopnow.model.ProductImage;
+import com.dungdemo.shopnow.model.SliderItem;
+import com.dungdemo.shopnow.model.User;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.utils.MoneyType;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,8 +109,6 @@ public class ProductDetailActivity extends AppCompatActivity {
         tvDescription.setText(product.getDescription());
         tvPrice.setText(MoneyType.toMoney(product.getPrice())+" VND");
         tvShopName.setText(product.getStore().getName());
-
-
 
         TextView tvProductName=toolbarView.findViewById(R.id.tvProductName);
         tvProductName.setText(product.getName());

@@ -23,17 +23,13 @@ import android.widget.Toast;
 
 import com.dungdemo.shopnow.AsyncResponse;
 import com.dungdemo.shopnow.HostName;
-import com.dungdemo.shopnow.Model.Product;
-import com.dungdemo.shopnow.Model.ProductCategory;
-import com.dungdemo.shopnow.Model.User;
+import com.dungdemo.shopnow.model.Product;
+import com.dungdemo.shopnow.model.User;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
-import com.dungdemo.shopnow.admin.UserManagerFragment;
-import com.dungdemo.shopnow.utils.ImageUtil;
 import com.dungdemo.shopnow.utils.ResponeFromServer;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 

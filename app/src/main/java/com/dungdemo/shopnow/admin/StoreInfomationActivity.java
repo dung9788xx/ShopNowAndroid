@@ -2,7 +2,6 @@ package com.dungdemo.shopnow.admin;
 
 import android.app.Activity;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,16 +10,13 @@ import android.widget.Toast;
 
 import com.dungdemo.shopnow.AsyncResponse;
 import com.dungdemo.shopnow.HostName;
-import com.dungdemo.shopnow.Model.User;
+import com.dungdemo.shopnow.model.User;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
 import com.dungdemo.shopnow.utils.ResponeFromServer;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import okhttp3.Response;
 
 public class StoreInfomationActivity extends Activity implements AsyncResponse {
     Button btActive;

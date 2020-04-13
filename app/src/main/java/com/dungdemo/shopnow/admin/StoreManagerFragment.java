@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.dungdemo.shopnow.AsyncResponse;
 import com.dungdemo.shopnow.HostName;
-import com.dungdemo.shopnow.Model.User;
+import com.dungdemo.shopnow.model.User;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
 import com.dungdemo.shopnow.utils.ResponeFromServer;
@@ -25,15 +25,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import okhttp3.Response;
 
 
 public class StoreManagerFragment extends Fragment implements AsyncResponse {

@@ -1,9 +1,8 @@
-package com.dungdemo.shopnow.Model;
+package com.dungdemo.shopnow.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
