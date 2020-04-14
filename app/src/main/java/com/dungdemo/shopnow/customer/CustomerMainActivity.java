@@ -66,6 +66,7 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
     ArrayAdapter<ProductCategory> arrayAdapter;
     EditText edtSearch;
     User user;
+    int checkExit=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -256,6 +257,22 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
     }
 
     @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+//            super.onBackPressed();
+            checkExit++;
+            if (checkExit == 2) {
+                finishAffinity();
+            }
+            Toast.makeText(this, "Ấn lại để thoát !", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    @Override
     public void whenfinish(ResponeFromServer output) {
         if(output!=null){
             if(output.code()==200){
@@ -299,4 +316,5 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         }
 
     }
+
 }

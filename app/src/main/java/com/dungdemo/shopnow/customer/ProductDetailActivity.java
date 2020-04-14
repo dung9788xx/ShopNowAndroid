@@ -1,5 +1,6 @@
 package com.dungdemo.shopnow.customer;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -109,6 +110,15 @@ public class ProductDetailActivity extends AppCompatActivity {
         tvDescription.setText(product.getDescription());
         tvPrice.setText(MoneyType.toMoney(product.getPrice())+" VND");
         tvShopName.setText(product.getStore().getName());
+        tvShopName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent t=new Intent(ProductDetailActivity.this,ProductListActivity.class);
+                t.putExtra("store_id",product.getStore().getStore_id());
+                t.putExtra("title",product.getStore().getName());
+                startActivity(t);
+            }
+        });
 
         TextView tvProductName=toolbarView.findViewById(R.id.tvProductName);
         tvProductName.setText(product.getName());

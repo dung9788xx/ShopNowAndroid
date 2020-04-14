@@ -1,6 +1,7 @@
 package com.dungdemo.shopnow.admin;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -60,7 +61,14 @@ public class AdminActivity extends AppCompatActivity
         loadData();
         navigationView.setNavigationItemSelectedListener(this);
         if (getIntent().getIntExtra("newStore", 0) == 1) {
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationManager notificationManager =
+                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                String id = "ForegroundServiceChannel";
+                notificationManager.deleteNotificationChannel(id);
+            }
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content, new StoreManagerFragment()).commit();
+
         } else {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content, new UserManagerFragment()).commit();
         }

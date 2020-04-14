@@ -39,16 +39,17 @@ import okhttp3.Response;
 public class ProductListActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     RecycleViewAdapter recycleViewAdapter;
-    List<Product> products=new ArrayList<>();
+    List<Product> products = new ArrayList<>();
     View toolbarView;
     SearchView searchView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_list);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.product_list_toolbar);
-        toolbarView=getSupportActionBar().getCustomView();
+        toolbarView = getSupportActionBar().getCustomView();
         toolbarView.findViewById(R.id.backImg).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,7 +62,7 @@ public class ProductListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ViewGroup.LayoutParams layoutParams = searchView.getLayoutParams();
-                WindowManager mWinMgr = (WindowManager)getSystemService(WINDOW_SERVICE);
+                WindowManager mWinMgr = (WindowManager) getSystemService(WINDOW_SERVICE);
                 int displayWidth = mWinMgr.getDefaultDisplay().getWidth();
                 layoutParams.width = displayWidth;
                 searchView.setLayoutParams(layoutParams);
@@ -71,7 +72,7 @@ public class ProductListActivity extends AppCompatActivity {
             @Override
             public boolean onClose() {
                 ViewGroup.LayoutParams layoutParams = searchView.getLayoutParams();
-                layoutParams.width=80;
+                layoutParams.width = 80;
                 searchView.setLayoutParams(layoutParams);
                 recycleViewAdapter.getFilter().filter("");
                 return false;
@@ -81,12 +82,12 @@ public class ProductListActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 recycleViewAdapter.getFilter().filter(query);
-                if(recycleViewAdapter.getItemCount()==0){
+                if (recycleViewAdapter.getItemCount() == 0) {
                     Toast.makeText(ProductListActivity.this, "Không tìm thấy sản phẩm!", Toast.LENGTH_SHORT).show();
-
                 }
                 return false;
             }
+
             @Override
             public boolean onQueryTextChange(String query) {
                 return false;
@@ -94,8 +95,8 @@ public class ProductListActivity extends AppCompatActivity {
         });
 
 
-        recyclerView=findViewById(R.id.recycleview);
-        recycleViewAdapter=new RecycleViewAdapter(products,ProductListActivity.this);
+        recyclerView = findViewById(R.id.recycleview);
+        recycleViewAdapter = new RecycleViewAdapter(products, ProductListActivity.this);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false));
         recycleViewAdapter.setOnItemClickedListener(new RecycleViewAdapter.OnItemClickedListener() {
             @Override
@@ -106,61 +107,64 @@ public class ProductListActivity extends AppCompatActivity {
             }
         });
         recyclerView.setAdapter(recycleViewAdapter);
-      loadProduct();
+        loadProduct();
 
 
     }
 
     private void loadProduct() {
-        TextView tvName=toolbarView.findViewById(R.id.tvName);
+        TextView tvName = toolbarView.findViewById(R.id.tvName);
         OkHttpClient client = new OkHttpClient();
-        String url="";
-        if(getIntent().getStringExtra("search")!=null){
-            url = HostName.host + "/product/getProductByName/"+getIntent().getStringExtra("search");
-            tvName.setText("Tìm kiếm: "+getIntent().getStringExtra("search"));
-        }else{
+        String url = "";
+        if (getIntent().getStringExtra("search") != null) {
+            url = HostName.host + "/product/getProductByName/" + getIntent().getStringExtra("search");
+            tvName.setText("Tìm kiếm: " + getIntent().getStringExtra("search"));
+        } else if (getIntent().getIntExtra("store_id", -1) != -1) {
+            url = HostName.host + "/store/getProductById/" + getIntent().getIntExtra("store_id",-1);
             tvName.setText(getIntent().getStringExtra("title"));
-            url = HostName.host + "/product/getProductByCategory/"+getIntent().getIntExtra("category_id",-1);
+        } else {
+            tvName.setText(getIntent().getStringExtra("title"));
+            url = HostName.host + "/product/getProductByCategory/" + getIntent().getIntExtra("category_id", -1);
+        }
+    Request request = new Request.Builder()
+            .url(url).addHeader("Authorization", User.getSavedToken(this))
+            .build();
+
+    Call call = client.newCall(request);
+
+        call.enqueue(new
+
+    Callback() {
+        @Override
+        public void onFailure (Call call, IOException e){
+
         }
 
+        @Override
+        public void onResponse (Call call, Response response) throws IOException {
+            if (response.isSuccessful()) {
+                String json = null;
 
-        Request request = new Request.Builder()
-                .url(url).addHeader("Authorization", User.getSavedToken(this))
-                .build();
-
-        Call call = client.newCall(request);
-
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    String json = null;
-
-                    json = response.body().string() + "";
-                    Type listType = new TypeToken<List<Product>>() {
-                    }.getType();
-                    products = new Gson().fromJson(json, listType);
-                    ProductListActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(products.size()==0){
-                                findViewById(R.id.tvNotFound).setVisibility(View.VISIBLE);
-                            }else {
-                                recycleViewAdapter.setProducts(products);
-                                recycleViewAdapter.notifyDataSetChanged();
-                            }
-                            findViewById(R.id.progress).setVisibility(View.INVISIBLE);
-
+                json = response.body().string() + "";
+                Type listType = new TypeToken<List<Product>>() {
+                }.getType();
+                products = new Gson().fromJson(json, listType);
+                ProductListActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (products.size() == 0) {
+                            findViewById(R.id.tvNotFound).setVisibility(View.VISIBLE);
+                        } else {
+                            recycleViewAdapter.setProducts(products);
+                            recycleViewAdapter.notifyDataSetChanged();
                         }
-                    });
+                        findViewById(R.id.progress).setVisibility(View.INVISIBLE);
 
-                }
+                    }
+                });
+
             }
-        });
-    }
+        }
+    });
+}
 }

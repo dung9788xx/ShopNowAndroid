@@ -43,23 +43,22 @@ public class AdminAlertService extends Service implements AsyncResponse {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+          handler = new Handler();
 
+          final Runnable r = new Runnable() {
+              public void run() {
+                  Map<String,String > map=new HashMap<>(  );
+                  map.put("token",User.getSavedToken(getApplication()));
+                  map.put("method","get");
+                  TaskConnect task=new TaskConnect(AdminAlertService.this, HostName.host+"/store/getNewStoreNotification");
+                  task.setMap( map );
+                  task.execute();
+                  handler.postDelayed(this, 2000);
+              }
+          };
 
-        handler = new Handler();
+          handler.postDelayed(r, 1000);
 
-        final Runnable r = new Runnable() {
-            public void run() {
-                Map<String,String > map=new HashMap<>(  );
-                map.put("token",User.getSavedToken(getApplication()));
-                map.put("method","get");
-                TaskConnect task=new TaskConnect(AdminAlertService.this, HostName.host+"/store/getNewStoreNotification");
-                task.setMap( map );
-                task.execute();
-                handler.postDelayed(this, 2000);
-            }
-        };
-
-        handler.postDelayed(r, 1000);
         return START_STICKY;
     }
     private void createNotificationChannel() {
@@ -81,12 +80,13 @@ public class AdminAlertService extends Service implements AsyncResponse {
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, 0);
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Foreground Service")
+                .setContentTitle("Shop now")
                 .setContentText(message)
                 .setSmallIcon(R.drawable.ic_store_black_24dp)
                 .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
                 .build();
-        startForeground(1, notification);
+        startForeground(id, notification);
         }else {
             Intent intent = new Intent(this, AdminActivity.class);
             intent.putExtra("newStore",1);
@@ -104,8 +104,7 @@ public class AdminAlertService extends Service implements AsyncResponse {
 
             NotificationManager notificationManager =
                     (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-            notificationManager.notify(id /* ID of notification */,
+            notificationManager.notify(id,
                     notificationBuilder.build());
         }
     }
@@ -117,7 +116,7 @@ public class AdminAlertService extends Service implements AsyncResponse {
                     JSONObject object=new JSONObject(output.getBody());
                     int count=object.getInt("count");
                     if(count>0){
-                       sendNotification("Có "+count+"hàng cần phê duyệt","Shop Now",1);
+                       sendNotification("Có "+count+" cửa hàng cần phê duyệt","Shop Now",2020);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
