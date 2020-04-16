@@ -5,16 +5,24 @@ import android.graphics.Color;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.dungdemo.shopnow.AsyncResponse;
 import com.dungdemo.shopnow.HostName;
+import com.dungdemo.shopnow.TaskConnect;
+import com.dungdemo.shopnow.admin.StoreManagerFragment;
 import com.dungdemo.shopnow.model.Product;
 import com.dungdemo.shopnow.model.ProductImage;
 import com.dungdemo.shopnow.model.SliderItem;
 import com.dungdemo.shopnow.model.User;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.utils.MoneyType;
+import com.dungdemo.shopnow.utils.ResponeFromServer;
 import com.google.gson.Gson;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderAnimations;
@@ -22,7 +30,9 @@ import com.smarteist.autoimageslider.SliderView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -30,12 +40,14 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class ProductDetailActivity extends AppCompatActivity {
+public class ProductDetailActivity extends AppCompatActivity implements AsyncResponse {
     SliderView sliderView;
     SliderAdapter adapter;
     List<SliderItem> sliderItemList = new ArrayList<>();
     Product product;
     View toolbarView;
+    Button btnAddToCart;
+    TaskConnect task;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,8 +61,13 @@ public class ProductDetailActivity extends AppCompatActivity {
                 finish();
             }
         });
+        toolbarView.findViewById(R.id.imgShoppingCart).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(ProductDetailActivity.this,CartActivity.class));
+            }
+        });
         loadProductInfo();
-
 
         sliderView = findViewById(R.id.imageSlider);
         adapter = new SliderAdapter(this);
@@ -64,6 +81,28 @@ public class ProductDetailActivity extends AppCompatActivity {
         sliderView.setIndicatorUnselectedColor(Color.GRAY);
         sliderView.setScrollTimeInSec(4); //set scroll delay in seconds :
         sliderView.startAutoCycle();
+
+        btnAddToCart=findViewById(R.id.btnAddToCart);
+        btnAddToCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addProductToCart();
+            }
+        });
+    }
+
+    private void addProductToCart() {
+        Map<String,String > map=new HashMap<>(  );
+        map.put("token", User.getSavedToken(ProductDetailActivity.this));
+        map.put("method","post");
+        map.put("product_id",product.getProduct_id()+"");
+        map.put("quantity","1");
+        EditText edtNote=findViewById(R.id.edtNote);
+        map.put("note",edtNote.getText().toString());
+        task=new TaskConnect(ProductDetailActivity.this, HostName.host+"/cart/addProductToCart");
+        task.setMap( map );
+        task.execute();
+
     }
 
     private void loadProductInfo() {
@@ -125,4 +164,17 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void whenfinish(ResponeFromServer output) {
+        if(output!=null){
+            if(output.code()==200){
+
+                Toast.makeText(this, "Thêm vào giỏ hàng thành công", Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(this, "Có lỗi xảy ra!", Toast.LENGTH_SHORT).show();
+            }
+        }else{
+
+        }
+    }
 }

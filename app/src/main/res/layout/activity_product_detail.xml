@@ -133,6 +133,8 @@
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"/>
                <EditText
+                   android:inputType="text"
+                   android:imeOptions="actionDone"
                    android:id="@+id/edtNote"
                    android:hint="Màu sắc, kích cỡ...."
                    android:layout_width="match_parent"
@@ -146,6 +148,7 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content">
                <Button
+                   android:id="@+id/btnAddToCart"
                    android:textColor="#FFF"
                    android:background="@drawable/button_rounded"
                    android:text="Thêm vào giỏ hàng"

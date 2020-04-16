@@ -237,12 +237,9 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.nav_userlist) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content,new UserManagerFragment()).commit();
+        if (id == R.id.nav_cart) {
+            startActivity(new Intent(this,CartActivity.class));
 
-        }
-        if(id==R.id.nav_stores){
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content,new StoreManagerFragment()).commit();
         }
         if(id==R.id.nav_logout){
             User.logout(this);
