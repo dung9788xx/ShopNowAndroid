@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.dungdemo.shopnow.model.User;
 import com.dungdemo.shopnow.admin.AdminActivity;
 import com.dungdemo.shopnow.customer.CustomerMainActivity;
+import com.dungdemo.shopnow.register.StoreRegisterActivity;
 import com.dungdemo.shopnow.store.ShopkeeperMainActivity;
 import com.dungdemo.shopnow.utils.ResponeFromServer;
 import com.google.gson.Gson;
@@ -56,10 +57,17 @@ public class LoginActivity extends Activity implements AsyncResponse {
             }
 
         }
+        register=findViewById(R.id.register);
         edtUsername = findViewById(R.id.username);
         edtPassword = findViewById(R.id.password);
         btnLogin = findViewById(R.id.login);
         progressBar = findViewById(R.id.progress);
+        register.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this, StoreRegisterActivity.class));
+            }
+        });
         btnLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

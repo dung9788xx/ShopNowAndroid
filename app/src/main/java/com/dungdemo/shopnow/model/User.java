@@ -15,8 +15,6 @@ public class User implements Serializable {
     String name;
     @SerializedName("username")
     String username;
-    @SerializedName("address")
-    String address;
     @SerializedName("phone")
     String phone;
     @SerializedName("level")
@@ -27,17 +25,27 @@ public class User implements Serializable {
     String api_token;
     @SerializedName("store")
     Store store;
+    @SerializedName("location")
+    Location location;
 
-    public User(int user_id, String name, String username, String address, String phone, int level, int active, String api_token, Store store) {
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public User(int user_id, String name, String username, String phone, int level, int active, String api_token, Store store, Location location) {
         this.user_id = user_id;
         this.name = name;
         this.username = username;
-        this.address = address;
         this.phone = phone;
         this.level = level;
         this.active = active;
         this.api_token = api_token;
         this.store = store;
+        this.location = location;
     }
 
     public Store getStore() {
@@ -63,15 +71,6 @@ public class User implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public String getPhone() {
         return phone;
     }
@@ -152,7 +151,6 @@ public class User implements Serializable {
                 "user_id=" + user_id +
                 ", name='" + name + '\'' +
                 ", username='" + username + '\'' +
-                ", address='" + address + '\'' +
                 ", phone='" + phone + '\'' +
                 ", level=" + level +
                 ", active=" + active +

@@ -61,6 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="13dp"
+                android:textStyle="bold"
                 android:background="@drawable/button_rounded"
                 android:text="Đăng nhập" />
             <TextView

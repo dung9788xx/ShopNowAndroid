@@ -49,7 +49,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 
-public class ActivityAddProduct extends AppCompatActivity implements AsyncResponse {
+public class  ActivityAddProduct extends AppCompatActivity implements AsyncResponse {
     int imageQuality=4;
     ImageView imageView1, imageView2, imageView3, imageView4;
     Bitmap thumbnail1, thumbnail2, thumbnail3, thumbnail4;
@@ -59,7 +59,6 @@ public class ActivityAddProduct extends AppCompatActivity implements AsyncRespon
     List<ProductCategory> productCategories;
     EditText edtName,edtDescription,edtPrice,edtAmount;
     ProgressBar progressBar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

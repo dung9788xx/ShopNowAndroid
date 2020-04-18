@@ -39,8 +39,9 @@ public class StoreInfomationActivity extends Activity implements AsyncResponse {
         tvStoreName.setText(user.getStore().getName());
         name.setText(user.getName());
         username.setText(user.getUsername());
-        address.setText(user.getAddress());
-        shopAddress.setText(user.getStore().getLocation().getName());
+        shopAddress.setText(user.getLocation().getStreet()+", "+user.getLocation().getWard().getPrefix()+" "+user.getLocation().getWard().getName()
+        +", "+user.getLocation().getDistrict().getPrefix()+" "+user.getLocation().getDistrict().getName()
+                +", "+user.getLocation().getProvince().getName());
         phone.setText(user.getPhone());
         loadActiveLayout();
         findViewById(R.id.btBack).setOnClickListener(new View.OnClickListener() {
