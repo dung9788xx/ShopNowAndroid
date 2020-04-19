@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.dungdemo.shopnow.AsyncResponse;
 import com.dungdemo.shopnow.HostName;
 import com.dungdemo.shopnow.LoginActivity;
+import com.dungdemo.shopnow.admin.AdminActivity;
 import com.dungdemo.shopnow.model.ProductCategory;
 import com.dungdemo.shopnow.model.SliderItem;
 import com.dungdemo.shopnow.model.User;
@@ -286,11 +287,11 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
             }
             if(output.code()==401){
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(CustomerMainActivity.this);
-                builder1.setMessage("Phiên đăng nhập đã hết hạn !.");
+                builder1.setMessage(new Gson().fromJson(output.getBody(),String.class));
                 builder1.setCancelable(true);
 
                 builder1.setPositiveButton(
-                        "Đăng nhập lại",
+                        "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 User.logout(getApplicationContext());

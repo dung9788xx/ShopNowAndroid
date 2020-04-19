@@ -140,11 +140,11 @@ public class AdminActivity extends AppCompatActivity
             }
             if (output.code() == 401) {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(AdminActivity.this);
-                builder1.setMessage("Phiên đăng nhập đã hết hạn !.");
+                builder1.setMessage(new Gson().fromJson(output.getBody(),String.class));
                 builder1.setCancelable(true);
 
                 builder1.setPositiveButton(
-                        "Đăng nhập lại",
+                        "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 User.logout(getApplicationContext());
