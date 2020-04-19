@@ -128,7 +128,6 @@ public class AdminActivity extends AppCompatActivity
     public void whenfinish(ResponeFromServer output) {
         if (output != null) {
             if (output.code() == 200) {
-
                 String json = "";
                 json = output.getBody();
                 Gson gson = new Gson();

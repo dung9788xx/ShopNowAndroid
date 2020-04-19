@@ -400,6 +400,7 @@ public class  ActivityAddProduct extends AppCompatActivity implements AsyncRespo
         progressBar.setVisibility(View.INVISIBLE);
         if (output != null) {
             if (output.code() == 200) {
+                Toast.makeText(this, "Thêm thành công!", Toast.LENGTH_SHORT).show();
                finish();
 
             }else{

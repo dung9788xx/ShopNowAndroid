@@ -1,9 +1,12 @@
 package com.dungdemo.shopnow;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -14,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dungdemo.shopnow.model.Location;
 import com.dungdemo.shopnow.model.User;
 import com.dungdemo.shopnow.admin.AdminActivity;
 import com.dungdemo.shopnow.customer.CustomerMainActivity;
@@ -98,6 +102,7 @@ public class LoginActivity extends Activity implements AsyncResponse {
 
     @Override
     public void whenfinish(ResponeFromServer output) {
+        Log.d("lol",output.code()+" "+output.getBody());
         progressBar.setVisibility(View.INVISIBLE);
         btnLogin.setEnabled(true);
 
@@ -131,8 +136,25 @@ public class LoginActivity extends Activity implements AsyncResponse {
                 }
 
             }
-            if(output.code()==401){
+            if(output.code()==404){
                 Toast.makeText(this, "Kiểm tra lại thông tin tài khoản" , Toast.LENGTH_LONG).show();
+            }
+            if(output.code()==401){
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(LoginActivity.this);
+                builder1.setMessage(new Gson().fromJson(output.getBody(),String.class));
+                builder1.setCancelable(true);
+
+                builder1.setPositiveButton(
+                        "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
             }
             if (output.code() == 0) {
                 Toast.makeText(this, "Kiểm tra lại kết nối" , Toast.LENGTH_LONG).show();

@@ -93,8 +93,6 @@ public class ProductListActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-
         recyclerView = findViewById(R.id.recycleview);
         recycleViewAdapter = new RecycleViewAdapter(products, ProductListActivity.this);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false));
@@ -108,10 +106,7 @@ public class ProductListActivity extends AppCompatActivity {
         });
         recyclerView.setAdapter(recycleViewAdapter);
         loadProduct();
-
-
     }
-
     private void loadProduct() {
         TextView tvName = toolbarView.findViewById(R.id.tvName);
         OkHttpClient client = new OkHttpClient();
