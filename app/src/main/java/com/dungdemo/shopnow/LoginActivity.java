@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -17,11 +16,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dungdemo.shopnow.model.Location;
 import com.dungdemo.shopnow.model.User;
 import com.dungdemo.shopnow.admin.AdminActivity;
 import com.dungdemo.shopnow.customer.CustomerMainActivity;
-import com.dungdemo.shopnow.register.StoreRegisterActivity;
+import com.dungdemo.shopnow.register.CustomerRegisterActivity;
 import com.dungdemo.shopnow.store.ShopkeeperMainActivity;
 import com.dungdemo.shopnow.utils.ResponeFromServer;
 import com.google.gson.Gson;
@@ -69,7 +67,7 @@ public class LoginActivity extends Activity implements AsyncResponse {
         register.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(LoginActivity.this, StoreRegisterActivity.class));
+                startActivity(new Intent(LoginActivity.this, CustomerRegisterActivity.class));
             }
         });
         btnLogin.setOnClickListener(new OnClickListener() {
@@ -102,7 +100,6 @@ public class LoginActivity extends Activity implements AsyncResponse {
 
     @Override
     public void whenfinish(ResponeFromServer output) {
-        Log.d("lol",output.code()+" "+output.getBody());
         progressBar.setVisibility(View.INVISIBLE);
         btnLogin.setEnabled(true);
 
