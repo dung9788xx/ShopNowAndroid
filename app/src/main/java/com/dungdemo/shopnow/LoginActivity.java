@@ -20,6 +20,7 @@ import com.dungdemo.shopnow.model.User;
 import com.dungdemo.shopnow.admin.AdminActivity;
 import com.dungdemo.shopnow.customer.CustomerMainActivity;
 import com.dungdemo.shopnow.register.CustomerRegisterActivity;
+import com.dungdemo.shopnow.register.StoreRegisterActivity;
 import com.dungdemo.shopnow.store.ShopkeeperMainActivity;
 import com.dungdemo.shopnow.utils.ResponeFromServer;
 import com.google.gson.Gson;
@@ -34,7 +35,7 @@ import java.util.Map;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends Activity implements AsyncResponse {
-    TextView register;
+    TextView registerStore,registerCustomer;
     EditText edtUsername, edtPassword;
     Button btnLogin;
     TaskConnect task;
@@ -59,15 +60,22 @@ public class LoginActivity extends Activity implements AsyncResponse {
             }
 
         }
-        register=findViewById(R.id.register);
+        registerCustomer=findViewById(R.id.registerCustomer);
+        registerStore=findViewById(R.id.registerStore);
         edtUsername = findViewById(R.id.username);
         edtPassword = findViewById(R.id.password);
         btnLogin = findViewById(R.id.login);
         progressBar = findViewById(R.id.progress);
-        register.setOnClickListener(new OnClickListener() {
+        registerCustomer.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(LoginActivity.this, CustomerRegisterActivity.class));
+            }
+        });
+        registerStore.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this, StoreRegisterActivity.class));
             }
         });
         btnLogin.setOnClickListener(new OnClickListener() {

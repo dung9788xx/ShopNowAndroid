@@ -3,6 +3,7 @@ package com.dungdemo.shopnow.customer;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,25 +24,35 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dungdemo.shopnow.AsyncResponse;
 import com.dungdemo.shopnow.HostName;
+import com.dungdemo.shopnow.LoginActivity;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
 import com.dungdemo.shopnow.admin.AdminActivity;
 import com.dungdemo.shopnow.model.Cart;
 import com.dungdemo.shopnow.model.Cart_Detail;
+import com.dungdemo.shopnow.model.District;
 import com.dungdemo.shopnow.model.Order;
 import com.dungdemo.shopnow.model.ProductCategory;
+import com.dungdemo.shopnow.model.Province;
 import com.dungdemo.shopnow.model.User;
+import com.dungdemo.shopnow.model.Ward;
+import com.dungdemo.shopnow.register.StoreRegisterActivity;
 import com.dungdemo.shopnow.store.ActivityAddProduct;
 import com.dungdemo.shopnow.utils.MoneyType;
 import com.dungdemo.shopnow.utils.ResponeFromServer;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -53,18 +65,24 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class CartActivity extends AppCompatActivity implements AsyncResponse {
     List<Cart_Detail> cart_details;
     Cart cart;
     ArrayAdapter<Cart_Detail> arrayAdapter;
-    TaskConnect task;
-    ProgressBar progressBar;
+    ProgressBar progressBar,dialogProgressBar;
     ListView lvCart;
     TextView tvNoItem;
     FrameLayout content;
-
+    JSONObject shippingInfo;
+    AlertDialog dialog;
+    Spinner spProvince, spDistrict, spWard;
+    EditText  edtPhone, edtStreet;
+    List<Province> provinceList;
+    List<District> districtList;
+    List<Ward> wardList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +112,125 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
                 task.execute();
             }
         });
+        findViewById(R.id.btnBook).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showConfirmAddress();
+//                progressBar.setVisibility(View.VISIBLE);
+//                placeBook();
+            }
+        });
         loadData();
+        loadShippingInfo();
+
+    }
+
+    private void loadShippingInfo() {
+        OkHttpClient client = new OkHttpClient();
+        String url = HostName.host + "/cart/getShippingInfo";
+        Request request = new Request.Builder()
+                .url(url).addHeader("Authorization", User.getSavedToken(this))
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String json = null;
+                    json = response.body().string() + "";
+                    try {
+                        shippingInfo=new JSONObject(json);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    CartActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(shippingInfo!=null){
+                                try {
+                                    loadShippingAddressDialog();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+    }
+
+    private void showConfirmAddress() {
+
+        dialog.show();
+    }
+
+    private void placeOrder() {
+        OkHttpClient client = new OkHttpClient();
+        String url = HostName.host + "/cart/placeOrder";
+        Map<String, String> map = new HashMap<>();
+        map.put("token", User.getSavedToken(getApplication()));
+        map.put("phone", edtPhone.getText().toString());
+        map.put("address",edtStreet.getText().toString()+", "
+                +wardList.get(spWard.getSelectedItemPosition()).getPrefix()+" "+wardList.get(spWard.getSelectedItemPosition()).getName()
+                +", "+districtList.get(spDistrict.getSelectedItemPosition()).getPrefix()+" "+districtList.get(spDistrict.getSelectedItemPosition()).getName()
+        +", "+provinceList.get(spProvince.getSelectedItemPosition()).getName());
+        RequestBody formBody = TaskConnect.makeBuilderFromMap( map )
+                .build();
+        Request request = new Request.Builder()
+                .url(url).addHeader("Authorization", User.getSavedToken(this)).post(formBody)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String json = null;
+                    json = response.body().string() + "";
+                    String strRespone = new Gson().fromJson(json, String.class);
+                    CartActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            dialogProgressBar.setVisibility(View.INVISIBLE);
+                            if (response.code()==200){
+                                AlertDialog.Builder builder1 = new AlertDialog.Builder(CartActivity.this);
+                                builder1.setMessage(strRespone);
+                                builder1.setCancelable(true);
+                                builder1.setPositiveButton(
+                                        "OK",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog1, int id) {
+                                                cart_details.clear();
+                                                arrayAdapter.notifyDataSetChanged();
+                                                progressBar.setVisibility(View.INVISIBLE);
+                                                tvNoItem.setVisibility(View.VISIBLE);
+                                                content.setVisibility(View.INVISIBLE);
+                                                dialog1.cancel();
+                                                dialog.dismiss();
+
+                                            }
+                                        });
+
+
+                                AlertDialog alert11 = builder1.create();
+                                alert11.show();
+
+                            }
+                        }
+                    });
+                }
+            }
+        });
 
     }
 
@@ -134,13 +270,53 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
                     CartActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            loadDataToView();
+                        loadDataToView();
                         }
                     });
 //
+                }else{
+                    CartActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.setVisibility(View.INVISIBLE);
+                            tvNoItem.setVisibility(View.VISIBLE);
+                        }
+                    });
+
                 }
             }
         });
+    }
+
+    private void loadShippingAddressDialog() throws JSONException {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.place_order_dialog_layout, null);
+        dialogProgressBar=layout.findViewById(R.id.progress);
+      edtPhone = (EditText) layout.findViewById(R.id.edtPhone);
+      edtStreet = (EditText) layout.findViewById(R.id.edtStreet);
+      edtPhone.setText(shippingInfo.getString("phone"));
+      edtStreet.setText(shippingInfo.getString("street"));
+      spProvince=layout.findViewById(R.id.spProvince);
+      spDistrict=layout.findViewById(R.id.spDistrict);
+      spWard=layout.findViewById(R.id.spWard);
+      layout.findViewById(R.id.btnBack).setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+              dialog.dismiss();
+          }
+      });
+      layout.findViewById(R.id.btnOk).setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+              dialogProgressBar.setVisibility(View.VISIBLE);
+                placeOrder();
+          }
+      });
+      loadProvinceSpinner();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(layout);
+        dialog = builder.create();
+
     }
 
     private void loadDataToView() {
@@ -255,6 +431,227 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
             this.note = note;
         }
     }
+    private void loadProvinceSpinner() {
+        spProvince.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                loadDistrict(provinceList.get(i).getProvince_id());
 
-    ;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        OkHttpClient client = new OkHttpClient();
+        String url = HostName.host + "/province/getProvince";
+        Request request = new Request.Builder()
+                .url(url).addHeader("Authorization", User.getSavedToken(this))
+                .build();
+        Call call = client.newCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String json = null;
+                    json = response.body().string() + "";
+                    Type listType = new TypeToken<List<Province>>() {
+                    }.getType();
+                    provinceList = new Gson().fromJson(json, listType);
+                    CartActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            ArrayAdapter<Province> arrayAdapter = new ArrayAdapter<Province>(CartActivity.this, R.layout.category_item_spinner, provinceList) {
+                                @NonNull
+                                @Override
+                                public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                                    LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                                    View v = layoutInflater.inflate(R.layout.category_item_spinner, null);
+                                    TextView name = v.findViewById(R.id.tvName);
+                                    name.setText(provinceList.get(position).getName());
+                                    return v;
+                                }
+
+                                @Override
+                                public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                                    LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                                    View v = layoutInflater.inflate(R.layout.category_item_spinner, null);
+                                    TextView name = v.findViewById(R.id.tvName);
+                                    name.setText(provinceList.get(position).getName());
+                                    return v;
+                                }
+                            };
+                            spProvince.setAdapter(arrayAdapter);
+                            for(int i=0;i<provinceList.size();i++){
+                                try {
+                                    if(provinceList.get(i).getProvince_id()==shippingInfo.getInt("province_id")){
+                                        spProvince.setSelection(i);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                        }
+                    });
+//
+                }
+            }
+        });
+    }
+
+    private void loadDistrict(int province_id) {
+        spDistrict.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                loadWard(districtList.get(i).getDistrict_id());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        OkHttpClient client = new OkHttpClient();
+        String url = HostName.host + "/province/getDistrictByProvince/" + province_id;
+        Request request = new Request.Builder()
+                .url(url).addHeader("Authorization", User.getSavedToken(this))
+                .build();
+        Call call = client.newCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String json = null;
+                    json = response.body().string() + "";
+                    Type listType = new TypeToken<List<District>>() {
+                    }.getType();
+                    districtList = new Gson().fromJson(json, listType);
+                    CartActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ArrayAdapter<District> arrayAdapter = new ArrayAdapter<District>(CartActivity.this, R.layout.category_item_spinner, districtList) {
+                                @NonNull
+                                @Override
+                                public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                                    LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                                    View v = layoutInflater.inflate(R.layout.category_item_spinner, null);
+                                    TextView name = v.findViewById(R.id.tvName);
+                                    name.setText(districtList.get(position).getPrefix() + " " + districtList.get(position).getName());
+                                    return v;
+                                }
+
+                                @Override
+                                public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                                    LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                                    View v = layoutInflater.inflate(R.layout.category_item_spinner, null);
+                                    TextView name = v.findViewById(R.id.tvName);
+                                    name.setText(districtList.get(position).getPrefix() + " " + districtList.get(position).getName());
+                                    return v;
+                                }
+                            };
+                            arrayAdapter.notifyDataSetChanged();
+                            spDistrict.setAdapter(arrayAdapter);
+                            for(int i=0;i<districtList.size();i++){
+                                try {
+                                    if(districtList.get(i).getDistrict_id()==shippingInfo.getInt("district_id")){
+                                        spDistrict.setSelection(i);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                        }
+                    });
+//
+                }
+            }
+        });
+    }
+
+    private void loadWard(int id) {
+        spWard.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        OkHttpClient client = new OkHttpClient();
+        String url = HostName.host + "/province/getWardByDistrict/" + id;
+        Request request = new Request.Builder()
+                .url(url).addHeader("Authorization", User.getSavedToken(this))
+                .build();
+        Call call = client.newCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String json = null;
+                    json = response.body().string() + "";
+                    Type listType = new TypeToken<List<Ward>>() {
+                    }.getType();
+                    wardList = new Gson().fromJson(json, listType);
+                    CartActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ArrayAdapter<Ward> arrayAdapter = new ArrayAdapter<Ward>(CartActivity.this, R.layout.category_item_spinner, wardList) {
+                                @NonNull
+                                @Override
+                                public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                                    LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                                    View v = layoutInflater.inflate(R.layout.category_item_spinner, null);
+                                    TextView name = v.findViewById(R.id.tvName);
+                                    name.setText(wardList.get(position).getPrefix() + " " + wardList.get(position).getName());
+                                    return v;
+                                }
+
+                                @Override
+                                public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                                    LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                                    View v = layoutInflater.inflate(R.layout.category_item_spinner, null);
+                                    TextView name = v.findViewById(R.id.tvName);
+                                    name.setText(wardList.get(position).getPrefix() + " " + wardList.get(position).getName());
+                                    return v;
+                                }
+                            };
+                            arrayAdapter.notifyDataSetChanged();
+                            spWard.setAdapter(arrayAdapter);
+                            for(int i=0;i<wardList.size();i++){
+                                try {
+                                    if(wardList.get(i).getId()==shippingInfo.getInt("ward_id")){
+                                            spWard.setSelection(i);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    });
+//
+                }
+            }
+        });
+    }
 }

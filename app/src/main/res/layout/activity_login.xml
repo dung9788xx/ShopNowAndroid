@@ -64,16 +64,41 @@
                 android:textStyle="bold"
                 android:background="@drawable/button_rounded"
                 android:text="Đăng nhập" />
-            <TextView
-                android:id="@+id/register"
-                android:fontFamily="sans-serif-light"
-                android:textSize="18dp"
-                android:textColor="#1976D2"
-                android:gravity="center"
-                android:layout_marginTop="20dp"
-                android:text="Đăng ký ngay"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+           <LinearLayout
+               android:orientation="horizontal"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+               <TextView
+                   android:textSize="18dp"
+                   android:gravity="center"
+                   android:text="Đăng ký :"
+                   android:textColor="#03A9F4"
+                   android:layout_marginTop="20dp"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"/>
+               <TextView
+                   android:textStyle="bold"
+                   android:id="@+id/registerCustomer"
+                   android:fontFamily="sans-serif-light"
+                   android:textSize="18dp"
+                   android:textColor="#673AB7"
+                   android:gravity="center"
+                   android:layout_marginTop="20dp"
+                   android:text="  Mua hàng |"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content" />
+               <TextView
+                   android:textStyle="bold"
+                   android:id="@+id/registerStore"
+                   android:fontFamily="sans-serif-light"
+                   android:textSize="18dp"
+                   android:textAlignment="textStart"
+                   android:textColor="#673AB7"
+                   android:layout_marginTop="20dp"
+                   android:text="| Bán hàng"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content" />
+           </LinearLayout>
             <ProgressBar
                 android:visibility="invisible"
                 android:id="@+id/progress"

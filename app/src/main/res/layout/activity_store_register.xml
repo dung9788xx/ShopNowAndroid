@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".register.StoreRegisterActivity">
+    <LinearLayout
+        android:background="#F6FAF6"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <FrameLayout
+            android:background="#F9FAEE"
+            android:layout_margin="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:fontFamily="@string/font"
+                        android:padding="10dp"
+                        android:id="@+id/edtName"
+                        android:hint="Họ và Tên"
+                        android:inputType="text"
+                        android:textAlignment="center"
+                        android:layout_margin="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/edtUsername"
+                        android:hint="Tên đăng nhập"
+                        android:textAlignment="center"
+                        android:inputType="text"
+                        android:padding="10dp"
+                        android:layout_margin="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/edtPassword"
+                        android:hint="Mật khẩu"
+                        android:inputType="textPassword"
+                        android:textAlignment="center"
+                        android:layout_margin="10dp"
+                        android:padding="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/edtRepassword"
+                        android:hint="Nhập lại mật khẩu"
+                        android:textAlignment="center"
+                        android:inputType="textPassword"
+                        android:padding="10dp"
+                        android:layout_margin="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <EditText
+                        android:id="@+id/edtPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:hint="Số điện thoại"
+                        android:inputType="phone"
+                        android:padding="10dp"
+                        android:textAlignment="center" />
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:text="Địa chỉ :"
+                        android:textSize="18sp"
+                        android:fontFamily="sans-serif-condensed-medium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                    <View
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:background="#6E6B6B"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"/>
+                    <LinearLayout
+                        android:paddingLeft="20dp"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <Spinner
+
+                            android:id="@+id/spProvince"
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"/>
+                        <View
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:background="#D6D4D4"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"/>
+                        <Spinner
+                            android:id="@+id/spDistrict"
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"/>
+                        <View
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:background="#D6D4D4"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"/>
+                        <Spinner
+                            android:id="@+id/spWard"
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"/>
+                        <View
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:background="#D6D4D4"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp">
+                        <EditText
+                            android:id="@+id/edtStreet"
+                            android:inputType="text"
+                            android:maxLines="1"
+                            android:padding="10dp"
+                            android:hint="Số nhà, đường..."
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"/>
+                    </LinearLayout>
+                    <EditText
+                        android:id="@+id/edtStoreName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:hint="Tên cửa hàng"
+                        android:inputType="text"
+                        android:padding="10dp" />
+                    <EditText
+                        android:id="@+id/edtDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:hint="Mô tả"
+                        android:lines="3"
+                        android:inputType="text"
+                        android:padding="10dp" />
+                    <Button
+                        android:id="@+id/btnRegister"
+                        android:textColor="#FFFF"
+                        android:textStyle="bold"
+                        android:text="Đăng ký"
+                        android:fontFamily="@string/font"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/button_rounded"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+            </ScrollView>
+            <ProgressBar
+                android:visibility="invisible"
+                android:id="@+id/progress"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </FrameLayout>
+
+    </LinearLayout>
+</LinearLayout>
