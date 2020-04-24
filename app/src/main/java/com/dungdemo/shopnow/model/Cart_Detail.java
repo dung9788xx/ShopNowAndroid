@@ -7,7 +7,8 @@ public class Cart_Detail {
     int quantity;
     @SerializedName("note")
     String note;
-
+    @SerializedName("price")
+    int price;
     @SerializedName("product")
     Product product;
 
@@ -35,11 +36,18 @@ public class Cart_Detail {
         this.product = product;
     }
 
-    public Cart_Detail(int quantity, String note, Product product) {
-        this.quantity = quantity;
-        this.note = note;
-        this.product = product;
+    public int getPrice() {
+        return price;
     }
 
+    public void setPrice(int price) {
+        this.price = price;
+    }
 
+    public Cart_Detail(int quantity, String note, int price, Product product) {
+        this.quantity = quantity;
+        this.note = note;
+        this.price = price;
+        this.product = product;
+    }
 }

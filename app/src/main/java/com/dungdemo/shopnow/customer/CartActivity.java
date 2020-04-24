@@ -72,17 +72,18 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
     List<Cart_Detail> cart_details;
     Cart cart;
     ArrayAdapter<Cart_Detail> arrayAdapter;
-    ProgressBar progressBar,dialogProgressBar;
+    ProgressBar progressBar, dialogProgressBar;
     ListView lvCart;
-    TextView tvNoItem;
+    TextView tvNoItem,tvAmount;
     FrameLayout content;
     JSONObject shippingInfo;
     AlertDialog dialog;
     Spinner spProvince, spDistrict, spWard;
-    EditText  edtPhone, edtStreet;
+    EditText edtPhone, edtStreet;
     List<Province> provinceList;
     List<District> districtList;
     List<Ward> wardList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +99,7 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
         lvCart = findViewById(R.id.lvCart);
         progressBar = findViewById(R.id.progress);
         tvNoItem = findViewById(R.id.tvNoCartItem);
+        tvAmount=findViewById(R.id.tvAmount);
         content = findViewById(R.id.content);
         findViewById(R.id.btnUpdateCart).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,14 +146,14 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
                     String json = null;
                     json = response.body().string() + "";
                     try {
-                        shippingInfo=new JSONObject(json);
+                        shippingInfo = new JSONObject(json);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     CartActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if(shippingInfo!=null){
+                            if (shippingInfo != null) {
                                 try {
                                     loadShippingAddressDialog();
                                 } catch (JSONException e) {
@@ -177,11 +179,11 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
         Map<String, String> map = new HashMap<>();
         map.put("token", User.getSavedToken(getApplication()));
         map.put("phone", edtPhone.getText().toString());
-        map.put("address",edtStreet.getText().toString()+", "
-                +wardList.get(spWard.getSelectedItemPosition()).getPrefix()+" "+wardList.get(spWard.getSelectedItemPosition()).getName()
-                +", "+districtList.get(spDistrict.getSelectedItemPosition()).getPrefix()+" "+districtList.get(spDistrict.getSelectedItemPosition()).getName()
-        +", "+provinceList.get(spProvince.getSelectedItemPosition()).getName());
-        RequestBody formBody = TaskConnect.makeBuilderFromMap( map )
+        map.put("address", edtStreet.getText().toString() + ", "
+                + wardList.get(spWard.getSelectedItemPosition()).getPrefix() + " " + wardList.get(spWard.getSelectedItemPosition()).getName()
+                + ", " + districtList.get(spDistrict.getSelectedItemPosition()).getPrefix() + " " + districtList.get(spDistrict.getSelectedItemPosition()).getName()
+                + ", " + provinceList.get(spProvince.getSelectedItemPosition()).getName());
+        RequestBody formBody = TaskConnect.makeBuilderFromMap(map)
                 .build();
         Request request = new Request.Builder()
                 .url(url).addHeader("Authorization", User.getSavedToken(this)).post(formBody)
@@ -202,7 +204,7 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
                         @Override
                         public void run() {
                             dialogProgressBar.setVisibility(View.INVISIBLE);
-                            if (response.code()==200){
+                            if (response.code() == 200) {
                                 AlertDialog.Builder builder1 = new AlertDialog.Builder(CartActivity.this);
                                 builder1.setMessage(strRespone);
                                 builder1.setCancelable(true);
@@ -217,14 +219,10 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
                                                 content.setVisibility(View.INVISIBLE);
                                                 dialog1.cancel();
                                                 dialog.dismiss();
-
                                             }
                                         });
-
-
                                 AlertDialog alert11 = builder1.create();
                                 alert11.show();
-
                             }
                         }
                     });
@@ -238,7 +236,7 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
 
         List<Cart_Detail_Temp> list = new ArrayList<>();
         for (Cart_Detail cart_detail : cart_details) {
-            list.add(new Cart_Detail_Temp(cart_detail.getProduct().getProduct_id(), cart_detail.getQuantity(), cart_detail.getNote()));
+            list.add(new Cart_Detail_Temp(cart_detail.getProduct().getProduct_id(),cart_detail.getPrice(), cart_detail.getQuantity(), cart_detail.getNote()));
         }
         return list;
     }
@@ -270,11 +268,11 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
                     CartActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                        loadDataToView();
+                            loadDataToView();
                         }
                     });
 //
-                }else{
+                } else {
                     CartActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -291,28 +289,28 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
     private void loadShippingAddressDialog() throws JSONException {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View layout = inflater.inflate(R.layout.place_order_dialog_layout, null);
-        dialogProgressBar=layout.findViewById(R.id.progress);
-      edtPhone = (EditText) layout.findViewById(R.id.edtPhone);
-      edtStreet = (EditText) layout.findViewById(R.id.edtStreet);
-      edtPhone.setText(shippingInfo.getString("phone"));
-      edtStreet.setText(shippingInfo.getString("street"));
-      spProvince=layout.findViewById(R.id.spProvince);
-      spDistrict=layout.findViewById(R.id.spDistrict);
-      spWard=layout.findViewById(R.id.spWard);
-      layout.findViewById(R.id.btnBack).setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-              dialog.dismiss();
-          }
-      });
-      layout.findViewById(R.id.btnOk).setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-              dialogProgressBar.setVisibility(View.VISIBLE);
+        dialogProgressBar = layout.findViewById(R.id.progress);
+        edtPhone = layout.findViewById(R.id.edtPhone);
+        edtStreet = layout.findViewById(R.id.edtStreet);
+        edtPhone.setText(shippingInfo.getString("phone"));
+        edtStreet.setText(shippingInfo.getString("street"));
+        spProvince = layout.findViewById(R.id.spProvince);
+        spDistrict = layout.findViewById(R.id.spDistrict);
+        spWard = layout.findViewById(R.id.spWard);
+        layout.findViewById(R.id.btnBack).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        layout.findViewById(R.id.btnOk).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogProgressBar.setVisibility(View.VISIBLE);
                 placeOrder();
-          }
-      });
-      loadProvinceSpinner();
+            }
+        });
+        loadProvinceSpinner();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(layout);
         dialog = builder.create();
@@ -387,6 +385,7 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
                                 Toast.makeText(CartActivity.this, "Không đủ hàng!", Toast.LENGTH_SHORT).show();
                             } else {
                                 cart_detail.setQuantity(cart_detail.getQuantity() + 1);
+                                caculateAmount();
                                 notifyDataSetChanged();
                             }
                         }
@@ -396,6 +395,7 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
                         public void onClick(View view) {
                             if (cart_detail.getQuantity() - 1 > 0) {
                                 cart_detail.setQuantity(cart_detail.getQuantity() - 1);
+                                caculateAmount();
                                 notifyDataSetChanged();
                             }
                         }
@@ -404,6 +404,7 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
                 }
             };
             content.setVisibility(View.VISIBLE);
+            caculateAmount();
             lvCart.setAdapter(arrayAdapter);
         } else {
             tvNoItem.setVisibility(View.VISIBLE);
@@ -422,15 +423,18 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
 
     class Cart_Detail_Temp {
         int product_id;
+        int price;
         int quantity;
         String note;
 
-        public Cart_Detail_Temp(int product_id, int quantity, String note) {
+        public Cart_Detail_Temp(int product_id, int price, int quantity, String note) {
             this.product_id = product_id;
+            this.price = price;
             this.quantity = quantity;
             this.note = note;
         }
     }
+
     private void loadProvinceSpinner() {
         spProvince.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -489,9 +493,9 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
                                 }
                             };
                             spProvince.setAdapter(arrayAdapter);
-                            for(int i=0;i<provinceList.size();i++){
+                            for (int i = 0; i < provinceList.size(); i++) {
                                 try {
-                                    if(provinceList.get(i).getProvince_id()==shippingInfo.getInt("province_id")){
+                                    if (provinceList.get(i).getProvince_id() == shippingInfo.getInt("province_id")) {
                                         spProvince.setSelection(i);
                                     }
                                 } catch (JSONException e) {
@@ -564,9 +568,9 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
                             };
                             arrayAdapter.notifyDataSetChanged();
                             spDistrict.setAdapter(arrayAdapter);
-                            for(int i=0;i<districtList.size();i++){
+                            for (int i = 0; i < districtList.size(); i++) {
                                 try {
-                                    if(districtList.get(i).getDistrict_id()==shippingInfo.getInt("district_id")){
+                                    if (districtList.get(i).getDistrict_id() == shippingInfo.getInt("district_id")) {
                                         spDistrict.setSelection(i);
                                     }
                                 } catch (JSONException e) {
@@ -638,10 +642,10 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
                             };
                             arrayAdapter.notifyDataSetChanged();
                             spWard.setAdapter(arrayAdapter);
-                            for(int i=0;i<wardList.size();i++){
+                            for (int i = 0; i < wardList.size(); i++) {
                                 try {
-                                    if(wardList.get(i).getId()==shippingInfo.getInt("ward_id")){
-                                            spWard.setSelection(i);
+                                    if (wardList.get(i).getId() == shippingInfo.getInt("ward_id")) {
+                                        spWard.setSelection(i);
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -649,9 +653,15 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
                             }
                         }
                     });
-//
                 }
             }
         });
+    }
+    public void caculateAmount(){
+        long amount=0;
+       for(Cart_Detail cart_detail:cart_details){
+            amount=amount+cart_detail.getQuantity()*cart_detail.getPrice();
+        }
+       tvAmount.setText(MoneyType.toMoney(amount)+" VND");
     }
 }

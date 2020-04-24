@@ -17,26 +17,49 @@
             android:layout_height="match_parent"/>
         <LinearLayout
             android:layout_gravity="bottom"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <Button
-                android:id="@+id/btnUpdateCart"
-                android:textColor="#FFFF"
-                android:background="#B5A4A4"
-                android:layout_weight="1"
-                android:text="Cập nhật giỏi hàng"
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <Button
-                android:id="@+id/btnBook"
-                android:textStyle="bold"
-                android:textColor="#FFFF"
-                android:background="#FD6E1D"
-                android:layout_weight="1"
-                android:text="ĐẶT HÀNG"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_marginLeft="10dp"
+                    android:textSize="18dp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:text="Tổng tiền: "
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/tvAmount"
+                    android:text="150000 VND"
+                    android:textSize="20dp"
+                    android:textColor="#F44336"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+               <Button
+                   android:id="@+id/btnUpdateCart"
+                   android:textColor="#FFFF"
+                   android:background="#B5A4A4"
+                   android:layout_weight="1"
+                   android:text="Cập nhật giỏi hàng"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"/>
+               <Button
+                   android:id="@+id/btnBook"
+                   android:textStyle="bold"
+                   android:textColor="#FFFF"
+                   android:background="#FD6E1D"
+                   android:layout_weight="1"
+                   android:text="ĐẶT HÀNG"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"/>
+           </LinearLayout>
         </LinearLayout>
     </FrameLayout>
     <ProgressBar

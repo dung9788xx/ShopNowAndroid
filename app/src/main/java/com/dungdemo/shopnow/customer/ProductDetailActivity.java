@@ -96,6 +96,7 @@ public class ProductDetailActivity extends AppCompatActivity implements AsyncRes
         map.put("token", User.getSavedToken(ProductDetailActivity.this));
         map.put("method","post");
         map.put("product_id",product.getProduct_id()+"");
+        map.put("price",product.getPrice()+"");
         map.put("quantity","1");
         EditText edtNote=findViewById(R.id.edtNote);
         map.put("note",edtNote.getText().toString());
@@ -168,7 +169,6 @@ public class ProductDetailActivity extends AppCompatActivity implements AsyncRes
     public void whenfinish(ResponeFromServer output) {
         if(output!=null){
             if(output.code()==200){
-
                 Toast.makeText(this, "Thêm vào giỏ hàng thành công", Toast.LENGTH_LONG).show();
             }else{
                 Toast.makeText(this, "Có lỗi xảy ra!", Toast.LENGTH_SHORT).show();
