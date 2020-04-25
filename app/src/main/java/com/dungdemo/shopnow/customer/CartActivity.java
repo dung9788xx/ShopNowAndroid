@@ -205,23 +205,26 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
                         public void run() {
                             dialogProgressBar.setVisibility(View.INVISIBLE);
                             if (response.code() == 200) {
-                                AlertDialog.Builder builder1 = new AlertDialog.Builder(CartActivity.this);
-                                builder1.setMessage(strRespone);
-                                builder1.setCancelable(true);
-                                builder1.setPositiveButton(
+                                cart_details.clear();
+                                arrayAdapter.notifyDataSetChanged();
+                                progressBar.setVisibility(View.INVISIBLE);
+                                tvNoItem.setVisibility(View.VISIBLE);
+                                content.setVisibility(View.INVISIBLE);
+                                LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+                                View layout = inflater.inflate(R.layout.dialog_custom_layout, null);
+                                TextView tv=layout.findViewById(R.id.tv);
+                                tv.setText(strRespone);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(CartActivity.this);
+                                builder.setView(layout);
+                                builder.setPositiveButton(
                                         "OK",
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog1, int id) {
-                                                cart_details.clear();
-                                                arrayAdapter.notifyDataSetChanged();
-                                                progressBar.setVisibility(View.INVISIBLE);
-                                                tvNoItem.setVisibility(View.VISIBLE);
-                                                content.setVisibility(View.INVISIBLE);
                                                 dialog1.cancel();
                                                 dialog.dismiss();
                                             }
                                         });
-                                AlertDialog alert11 = builder1.create();
+                                AlertDialog alert11 = builder.create();
                                 alert11.show();
                             }
                         }

@@ -7,7 +7,11 @@
             android:id="@+id/nav_cart"
             android:icon="@drawable/ic_user_black_24dp"
             android:title="Giỏ hàng" />
-
+        <item
+            android:id="@+id/nav_order"
+            android:icon="@drawable/ic_order_black_24dp"
+            android:title="Đơn hàng"
+            />
     </group>
     <group >
         <item

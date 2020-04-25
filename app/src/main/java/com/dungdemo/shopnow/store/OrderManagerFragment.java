@@ -1,6 +1,7 @@
 package com.dungdemo.shopnow.store;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 import com.dungdemo.shopnow.AsyncResponse;
 import com.dungdemo.shopnow.HostName;
 import com.dungdemo.shopnow.model.Order;
+import com.dungdemo.shopnow.model.Order_Detail;
 import com.dungdemo.shopnow.model.User;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
@@ -40,7 +43,6 @@ public class OrderManagerFragment extends Fragment implements AsyncResponse {
         super.onCreate(savedInstanceState);
         loadData();
     }
-
     private void loadData() {
         Map<String,String > map=new HashMap<>(  );
         map.put("token", User.getSavedToken(getContext()));
@@ -49,25 +51,24 @@ public class OrderManagerFragment extends Fragment implements AsyncResponse {
         task.setMap( map );
         task.execute();
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_order_manager, container, false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Quản lý đơn hàng");
         orderListView=view.findViewById(R.id.lvOrder);
+        orderListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent t=new Intent(getContext(), OrderDetailActivity.class);
+                t.putExtra("order_id",orders.get(i).getOrder_id());
+                startActivity(t);
+            }
+        });
         tvNoItem=view.findViewById(R.id.noItem);
         view.findViewById(R.id.tvDonMoi).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(orders.size()>0){
-                    for(int i=0;i<orders.size();i++){
-                        if(orders.get(i).getStatus().getStatus_id()==1){
-                            orders.add(0,orders.get(i));
-                            orders.remove(i+1);
-                        }
-                    }
-                    arrayAdapter.notifyDataSetChanged();
-                }
+                sortOrderByNewOrder();
             }
         });
         view.findViewById(R.id.tvDangGiao).setOnClickListener(new View.OnClickListener() {
@@ -101,10 +102,21 @@ public class OrderManagerFragment extends Fragment implements AsyncResponse {
         return  view;
     }
 
+    private void sortOrderByNewOrder() {
+        if(orders.size()>0){
+            for(int i=0;i<orders.size();i++){
+                if(orders.get(i).getStatus().getStatus_id()==1){
+                    orders.add(0,orders.get(i));
+                    orders.remove(i+1);
+                }
+            }
+            arrayAdapter.notifyDataSetChanged();
+        }
+    }
+
     @Override
     public void whenfinish(ResponeFromServer output) {
         if(output!=null){
-
             if(output.code()==200){
                 String json = null;
                 json = output.getBody() + "";
@@ -148,15 +160,14 @@ public class OrderManagerFragment extends Fragment implements AsyncResponse {
                                     tvStatus.setText("Đã hủy");
                                     tvStatus.setTextColor(Color.parseColor("#FFF44336"));
                                 }
-
                             return v;
                         }
                     };
+                    sortOrderByNewOrder();
                 orderListView.setAdapter(arrayAdapter);
                 }else{
                         tvNoItem.setVisibility(View.VISIBLE);
                 }
-
             }
         }
     }
