@@ -7,8 +7,78 @@
     android:orientation="vertical"
     tools:context=".store.OrderDetailActivity">
     <LinearLayout
+        android:padding="10dp"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="Tên khách hàng: "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:textColor="#2196F3"
+                android:fontFamily="@string/font"
+                android:textSize="18sp"
+                android:text="Truong van dung"
+                android:id="@+id/tvName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="Số điện thoại: "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:textColor="#2196F3"
+                android:fontFamily="@string/font"
+                android:textSize="18sp"
+                android:id="@+id/tvPhone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="Địa chỉ nhận hàng: "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:textColor="#2196F3"
+                android:fontFamily="@string/font"
+                android:id="@+id/tvAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="Ngày đặt: "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:textColor="#2196F3"
+                android:fontFamily="@string/font"
+                android:textSize="18sp"
+                android:id="@+id/tvDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
         <ListView
             android:id="@+id/lv"
             android:layout_width="match_parent"
@@ -43,20 +113,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button
-                android:id="@+id/btnUpdateCart"
+                android:id="@+id/btnDeclineOrder"
                 android:textColor="#FFFF"
-                android:background="#B5A4A4"
+                android:background="#F44336"
                 android:layout_weight="1"
-                android:text="Cập nhật giỏi hàng"
+                android:text="Từ chối đơn hàng "
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
             <Button
                 android:id="@+id/btnBook"
                 android:textStyle="bold"
                 android:textColor="#FFFF"
-                android:background="#FD6E1D"
+                android:background="#009688"
                 android:layout_weight="1"
-                android:text="ĐẶT HÀNG"
+                android:text="GIAO HÀNG"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </LinearLayout>

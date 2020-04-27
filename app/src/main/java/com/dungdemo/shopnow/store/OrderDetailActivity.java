@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.dungdemo.shopnow.HostName;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.model.Cart_Detail;
+import com.dungdemo.shopnow.model.Order;
 import com.dungdemo.shopnow.model.Order_Detail;
 import com.dungdemo.shopnow.model.Product;
 import com.dungdemo.shopnow.model.ProductCategory;
@@ -41,12 +42,11 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class OrderDetailActivity extends AppCompatActivity {
-    int order_id;
     ListView orderLv;
     ArrayList<Order_Detail> order_details;
     ArrayAdapter<Order_Detail> arrayAdapter;
-    TextView tvAmount;
-
+    TextView tvAmount,tvName,tvAddress,tvPhone,tvDate;
+    Order order;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,18 +63,25 @@ public class OrderDetailActivity extends AppCompatActivity {
         toolbarTitle.setText("Thông tin đơn hàng");
 
 
-        order_id = getIntent().getIntExtra("order_id", -1);
+        order= (Order) getIntent().getSerializableExtra("order");
         orderLv = findViewById(R.id.lv);
         tvAmount=findViewById(R.id.tvAmount);
+        tvDate=findViewById(R.id.tvDate);
+        tvAddress=findViewById(R.id.tvAddress);
+        tvName=findViewById(R.id.tvName);
+        tvPhone=findViewById(R.id.tvPhone);
+        tvDate.setText(order.getDate());
+        tvPhone.setText(order.getShipping_phone()+"");
+        tvName.setText(order.getUser().getName());
+        tvAddress.setText(order.getShipping_address());
+
         loadOrderData();
-
-
     }
 
     private void loadOrderData() {
 
         OkHttpClient client = new OkHttpClient();
-        String url = HostName.host + "/order/getOrderDetail/"+order_id;
+        String url = HostName.host + "/order/getOrderDetail/"+order.getOrder_id();
 
         Request request = new Request.Builder()
                 .url(url).addHeader("Authorization", User.getSavedToken(this))

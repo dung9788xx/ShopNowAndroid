@@ -60,7 +60,7 @@ public class OrderManagerFragment extends Fragment implements AsyncResponse {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent t=new Intent(getContext(), OrderDetailActivity.class);
-                t.putExtra("order_id",orders.get(i).getOrder_id());
+                t.putExtra("order",orders.get(i));
                 startActivity(t);
             }
         });
