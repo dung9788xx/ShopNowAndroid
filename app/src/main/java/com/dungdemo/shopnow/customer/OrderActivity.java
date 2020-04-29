@@ -69,6 +69,34 @@ public class OrderActivity extends AppCompatActivity implements AsyncResponse {
                 orderArrayAdapter.notifyDataSetChanged();
             }
         });
+        findViewById(R.id.tvSortProgressing).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (orders.size() > 0) {
+                    for (int i = 0; i < orders.size(); i++) {
+                        if (orders.get(i).getStatus().getStatus_id() == 1) {
+                            orders.add(0, orders.get(i));
+                            orders.remove(i + 1);
+                        }
+                    }
+                    orderArrayAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+        findViewById(R.id.tvSortByShipping).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (orders.size() > 0) {
+                    for (int i = 0; i < orders.size(); i++) {
+                        if (orders.get(i).getStatus().getStatus_id() == 2) {
+                            orders.add(0, orders.get(i));
+                            orders.remove(i + 1);
+                        }
+                    }
+                    orderArrayAdapter.notifyDataSetChanged();
+                }
+            }
+        });
     }
 
     private void loadData() {
