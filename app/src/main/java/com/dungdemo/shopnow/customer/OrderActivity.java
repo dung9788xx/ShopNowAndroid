@@ -1,6 +1,7 @@
 package com.dungdemo.shopnow.customer;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -97,6 +99,14 @@ public class OrderActivity extends AppCompatActivity implements AsyncResponse {
                 }
             }
         });
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent t=new Intent(OrderActivity.this,CustomerOrderDetail.class);
+                t.putExtra("order",orders.get(i));
+                startActivityForResult(t,1);
+            }
+        });
     }
 
     private void loadData() {
@@ -163,5 +173,11 @@ public class OrderActivity extends AppCompatActivity implements AsyncResponse {
         }
 
     return false;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        loadData();
     }
 }
