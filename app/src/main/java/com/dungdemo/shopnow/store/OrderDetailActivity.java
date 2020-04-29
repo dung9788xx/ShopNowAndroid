@@ -1,6 +1,8 @@
 package com.dungdemo.shopnow.store;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,9 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dungdemo.shopnow.HostName;
 import com.dungdemo.shopnow.R;
@@ -45,8 +50,10 @@ public class OrderDetailActivity extends AppCompatActivity {
     ListView orderLv;
     ArrayList<Order_Detail> order_details;
     ArrayAdapter<Order_Detail> arrayAdapter;
-    TextView tvAmount,tvName,tvAddress,tvPhone,tvDate;
+    TextView tvAmount, tvName, tvAddress, tvPhone, tvDate, tvStatus;
     Order order;
+    LinearLayout linearLayout;
+    Button btnDecline,btnAccept;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,29 +66,179 @@ public class OrderDetailActivity extends AppCompatActivity {
                 finish();
             }
         });
-        TextView toolbarTitle=getSupportActionBar().getCustomView().findViewById(R.id.tvProductName);
+        TextView toolbarTitle = getSupportActionBar().getCustomView().findViewById(R.id.tvProductName);
         toolbarTitle.setText("Thông tin đơn hàng");
 
 
-        order= (Order) getIntent().getSerializableExtra("order");
+        order = (Order) getIntent().getSerializableExtra("order");
         orderLv = findViewById(R.id.lv);
-        tvAmount=findViewById(R.id.tvAmount);
-        tvDate=findViewById(R.id.tvDate);
-        tvAddress=findViewById(R.id.tvAddress);
-        tvName=findViewById(R.id.tvName);
-        tvPhone=findViewById(R.id.tvPhone);
+        tvAmount = findViewById(R.id.tvAmount);
+        tvDate = findViewById(R.id.tvDate);
+        tvAddress = findViewById(R.id.tvAddress);
+        tvName = findViewById(R.id.tvName);
+        tvPhone = findViewById(R.id.tvPhone);
+        tvStatus = findViewById(R.id.tvStatus);
+        linearLayout=findViewById(R.id.layoutBotton);
+        btnDecline=findViewById(R.id.btnDecline);
+        btnAccept=findViewById(R.id.btnAccept);
+
+
+        linearLayout.setVisibility(View.GONE);
         tvDate.setText(order.getDate());
-        tvPhone.setText(order.getShipping_phone()+"");
+        tvPhone.setText(order.getShipping_phone() + "");
         tvName.setText(order.getUser().getName());
         tvAddress.setText(order.getShipping_address());
+        btnDecline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(OrderDetailActivity.this)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle("")
+                        .setMessage("Bạn muốn từ chối đơn hàng này?")
+                        .setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                declineOrder();
+                            }
 
+                        })
+                        .setNegativeButton("Không", null)
+                        .show();
+            }
+        });
+        btnAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(OrderDetailActivity.this)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle("")
+                        .setMessage("Bạn đã gửi hàng cho khách ?")
+                        .setPositiveButton("Đã gửi và chờ khách nhận", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                acceptOrder();
+                            }
+
+                        })
+                        .setNegativeButton("chưa", null)
+                        .show();
+            }
+        });
+        orderStatus();
         loadOrderData();
+    }
+
+    private void acceptOrder() {
+        OkHttpClient client = new OkHttpClient();
+        String url = HostName.host + "/order/acceptOrder/"+order.getOrder_id();
+
+        Request request = new Request.Builder()
+                .url(url).addHeader("Authorization",User.getSavedToken(this))
+                .build();
+        Call call = client.newCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String json = null;
+                    json = response.body().string() + "";
+                    if(response.code()==200){
+                        OrderDetailActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(OrderDetailActivity.this, "Xác nhận thành công", Toast.LENGTH_LONG).show();
+                                finish();
+                            }
+                        });
+                    }else{
+                        OrderDetailActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(OrderDetailActivity.this, "Có lỗi xảy ra!", Toast.LENGTH_LONG).show();
+                                finish();
+                            }
+                        });
+                    }
+//
+                }
+            }
+        });
+    }
+
+    private void declineOrder() {
+        OkHttpClient client = new OkHttpClient();
+        String url = HostName.host + "/order/declineOrder/"+order.getOrder_id();
+
+        Request request = new Request.Builder()
+                .url(url).addHeader("Authorization",User.getSavedToken(this))
+                .build();
+        Call call = client.newCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String json = null;
+                    json = response.body().string() + "";
+                    if(response.code()==200){
+                        OrderDetailActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(OrderDetailActivity.this, "Đã từ chối đơn hàng", Toast.LENGTH_LONG).show();
+                                finish();
+                            }
+                        });
+                    }else{
+                        OrderDetailActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(OrderDetailActivity.this, "Có lỗi xảy ra!", Toast.LENGTH_LONG).show();
+                                finish();
+                            }
+                        });
+                    }
+//
+                }
+            }
+        });
+    }
+
+    private void orderStatus() {
+        if (order.getStatus().getStatus_id() == 1) {
+            linearLayout.setVisibility(View.VISIBLE);
+            tvStatus.setText("Đơn mới");
+            tvStatus.setTextColor(Color.parseColor("#FF009688"));
+        } else if (order.getStatus().getStatus_id() == 2) {
+            tvStatus.setText("Đang giao");
+            tvStatus.setTextColor(Color.parseColor("#FFFFC107"));
+
+        } else if (order.getStatus().getStatus_id() == 3) {
+            tvStatus.setText("Đã nhận hàng");
+            tvStatus.setTextColor(Color.parseColor("#FF673AB7"));
+        } else if (order.getStatus().getStatus_id() == 4) {
+            tvStatus.setText("Đã từ chối");
+            tvStatus.setTextColor(Color.parseColor("#FFF44336"));
+        } else {
+            tvStatus.setText("Khách đã hủy");
+            tvStatus.setTextColor(Color.parseColor("#FFF44336"));
+        }
     }
 
     private void loadOrderData() {
 
         OkHttpClient client = new OkHttpClient();
-        String url = HostName.host + "/order/getOrderDetail/"+order.getOrder_id();
+        String url = HostName.host + "/order/getOrderDetail/" + order.getOrder_id();
 
         Request request = new Request.Builder()
                 .url(url).addHeader("Authorization", User.getSavedToken(this))
@@ -92,7 +249,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.d("lol",e.toString()+"");
+                Log.d("lol", e.toString() + "");
             }
 
             @Override
@@ -134,11 +291,12 @@ public class OrderDetailActivity extends AppCompatActivity {
             }
         });
     }
-    public void caculateAmount(){
-        long amount=0;
-        for(Order_Detail order_detail:order_details){
-            amount=amount+order_detail.getQuantity()*order_detail.getPrice();
+
+    public void caculateAmount() {
+        long amount = 0;
+        for (Order_Detail order_detail : order_details) {
+            amount = amount + order_detail.getQuantity() * order_detail.getPrice();
         }
-        tvAmount.setText(MoneyType.toMoney(amount)+" VND");
+        tvAmount.setText(MoneyType.toMoney(amount) + " VND");
     }
 }

@@ -242,6 +242,9 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
             startActivity(new Intent(this,CartActivity.class));
 
         }
+        if(id==R.id.nav_order){
+            startActivity(new Intent(this,OrderActivity.class));
+        }
         if(id==R.id.nav_logout){
             User.logout(this);
             Intent intent = new Intent(CustomerMainActivity.this, LoginActivity.class);
