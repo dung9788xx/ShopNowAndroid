@@ -133,7 +133,6 @@
                 android:layout_height="wrap_content"/>
         </LinearLayout>
         <LinearLayout
-            android:id="@+id/layoutBotton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button
@@ -142,6 +141,14 @@
                 android:background="#F44336"
                 android:layout_weight="1"
                 android:text="Hủy đợn hàng "
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <Button
+                android:id="@+id/btnReceived"
+                android:textColor="#FFFF"
+                android:background="#4CAF50"
+                android:layout_weight="1"
+                android:text="Đã nhận được hàng "
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </LinearLayout>

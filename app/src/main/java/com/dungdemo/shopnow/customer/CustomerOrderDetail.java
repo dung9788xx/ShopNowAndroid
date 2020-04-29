@@ -49,8 +49,7 @@ public class CustomerOrderDetail extends AppCompatActivity {
     ArrayAdapter<Order_Detail> arrayAdapter;
     TextView tvAmount, tvName, tvAddress, tvPhone, tvDate, tvStatus;
     Order order;
-    LinearLayout linearLayout;
-    Button btnCancelOrder;
+    Button btnCancelOrder,btnReceived;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,11 +75,12 @@ public class CustomerOrderDetail extends AppCompatActivity {
         tvName = findViewById(R.id.tvName);
         tvPhone = findViewById(R.id.tvPhone);
         tvStatus = findViewById(R.id.tvStatus);
-        linearLayout = findViewById(R.id.layoutBotton);
+        btnReceived=findViewById(R.id.btnReceived);
         btnCancelOrder = findViewById(R.id.btnCancelOrder);
 
 
-        linearLayout.setVisibility(View.GONE);
+        btnReceived.setVisibility(View.GONE);
+        btnCancelOrder.setVisibility(View.GONE);
         tvDate.setText(order.getDate());
         tvPhone.setText(order.getShipping_phone() + "");
         tvName.setText(order.getUser().getName());
@@ -103,8 +103,67 @@ public class CustomerOrderDetail extends AppCompatActivity {
                         .show();
             }
         });
+        btnReceived.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(CustomerOrderDetail.this)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle("")
+                        .setMessage("Bạn đã nhận được hàng?")
+                        .setPositiveButton("Đã nhận hàng", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                receivedOrder();
+                            }
+
+                        })
+                        .setNegativeButton("Chưa", null)
+                        .show();
+            }
+        });
         orderStatus();
         loadOrderData();
+    }
+
+    private void receivedOrder() {
+        OkHttpClient client = new OkHttpClient();
+        String url = HostName.host + "/order/receivedOrder/" + order.getOrder_id();
+        Request request = new Request.Builder()
+                .url(url).addHeader("Authorization", User.getSavedToken(this))
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String json = null;
+                    json = response.body().string() + "";
+                    if (response.code() == 200) {
+                        CustomerOrderDetail.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(CustomerOrderDetail.this, "Cảm ơn bạn đã mua hàng", Toast.LENGTH_LONG).show();
+                                finish();
+                            }
+                        });
+                    } else {
+                        CustomerOrderDetail.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(CustomerOrderDetail.this, "Có lỗi xảy ra!", Toast.LENGTH_LONG).show();
+                                finish();
+                            }
+                        });
+                    }
+//
+                }
+            }
+        });
     }
 
     private void loadOrderData() {
@@ -157,7 +216,6 @@ public class CustomerOrderDetail extends AppCompatActivity {
                             orderLv.setAdapter(arrayAdapter);
                         }
                     });
-//
                 }
             }
         });
@@ -207,7 +265,6 @@ public class CustomerOrderDetail extends AppCompatActivity {
                             }
                         });
                     }
-//
                 }
             }
         });
@@ -217,9 +274,10 @@ public class CustomerOrderDetail extends AppCompatActivity {
     private void orderStatus() {
         tvStatus.setText(order.getStatus().getName());
         if (order.getStatus().getStatus_id() == 1) {
-            linearLayout.setVisibility(View.VISIBLE);
+            btnCancelOrder.setVisibility(View.VISIBLE);
             tvStatus.setTextColor(Color.parseColor("#FF009688"));
         } else if (order.getStatus().getStatus_id() == 2) {
+            btnReceived.setVisibility(View.VISIBLE);
             tvStatus.setTextColor(Color.parseColor("#FFFFC107"));
         } else if (order.getStatus().getStatus_id() == 3) {
             tvStatus.setTextColor(Color.parseColor("#FF673AB7"));
