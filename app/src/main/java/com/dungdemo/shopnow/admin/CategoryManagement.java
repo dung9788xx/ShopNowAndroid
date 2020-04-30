@@ -3,6 +3,7 @@ package com.dungdemo.shopnow.admin;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -77,6 +78,12 @@ public class CategoryManagement extends Fragment {
                         .setNegativeButton("Không", null)
                         .show();
                 return false;
+            }
+        });
+        view.findViewById(R.id.addCategoryButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    startActivityForResult(new Intent(getActivity(),AddCategoryActivity.class),1);
             }
         });
         return view;
@@ -181,4 +188,9 @@ public class CategoryManagement extends Fragment {
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+            loadCategory();
+    }
 }
