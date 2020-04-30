@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:orientation="vertical"
+    tools:context=".admin.EditCategoryActivity">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:fontFamily="@string/font"
+                android:text="Tên danh mục: "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <EditText
+                android:id="@+id/edtName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:fontFamily="@string/font"
+                android:text="Mô tả :"
+                android:layout_width="85dp"
+                android:layout_height="wrap_content"/>
+            <EditText
+                android:id="@+id/edtDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:fontFamily="@string/font"
+                android:text="Ảnh :"
+                android:layout_width="85dp"
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:id="@+id/img"
+                android:src="@drawable/icon_add_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"/>
+        </LinearLayout>
+        <ProgressBar
+            android:visibility="invisible"
+            android:id="@+id/progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <Button
+        android:textColor="#FFF"
+        android:layout_alignParentBottom="true"
+        android:background="#4CAF50"
+        android:text="Cập nhật"
+        android:id="@+id/buttonAddCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</RelativeLayout>

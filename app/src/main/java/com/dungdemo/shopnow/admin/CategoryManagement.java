@@ -80,6 +80,14 @@ public class CategoryManagement extends Fragment {
                 return false;
             }
         });
+        lvCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent t=new Intent(getActivity(),EditCategoryActivity.class);
+                t.putExtra("category",productCategories.get(i));
+                startActivityForResult(t,1);
+            }
+        });
         view.findViewById(R.id.addCategoryButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".admin.AddCategoryActivity"></activity>
+        <activity android:name=".admin.EditCategoryActivity"></activity>
+        <activity android:name=".admin.AddCategoryActivity" />
         <activity android:name=".customer.CustomerOrderDetail" />
         <activity android:name=".customer.OrderActivity" />
         <activity android:name=".store.OrderDetailActivity" />
