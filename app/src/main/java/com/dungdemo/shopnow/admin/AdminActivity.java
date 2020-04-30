@@ -113,6 +113,10 @@ public class AdminActivity extends AppCompatActivity
         if (id == R.id.nav_stores) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content, new StoreManagerFragment()).commit();
         }
+        if(id==R.id.nav_category){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content, new CategoryManagement()).commit();
+        }
+
         if (id == R.id.nav_logout) {
             User.logout(this);
             Intent intent = new Intent(AdminActivity.this, LoginActivity.class);
