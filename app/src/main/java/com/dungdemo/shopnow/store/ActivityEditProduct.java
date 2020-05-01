@@ -64,7 +64,7 @@ public class ActivityEditProduct extends AppCompatActivity implements AsyncRespo
     ArrayAdapter<ProductCategory> arrayAdapter;
     int category_selected_id = 0;
     List<ProductCategory> productCategories;
-    EditText edtName,edtDescription,edtPrice,edtAmount;
+    EditText edtName,edtDescription,edtPrice,edtAmount,edtPromotionPrice;
     TextView tvStatus;
     ProgressBar progressBar;
     Product product;
@@ -79,6 +79,7 @@ public class ActivityEditProduct extends AppCompatActivity implements AsyncRespo
         edtName=findViewById(R.id.edtName);
         edtDescription=findViewById(R.id.edtDescription);
         edtPrice=findViewById(R.id.edtPrice);
+        edtPromotionPrice=findViewById(R.id.edtPromotionPrice);
         edtAmount=findViewById(R.id.edtAmount);
         imageView1 = findViewById(R.id.img1);
         imageView2 = findViewById(R.id.img2);
@@ -86,6 +87,7 @@ public class ActivityEditProduct extends AppCompatActivity implements AsyncRespo
         imageView4 = findViewById(R.id.img4);
         tvStatus=findViewById(R.id.tvStatus);
         btnStatus=findViewById(R.id.btnStatus);
+
         findViewById(R.id.btnBack).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,6 +120,9 @@ public class ActivityEditProduct extends AppCompatActivity implements AsyncRespo
                     }else{
                         if(edtPrice.getText().toString().isEmpty()){
                             edtPrice.setError("Giá không được bỏ trống!");
+                        }
+                        else if(invalidatePrice()){
+                            edtPromotionPrice.setError("Giảm giá phải nhỏ hơn giá gốc!");
                         }else{
                             if(edtAmount.getText().toString().isEmpty()){
                                 edtAmount.setError("Số lượng sản phẩm không được bỏ trống!");
@@ -130,6 +135,9 @@ public class ActivityEditProduct extends AppCompatActivity implements AsyncRespo
                                 map.put("name",edtName.getText().toString());
                                 map.put("description",edtDescription.getText().toString());
                                 map.put("price",edtPrice.getText().toString());
+                                if(!edtPromotionPrice.getText().toString().isEmpty()){
+                                    map.put("promotion_price",edtPromotionPrice.getText().toString());
+                                }
                                 map.put("amount",edtAmount.getText().toString());
                                 map.put("category_id",(category_selected_id+1)+"");
 
@@ -303,6 +311,7 @@ public class ActivityEditProduct extends AppCompatActivity implements AsyncRespo
         edtDescription.setText(product.getDescription());
         edtPrice.setText(product.getPrice()+"");
         edtAmount.setText(product.getAmount()+"");
+        edtPromotionPrice.setText(product.getPromotion_price()+"");
         loadActiveLayout();
 
         if(product.getImages().size()>0){
@@ -579,6 +588,14 @@ public class ActivityEditProduct extends AppCompatActivity implements AsyncRespo
         }else{
             Toast.makeText(this, "NULL", Toast.LENGTH_SHORT).show();
         }
+    }
+    private boolean invalidatePrice() {
+        if(!edtPromotionPrice.getText().toString().isEmpty()){
+            if(Integer.parseInt(edtPromotionPrice.getText().toString())-Integer.parseInt(edtPrice.getText().toString())>=0){
+                return  true;
+            }
+        }
+        return false;
     }
 }
 

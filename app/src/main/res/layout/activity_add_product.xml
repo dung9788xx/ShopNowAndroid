@@ -89,6 +89,39 @@
          <TextView
              android:textSize="15sp"
              android:textStyle="bold"
+             android:layout_gravity="center"
+             android:layout_weight="6"
+             android:text="Giá khuyến mại"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"/>
+         <LinearLayout
+             android:layout_weight="4"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
+             <EditText
+                 android:id="@+id/edtPromotionPrice"
+                 android:inputType="number"
+                 android:layout_weight="4"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"/>
+             <TextView
+                 android:textSize="15sp"
+                 android:textStyle="bold"
+                 android:layout_weight="8"
+                 android:text="VND"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"/>
+         </LinearLayout>
+
+
+     </LinearLayout>
+     <LinearLayout
+         android:orientation="horizontal"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content">
+         <TextView
+             android:textSize="15sp"
+             android:textStyle="bold"
              android:fontFamily="@font/font"
              android:layout_weight="6"
              android:text="Số lượng sản phẩm"

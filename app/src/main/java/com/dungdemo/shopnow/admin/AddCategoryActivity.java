@@ -126,7 +126,7 @@ public class AddCategoryActivity extends AppCompatActivity implements AsyncRespo
         if(output.code()==200){
             Toast.makeText(this, "Thêm thành công", Toast.LENGTH_SHORT).show();
             finish();
-        }
+        }else
         if(output.code()==409){
             Toast.makeText(this, "Tên danh mục đã tồn tại!", Toast.LENGTH_SHORT).show();
         }else{

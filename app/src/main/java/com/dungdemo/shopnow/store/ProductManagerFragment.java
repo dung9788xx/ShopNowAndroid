@@ -27,6 +27,7 @@ import com.dungdemo.shopnow.model.Product;
 import com.dungdemo.shopnow.model.User;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
+import com.dungdemo.shopnow.utils.MoneyType;
 import com.dungdemo.shopnow.utils.ResponeFromServer;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -177,7 +178,11 @@ public class ProductManagerFragment extends Fragment implements AsyncResponse {
                         Picasso.get().load(url).networkPolicy(NetworkPolicy.NO_CACHE)
                                 .resize(100, 100).into(thumbnail);
                         name.setText(product.getName());
-                        price.setText(product.getPrice() + " VND");
+                        if(product.getPromotion_price()!=0){
+                            price.setText(MoneyType.toMoney(product.getPromotion_price()) + " VND");
+                        }else{
+                            price.setText(MoneyType.toMoney(product.getPrice()) + " VND");
+                        }
                         if (product.getIsSelling() == 1) {
                             tvStatus.setText("Còn lại :" + product.getAmount() + " sp");
                         } else {

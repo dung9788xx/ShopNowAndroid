@@ -77,7 +77,7 @@ public class CategoryManagement extends Fragment {
                         })
                         .setNegativeButton("Không", null)
                         .show();
-                return false;
+                return true;
             }
         });
         lvCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {

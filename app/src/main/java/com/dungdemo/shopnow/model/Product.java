@@ -14,6 +14,8 @@ public class Product implements Serializable {
     String name;
     @SerializedName("description")
     String description;
+    @SerializedName("promotion_price")
+    int promotion_price;
     @SerializedName("price")
     int price;
     @SerializedName("amount")
@@ -38,15 +40,26 @@ public class Product implements Serializable {
     public Product(){
 
     };
-    public Product(int product_id, String name, String description, int price, int amount, int isSelling, ProductCategory category, List<ProductImage> images) {
+
+    public Product(int product_id, String name, String description, int promotion_price, int price, int amount, int isSelling, ProductCategory category, List<ProductImage> images, Store store) {
         this.product_id = product_id;
         this.name = name;
         this.description = description;
+        this.promotion_price = promotion_price;
         this.price = price;
         this.amount = amount;
         this.isSelling = isSelling;
         this.category = category;
         this.images = images;
+        this.store = store;
+    }
+
+    public int getPromotion_price() {
+        return promotion_price;
+    }
+
+    public void setPromotion_price(int promotion_price) {
+        this.promotion_price = promotion_price;
     }
 
     public int getProduct_id() {

@@ -70,7 +70,7 @@
                         android:layout_marginLeft="15dp"
                         android:gravity="center"
                         android:id="@+id/btnPlus"
-                        android:background="@drawable/ic_add_black_24dp"
+                        android:background="@drawable/ic_add_quanity_24dp"
                         android:layout_width="30dp"
                         android:layout_height="25dp"/>
                 </LinearLayout>

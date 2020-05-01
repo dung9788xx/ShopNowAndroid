@@ -57,7 +57,7 @@ public class  ActivityAddProduct extends AppCompatActivity implements AsyncRespo
     ArrayAdapter<ProductCategory> arrayAdapter;
     int category_selected_id = -1;
     List<ProductCategory> productCategories;
-    EditText edtName,edtDescription,edtPrice,edtAmount;
+    EditText edtName,edtDescription,edtPrice,edtAmount,edtPromotionPrice;
     ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +68,7 @@ public class  ActivityAddProduct extends AppCompatActivity implements AsyncRespo
         edtName=findViewById(R.id.edtName);
         edtDescription=findViewById(R.id.edtDescription);
         edtPrice=findViewById(R.id.edtPrice);
+        edtPromotionPrice=findViewById(R.id.edtPromotionPrice);
         edtAmount=findViewById(R.id.edtAmount);
         imageView1 = findViewById(R.id.img1);
         imageView2 = findViewById(R.id.img2);
@@ -104,7 +105,11 @@ public class  ActivityAddProduct extends AppCompatActivity implements AsyncRespo
                     }else{
                         if(edtPrice.getText().toString().isEmpty()){
                             edtPrice.setError("Giá không được bỏ trống!");
-                        }else{
+                        }
+                        else if(invalidatePrice()){
+                                edtPromotionPrice.setError("Giảm giá phải nhỏ hơn giá gốc!");
+                        }
+                        else{
                             if(edtAmount.getText().toString().isEmpty()){
                                 edtAmount.setError("Số lượng sản phẩm không được bỏ trống!");
                             }else{
@@ -117,6 +122,9 @@ public class  ActivityAddProduct extends AppCompatActivity implements AsyncRespo
                                 map.put("description",edtDescription.getText().toString());
                                 map.put("price",edtPrice.getText().toString());
                                 map.put("amount",edtAmount.getText().toString());
+                                if(!edtPromotionPrice.getText().toString().isEmpty()){
+                                    map.put("promotion_price",edtPromotionPrice.getText().toString());
+                                }
                                 map.put("category_id",(category_selected_id+1)+"");
 
                                 new AsyncTask<Void,Void,Void>(){
@@ -236,6 +244,15 @@ public class  ActivityAddProduct extends AppCompatActivity implements AsyncRespo
                 return true;
             }
         });
+    }
+
+    private boolean invalidatePrice() {
+        if(!edtPromotionPrice.getText().toString().isEmpty()){
+            if(Integer.parseInt(edtPromotionPrice.getText().toString())-Integer.parseInt(edtPrice.getText().toString())>=0){
+                return  true;
+            }
+        }
+        return false;
     }
 
     private void loadSpinner() {

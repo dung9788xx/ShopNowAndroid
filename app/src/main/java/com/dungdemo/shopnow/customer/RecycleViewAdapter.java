@@ -2,6 +2,8 @@ package com.dungdemo.shopnow.customer;
 
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,7 +54,16 @@ implements Filterable {
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
         Product product=productsFiltered.get(position);
         holder.tvProductName.setText(product.getName());
-        holder.tvPrice.setText(MoneyType.toMoney(product.getPrice()) +" VND");
+        if (product.getPromotion_price()!=0) {
+            holder.tvPrice.setTextColor(Color.rgb(105,105,105));
+            holder.tvPrice.setText(MoneyType.toMoney(product.getPrice()) +" VND");
+            holder.tvPrice.setPaintFlags(holder.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.tvPromotionPrice.setVisibility(View.VISIBLE);
+            holder.tvPromotionPrice.setText(MoneyType.toMoney(product.getPromotion_price())+" VND");
+        }else{
+            holder.tvPrice.setText(MoneyType.toMoney(product.getPrice()) +" VND");
+        }
+
         Picasso.get().load(HostName.imgurl+product.getProduct_id()+"/"+product.getImages().get(0).getImage_name())
         .into(holder.imgProduct);
         holder.viewClick.setOnClickListener(new View.OnClickListener() {
@@ -101,14 +112,16 @@ implements Filterable {
         };
     }
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
-        TextView tvProductName,tvPrice;
+        TextView tvProductName,tvPrice,tvPromotionPrice;
         ImageView imgProduct;
         View viewClick;
         public RecyclerViewHolder(View itemView) {
             super(itemView);
             tvProductName = (TextView) itemView.findViewById(R.id.tvProductName);
             tvPrice=itemView.findViewById(R.id.tvPrice);
+            tvPromotionPrice=itemView.findViewById(R.id.tvPromotionPrice);
             imgProduct=itemView.findViewById(R.id.imgProduct);
+
             viewClick=itemView.findViewById(R.id.view);
         }
     }

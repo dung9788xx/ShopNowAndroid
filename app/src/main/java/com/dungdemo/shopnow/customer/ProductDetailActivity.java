@@ -2,6 +2,7 @@ package com.dungdemo.shopnow.customer;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -96,7 +97,11 @@ public class ProductDetailActivity extends AppCompatActivity implements AsyncRes
         map.put("token", User.getSavedToken(ProductDetailActivity.this));
         map.put("method","post");
         map.put("product_id",product.getProduct_id()+"");
-        map.put("price",product.getPrice()+"");
+        if(product.getPromotion_price()!=0){
+            map.put("price",product.getPromotion_price()+"");
+        }else{
+            map.put("price",product.getPrice()+"");
+        }
         map.put("quantity","1");
         EditText edtNote=findViewById(R.id.edtNote);
         map.put("note",edtNote.getText().toString());
@@ -143,12 +148,20 @@ public class ProductDetailActivity extends AppCompatActivity implements AsyncRes
 
     private void loadInfoToView() {
         TextView tvPrice=findViewById(R.id.tvPrice);
+        TextView tvPromotionPrice=findViewById(R.id.tvPromotionPrice);
         TextView tvAmount=findViewById(R.id.tvAmount);
         TextView tvDescription=findViewById(R.id.tvDescription);
         TextView tvShopName=findViewById(R.id.tvShopName);
         tvAmount.setText(product.getAmount()+"");
         tvDescription.setText(product.getDescription());
-        tvPrice.setText(MoneyType.toMoney(product.getPrice())+" VND");
+        if (product.getPromotion_price()!=0) {
+            tvPrice.setText(MoneyType.toMoney(product.getPrice()) +" VND");
+            tvPrice.setPaintFlags(tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            tvPrice.setVisibility(View.VISIBLE);
+            tvPromotionPrice.setText(MoneyType.toMoney(product.getPromotion_price())+" VND");
+        }else{
+            tvPromotionPrice.setText(MoneyType.toMoney(product.getPrice()) +" VND");
+        }
         tvShopName.setText(product.getStore().getName());
         tvShopName.setOnClickListener(new View.OnClickListener() {
             @Override
