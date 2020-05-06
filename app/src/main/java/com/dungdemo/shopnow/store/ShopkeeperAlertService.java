@@ -80,7 +80,7 @@ public class ShopkeeperAlertService extends Service implements AsyncResponse {
             PendingIntent pendingIntent = PendingIntent.getActivity(this,
                     0, notificationIntent, 0);
             Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setContentTitle("Foreground Service")
+                    .setContentTitle(title)
                     .setContentText(message)
                     .setSmallIcon(R.drawable.ic_store_black_24dp)
                     .setContentIntent(pendingIntent)

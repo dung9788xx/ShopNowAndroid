@@ -1,6 +1,7 @@
 package com.dungdemo.shopnow.store;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -33,16 +34,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ShopkeeperMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, AsyncResponse {
-    int checkExit=0;
+    int checkExit = 0;
     NavigationView navigationView;
     User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopkeeper_main);
-    //AlertService
+        //AlertService
         Intent myIntent = new Intent(ShopkeeperMainActivity.this, ShopkeeperAlertService.class);
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             ContextCompat.startForegroundService(this, myIntent);
             startService(myIntent);
         } else {
@@ -60,7 +62,13 @@ public class ShopkeeperMainActivity extends AppCompatActivity implements Navigat
         navigationView = (NavigationView) findViewById(R.id.shopkeeper_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         loadData();
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content,new OrderManagerFragment()).commit();
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            String id = "ForegroundServiceChannel";
+            notificationManager.deleteNotificationChannel(id);
+        }
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content, new OrderManagerFragment()).commit();
     }
 
     @Override
@@ -68,15 +76,15 @@ public class ShopkeeperMainActivity extends AppCompatActivity implements Navigat
         int id = menuItem.getItemId();
 
         if (id == R.id.nav_order) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content,new OrderManagerFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content, new OrderManagerFragment()).commit();
 
         }
-        if(id==R.id.nav_product){
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content,new ProductManagerFragment()).commit();
+        if (id == R.id.nav_product) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content, new ProductManagerFragment()).commit();
         }
-        if(id==R.id.nav_logout){
+        if (id == R.id.nav_logout) {
             User.logout(this);
-            Intent intent = new Intent(ShopkeeperMainActivity.this,LoginActivity.class);
+            Intent intent = new Intent(ShopkeeperMainActivity.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
@@ -93,40 +101,41 @@ public class ShopkeeperMainActivity extends AppCompatActivity implements Navigat
         } else {
 //            super.onBackPressed();
             checkExit++;
-            if(checkExit==2){
+            if (checkExit == 2) {
                 finishAffinity();
             }
             Toast.makeText(this, "Ấn lại để thoát !", Toast.LENGTH_SHORT).show();
 
         }
     }
+
     private void loadData() {
-        Map<String,String > map=new HashMap<>(  );
-        map.put("token",User.getSavedToken(getApplication()));
-        map.put("method","get");
-        TaskConnect task=new TaskConnect(ShopkeeperMainActivity.this, HostName.host+"/user/"+User.getSavedUserId(this));
-        task.setMap( map );
+        Map<String, String> map = new HashMap<>();
+        map.put("token", User.getSavedToken(getApplication()));
+        map.put("method", "get");
+        TaskConnect task = new TaskConnect(ShopkeeperMainActivity.this, HostName.host + "/user/" + User.getSavedUserId(this));
+        task.setMap(map);
         task.execute();
     }
 
     @Override
     public void whenfinish(ResponeFromServer output) {
-        Log.d("lol",output.code()+""+output.getBody());
-        if(output!=null){
-            if(output.code()==200){
-                String json="";
-                    json=output.getBody();
-                Gson gson=new Gson();
-                user=gson.fromJson(json,User.class);
-                View headerView=navigationView.getHeaderView(0);
-                TextView name=headerView.findViewById(R.id.tvName);
+        Log.d("lol", output.code() + "" + output.getBody());
+        if (output != null) {
+            if (output.code() == 200) {
+                String json = "";
+                json = output.getBody();
+                Gson gson = new Gson();
+                user = gson.fromJson(json, User.class);
+                View headerView = navigationView.getHeaderView(0);
+                TextView name = headerView.findViewById(R.id.tvName);
                 name.setText(user.getName());
-                TextView phone=headerView.findViewById(R.id.tvPhone);
+                TextView phone = headerView.findViewById(R.id.tvPhone);
                 phone.setText(user.getPhone());
             }
-            if(output.code()==401){
+            if (output.code() == 401) {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(ShopkeeperMainActivity.this);
-                builder1.setMessage(new Gson().fromJson(output.getBody(),String.class));
+                builder1.setMessage(new Gson().fromJson(output.getBody(), String.class));
                 builder1.setCancelable(true);
 
                 builder1.setPositiveButton(
@@ -145,9 +154,9 @@ public class ShopkeeperMainActivity extends AppCompatActivity implements Navigat
                 AlertDialog alert11 = builder1.create();
                 alert11.show();
             }
-            if(output.code()==0){
+            if (output.code() == 0) {
 
-                    Toast.makeText(this, "Kiểm tra lại kết nối !", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Kiểm tra lại kết nối !", Toast.LENGTH_SHORT).show();
 
             }
 

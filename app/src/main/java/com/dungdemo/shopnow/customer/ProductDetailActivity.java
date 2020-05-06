@@ -155,6 +155,7 @@ public class ProductDetailActivity extends AppCompatActivity implements AsyncRes
         tvAmount.setText(product.getAmount()+"");
         tvDescription.setText(product.getDescription());
         if (product.getPromotion_price()!=0) {
+            tvPrice.setText(Color.BLACK);
             tvPrice.setText(MoneyType.toMoney(product.getPrice()) +" VND");
             tvPrice.setPaintFlags(tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             tvPrice.setVisibility(View.VISIBLE);
