@@ -60,6 +60,7 @@ implements Filterable {
             holder.tvPrice.setPaintFlags(holder.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             holder.tvPromotionPrice.setVisibility(View.VISIBLE);
             holder.tvPromotionPrice.setText(MoneyType.toMoney(product.getPromotion_price())+" VND");
+            holder.saleIcon.setVisibility(View.VISIBLE);
         }else{
             holder.tvPrice.setText(MoneyType.toMoney(product.getPrice()) +" VND");
         }
@@ -115,13 +116,14 @@ implements Filterable {
         TextView tvProductName,tvPrice,tvPromotionPrice;
         ImageView imgProduct;
         View viewClick;
+        ImageView saleIcon;
         public RecyclerViewHolder(View itemView) {
             super(itemView);
             tvProductName = (TextView) itemView.findViewById(R.id.tvProductName);
             tvPrice=itemView.findViewById(R.id.tvPrice);
             tvPromotionPrice=itemView.findViewById(R.id.tvPromotionPrice);
             imgProduct=itemView.findViewById(R.id.imgProduct);
-
+            saleIcon=itemView.findViewById(R.id.saleicon);
             viewClick=itemView.findViewById(R.id.view);
         }
     }

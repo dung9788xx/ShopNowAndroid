@@ -30,7 +30,6 @@
             android:layout_margin="50dp"
             android:orientation="vertical">
             <EditText
-                android:text="admin"
                 android:inputType="text"
                 android:maxLines="1"
                 android:fontFamily="sans-serif-light"
@@ -42,7 +41,6 @@
                 android:textAlignment="center" />
 
             <EditText
-                android:text="admin"
                 android:maxLines="1"
                 android:fontFamily="sans-serif-light"
                 android:id="@+id/password"
