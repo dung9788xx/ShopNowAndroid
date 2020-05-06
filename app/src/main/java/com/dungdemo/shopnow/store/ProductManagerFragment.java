@@ -52,7 +52,7 @@ public class ProductManagerFragment extends Fragment implements AsyncResponse {
     TaskConnect task;
     List<Product> products = new ArrayList<>();
     ArrayAdapter<Product> arrayAdapter;
-
+    TextView tvNoProduct;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +64,7 @@ public class ProductManagerFragment extends Fragment implements AsyncResponse {
         View view = inflater.inflate(R.layout.fragment_product_manage, container, false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Quản lý sản phẩm");
         lvProduct = view.findViewById(R.id.lvProduct);
+        tvNoProduct=view.findViewById(R.id.tvNoProduct);
         lvProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -176,7 +177,7 @@ public class ProductManagerFragment extends Fragment implements AsyncResponse {
                         Product product = products.get(position);
                         String url = HostName.imgurl + product.getProduct_id() + "/" + product.getImages().get(0).getImage_name();
                         Picasso.get().load(url).networkPolicy(NetworkPolicy.NO_CACHE)
-                                .resize(100, 100).into(thumbnail);
+                                .resize(200, 200).into(thumbnail);
                         name.setText(product.getName());
                         if(product.getPromotion_price()!=0){
                             price.setText(MoneyType.toMoney(product.getPromotion_price()) + " VND");
@@ -184,7 +185,7 @@ public class ProductManagerFragment extends Fragment implements AsyncResponse {
                             price.setText(MoneyType.toMoney(product.getPrice()) + " VND");
                         }
                         if (product.getIsSelling() == 1) {
-                            tvStatus.setText("Còn lại :" + product.getAmount() + " sp");
+                            tvStatus.setText("Còn:" + product.getAmount() + " sp");
                         } else {
                             tvStatus.setTextColor(Color.RED);
                             tvStatus.setText("Đã tạm dừng bán");
@@ -195,6 +196,9 @@ public class ProductManagerFragment extends Fragment implements AsyncResponse {
                     }
                 };
                 lvProduct.setAdapter(arrayAdapter);
+                if(products.size()==0){
+                    tvNoProduct.setVisibility(View.VISIBLE);
+                }
             }
         }
     }

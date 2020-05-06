@@ -57,7 +57,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class ActivityEditProduct extends AppCompatActivity implements AsyncResponse {
-    int imageQuality=4;
+    int imageQuality=2;
     ImageView imageView1, imageView2, imageView3, imageView4;
     Bitmap thumbnail1, thumbnail2, thumbnail3, thumbnail4;
     Spinner spinner;

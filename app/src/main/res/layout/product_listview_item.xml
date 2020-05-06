@@ -3,7 +3,11 @@
     android:padding="10dp"
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="wrap_content">
+<android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <LinearLayout
+        android:layout_margin="5dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -31,7 +35,7 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:textStyle="bold"
-                    android:maxLength="25"
+                    android:maxLength="17"
                     android:textSize="18sp"
                     android:fontFamily="@font/font"
                     android:id="@+id/tvName"
@@ -45,13 +49,15 @@
                     android:layout_height="wrap_content"/>
             </LinearLayout>
 
-                <TextView
-                    android:layout_gravity="right|center"
-                    android:id="@+id/tvStatus"
-                    android:text="Con lai:300"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_gravity="right"
+                android:id="@+id/tvStatus"
+                android:text="Còn:300"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
         </FrameLayout>
     </LinearLayout>
+</android.support.v7.widget.CardView>
 </LinearLayout>
