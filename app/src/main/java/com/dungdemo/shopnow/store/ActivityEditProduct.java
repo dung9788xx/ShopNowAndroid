@@ -168,8 +168,6 @@ public class ActivityEditProduct extends AppCompatActivity implements AsyncRespo
                                     }
                                 }.execute();
 
-
-
                             }
                         }
                     }

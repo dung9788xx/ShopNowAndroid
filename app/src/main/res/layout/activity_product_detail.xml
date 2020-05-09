@@ -127,7 +127,7 @@
                    android:paddingLeft="3dp"
                    android:fontFamily="@string/font"
                    android:textSize="16sp"
-                   android:text="Thien Huong Shop"
+                   android:text="ABC Shop"
                    android:id="@+id/tvShopName"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"/>
