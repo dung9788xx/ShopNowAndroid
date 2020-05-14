@@ -164,37 +164,39 @@ public class ProductManagerFragment extends Fragment implements AsyncResponse {
                 Type listType = new TypeToken<List<Product>>() {
                 }.getType();
                 products = new Gson().fromJson(json, listType);
-                arrayAdapter = new ArrayAdapter<Product>(getContext(), R.layout.product_listview_item, products) {
-                    @NonNull
-                    @Override
-                    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                        LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        View v = layoutInflater.inflate(R.layout.product_listview_item, null);
-                        ImageView thumbnail = v.findViewById(R.id.thumbnail);
-                        TextView name = v.findViewById(R.id.tvName);
-                        TextView price = v.findViewById(R.id.tvPrive);
-                        TextView tvStatus = v.findViewById(R.id.tvStatus);
-                        Product product = products.get(position);
-                        String url = HostName.imgurl + product.getProduct_id() + "/" + product.getImages().get(0).getImage_name();
-                        Picasso.get().load(url).networkPolicy(NetworkPolicy.NO_CACHE)
-                                .resize(200, 200).into(thumbnail);
-                        name.setText(product.getName());
-                        if(product.getPromotion_price()!=0){
-                            price.setText(MoneyType.toMoney(product.getPromotion_price()) + " VND");
-                        }else{
-                            price.setText(MoneyType.toMoney(product.getPrice()) + " VND");
-                        }
-                        if (product.getIsSelling() == 1) {
-                            tvStatus.setText("Còn:" + product.getAmount() + " sp");
-                        } else {
-                            tvStatus.setTextColor(Color.RED);
-                            tvStatus.setText("Đã tạm dừng bán");
-                        }
+              if(getActivity()!=null){
+                  arrayAdapter = new ArrayAdapter<Product>(getContext(), R.layout.product_listview_item, products) {
+                      @NonNull
+                      @Override
+                      public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                          LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                          View v = layoutInflater.inflate(R.layout.product_listview_item, null);
+                          ImageView thumbnail = v.findViewById(R.id.thumbnail);
+                          TextView name = v.findViewById(R.id.tvName);
+                          TextView price = v.findViewById(R.id.tvPrive);
+                          TextView tvStatus = v.findViewById(R.id.tvStatus);
+                          Product product = products.get(position);
+                          String url = HostName.imgurl + product.getProduct_id() + "/" + product.getImages().get(0).getImage_name();
+                          Picasso.get().load(url).networkPolicy(NetworkPolicy.NO_CACHE)
+                                  .resize(200, 200).into(thumbnail);
+                          name.setText(product.getName());
+                          if(product.getPromotion_price()!=0){
+                              price.setText(MoneyType.toMoney(product.getPromotion_price()) + " VND");
+                          }else{
+                              price.setText(MoneyType.toMoney(product.getPrice()) + " VND");
+                          }
+                          if (product.getIsSelling() == 1) {
+                              tvStatus.setText("Còn:" + product.getAmount() + " sp");
+                          } else {
+                              tvStatus.setTextColor(Color.RED);
+                              tvStatus.setText("Đã tạm dừng bán");
+                          }
 
 
-                        return v;
-                    }
-                };
+                          return v;
+                      }
+                  };
+              }
                 lvProduct.setAdapter(arrayAdapter);
                 if(products.size()==0){
                     tvNoProduct.setVisibility(View.VISIBLE);

@@ -120,7 +120,6 @@ public class ShopkeeperMainActivity extends AppCompatActivity implements Navigat
 
     @Override
     public void whenfinish(ResponeFromServer output) {
-        Log.d("lol", output.code() + "" + output.getBody());
         if (output != null) {
             if (output.code() == 200) {
                 String json = "";
@@ -137,7 +136,6 @@ public class ShopkeeperMainActivity extends AppCompatActivity implements Navigat
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(ShopkeeperMainActivity.this);
                 builder1.setMessage(new Gson().fromJson(output.getBody(), String.class));
                 builder1.setCancelable(true);
-
                 builder1.setPositiveButton(
                         "OK",
                         new DialogInterface.OnClickListener() {
