@@ -8,7 +8,7 @@
         android:layout_height="wrap_content">
         <LinearLayout
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="14dp"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -23,9 +23,10 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:textStyle="bold"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:fontFamily="@string/font"
                     android:text="Điện thoại"
+                    android:layout_marginRight="23dp"
                     android:id="@+id/tvProductName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>

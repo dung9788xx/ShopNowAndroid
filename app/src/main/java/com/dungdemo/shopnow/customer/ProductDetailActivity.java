@@ -3,6 +3,7 @@ package com.dungdemo.shopnow.customer;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.support.annotation.DrawableRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -155,7 +156,7 @@ public class ProductDetailActivity extends AppCompatActivity implements AsyncRes
         tvAmount.setText(product.getAmount()+"");
         tvDescription.setText(product.getDescription());
         if (product.getPromotion_price()!=0) {
-            tvPrice.setTextColor(Color.BLACK);
+            tvPrice.setTextColor(Color.parseColor("#616A6B"));
             tvPrice.setText(MoneyType.toMoney(product.getPrice()) +" VND");
             tvPrice.setPaintFlags(tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             tvPrice.setVisibility(View.VISIBLE);
@@ -176,6 +177,12 @@ public class ProductDetailActivity extends AppCompatActivity implements AsyncRes
 
         TextView tvProductName=toolbarView.findViewById(R.id.tvProductName);
         tvProductName.setText(product.getName());
+
+        if(product.getAmount()<=0){
+            btnAddToCart.setText("Hết hàng");
+            btnAddToCart.setEnabled(false);
+            btnAddToCart.setBackground(getDrawable(R.drawable.button_rounded_disable));
+        }
     }
 
 
