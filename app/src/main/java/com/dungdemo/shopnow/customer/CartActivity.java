@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -74,7 +75,7 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
     ArrayAdapter<Cart_Detail> arrayAdapter;
     ProgressBar progressBar, dialogProgressBar;
     ListView lvCart;
-    TextView tvNoItem,tvAmount;
+    TextView tvNoItem, tvAmount;
     FrameLayout content;
     JSONObject shippingInfo;
     AlertDialog dialog;
@@ -83,7 +84,7 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
     List<Province> provinceList;
     List<District> districtList;
     List<Ward> wardList;
-
+    boolean showUpdatedMessage=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,32 +100,76 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
         lvCart = findViewById(R.id.lvCart);
         progressBar = findViewById(R.id.progress);
         tvNoItem = findViewById(R.id.tvNoCartItem);
-        tvAmount=findViewById(R.id.tvAmount);
+        tvAmount = findViewById(R.id.tvAmount);
         content = findViewById(R.id.content);
         findViewById(R.id.btnUpdateCart).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String s = new Gson().toJson(getListJson());
-                Map<String, String> map = new HashMap<>();
-                map.put("token", User.getSavedToken(getApplication()));
-                map.put("method", "post");
-                map.put("data", s);
-                TaskConnect task = new TaskConnect(CartActivity.this, HostName.host + "/cart/updateCart");
-                task.setMap(map);
-                task.execute();
+                showUpdatedMessage=true;
+             updateCart();
+
             }
         });
         findViewById(R.id.btnBook).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showConfirmAddress();
-//                progressBar.setVisibility(View.VISIBLE);
-//                placeBook();
+                if(checkCart()==1){
+                    showUpdatedMessage=false;
+                    updateCart();
+                    showConfirmAddress();
+                }else if(checkCart()==2){
+                    new AlertDialog.Builder(CartActivity.this)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setTitle("Hết sản phẩm")
+                            .setMessage("Sản phẩm hết hàng sẽ không được đăt, tiếp tục đặt sản phẩm còn hàng ?")
+                            .setPositiveButton("Tiếp tục", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    showUpdatedMessage=false;
+                                    updateCart();
+                                    showConfirmAddress();
+                                }
+
+                            })
+                            .setNegativeButton("Không", null)
+                            .show();
+                }else{
+                    Toast.makeText(CartActivity.this, "Các sản phẩm bạn đặt đã hết hàng!", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
         loadData();
         loadShippingInfo();
 
+    }
+
+    private void updateCart() {
+        String s = new Gson().toJson(getListJson());
+        Map<String, String> map = new HashMap<>();
+        map.put("token", User.getSavedToken(getApplication()));
+        map.put("method", "post");
+        map.put("data", s);
+        TaskConnect task = new TaskConnect(CartActivity.this, HostName.host + "/cart/updateCart");
+        task.setMap(map);
+        task.execute();
+    }
+
+    private int checkCart() {
+        boolean hasProuductOutAmount=false;
+        boolean hasProductEnoughAmount=false;
+        for(int i=0;i<cart_details.size();i++){
+            if(cart_details.get(i).getProduct().getAmount()-cart_details.get(i).getQuantity()<0){
+                hasProuductOutAmount=true;
+            }
+            hasProductEnoughAmount=true;
+        }
+       if(hasProductEnoughAmount&&!hasProuductOutAmount){
+           return 1;
+       }else if(hasProductEnoughAmount&&hasProuductOutAmount){
+           return 2;
+       }
+       return 3;
     }
 
     private void loadShippingInfo() {
@@ -212,7 +257,7 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
                                 content.setVisibility(View.INVISIBLE);
                                 LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
                                 View layout = inflater.inflate(R.layout.dialog_custom_layout, null);
-                                TextView tv=layout.findViewById(R.id.tv);
+                                TextView tv = layout.findViewById(R.id.tv);
                                 tv.setText(strRespone);
                                 AlertDialog.Builder builder = new AlertDialog.Builder(CartActivity.this);
                                 builder.setView(layout);
@@ -239,7 +284,7 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
 
         List<Cart_Detail_Temp> list = new ArrayList<>();
         for (Cart_Detail cart_detail : cart_details) {
-            list.add(new Cart_Detail_Temp(cart_detail.getProduct().getProduct_id(),cart_detail.getPrice(), cart_detail.getQuantity(), cart_detail.getNote()));
+            list.add(new Cart_Detail_Temp(cart_detail.getProduct().getProduct_id(), cart_detail.getPrice(), cart_detail.getQuantity(), cart_detail.getNote()));
         }
         return list;
     }
@@ -332,6 +377,7 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
                     TextView tvProductName = v.findViewById(R.id.tvProductName);
                     TextView tvPrice = v.findViewById(R.id.tvPrice);
                     TextView tvQuantity = v.findViewById(R.id.tvQuantity);
+                    TextView tvAmount = v.findViewById(R.id.tvAmount);
                     EditText edtNote = v.findViewById(R.id.edtNote);
                     ImageView imgProduct = v.findViewById(R.id.imgProduct);
                     ImageView imgRemove = v.findViewById(R.id.imgRemove);
@@ -339,6 +385,20 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
                     tvProductName.setText(cart_detail.getProduct().getName());
                     tvPrice.setText(MoneyType.toMoney(cart_detail.getProduct().getPrice()) + " VND");
                     tvQuantity.setText(cart_detail.getQuantity() + "");
+                    if (cart_detail.getProduct().getAmount() <= 0) {
+                        tvAmount.setTextColor(Color.parseColor("#F44336"));
+                        tvAmount.setText("Hết hàng".toUpperCase());
+                        tvQuantity.setText("0");
+                    } else {
+                        if(cart_detail.getProduct().getAmount()-cart_detail.getQuantity()<0){
+                            tvAmount.setTextColor(Color.parseColor("#F44336"));
+                            tvAmount.setText("Không đủ sản phẩm còn lại :"+cart_detail.getProduct().getAmount());
+                        }else {
+
+                            tvAmount.setText("Còn lại " + (cart_detail.getProduct().getAmount() - cart_detail.getQuantity()) + " sản phẩm");
+                        }
+                    }
+
                     edtNote.setText(cart_detail.getNote());
                     edtNote.addTextChangedListener(new TextWatcher() {
                         @Override
@@ -389,6 +449,19 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
                             } else {
                                 cart_detail.setQuantity(cart_detail.getQuantity() + 1);
                                 caculateAmount();
+                                if (cart_detail.getProduct().getAmount()-cart_detail.getQuantity() <= 0) {
+                                    tvAmount.setTextColor(Color.parseColor("#F44336"));
+                                    tvAmount.setText("Hết hàng".toUpperCase());
+                                    tvQuantity.setText("0");
+                                } else {
+                                    if(cart_detail.getProduct().getAmount()-cart_detail.getQuantity()<0){
+                                        tvAmount.setTextColor(Color.parseColor("#F44336"));
+                                        tvAmount.setText("Không đủ sản phẩm còn lại :"+cart_detail.getProduct().getAmount());
+                                    }else {
+
+                                        tvAmount.setText("Còn lại " + (cart_detail.getProduct().getAmount() - cart_detail.getQuantity()) + " sản phẩm");
+                                    }
+                                }
                                 notifyDataSetChanged();
                             }
                         }
@@ -399,6 +472,19 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
                             if (cart_detail.getQuantity() - 1 > 0) {
                                 cart_detail.setQuantity(cart_detail.getQuantity() - 1);
                                 caculateAmount();
+                                if (cart_detail.getProduct().getAmount()-cart_detail.getQuantity() <= 0) {
+                                    tvAmount.setTextColor(Color.parseColor("#F44336"));
+                                    tvAmount.setText("Hết hàng".toUpperCase());
+                                    tvQuantity.setText("0");
+                                } else {
+                                    if(cart_detail.getProduct().getAmount()-cart_detail.getQuantity()<0){
+                                        tvAmount.setTextColor(Color.parseColor("#F44336"));
+                                        tvAmount.setText("Không đủ sản phẩm còn lại :"+cart_detail.getProduct().getAmount());
+                                    }else {
+
+                                        tvAmount.setText("Còn lại " + (cart_detail.getProduct().getAmount() - cart_detail.getQuantity()) + " sản phẩm");
+                                    }
+                                }
                                 notifyDataSetChanged();
                             }
                         }
@@ -417,11 +503,14 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
     @Override
     public void whenfinish(ResponeFromServer output) {
         if (output.code() == 200) {
-            Toast.makeText(this, "Cập nhật giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
+            if(showUpdatedMessage){
+                Toast.makeText(this, "Cập nhật giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
+            }
+
         } else {
             Toast.makeText(this, "Kiểm tra lại kết nối!", Toast.LENGTH_SHORT).show();
         }
-
+        showUpdatedMessage=false;
     }
 
     class Cart_Detail_Temp {
@@ -660,11 +749,12 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
             }
         });
     }
-    public void caculateAmount(){
-        long amount=0;
-       for(Cart_Detail cart_detail:cart_details){
-            amount=amount+cart_detail.getQuantity()*cart_detail.getPrice();
+
+    public void caculateAmount() {
+        long amount = 0;
+        for (Cart_Detail cart_detail : cart_details) {
+            amount = amount + cart_detail.getQuantity() * cart_detail.getPrice();
         }
-       tvAmount.setText(MoneyType.toMoney(amount)+" VND");
+        tvAmount.setText(MoneyType.toMoney(amount) + " VND");
     }
 }

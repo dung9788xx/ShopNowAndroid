@@ -77,7 +77,7 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         findViewById(R.id.imgSearch).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!"".equals(edtSearch.getText().toString())){
+                if(!"".equals(edtSearch.getText().toString().trim())){
                     Intent t=new Intent(CustomerMainActivity.this,ProductListActivity.class);
                     t.putExtra("search",edtSearch.getText().toString());
                     startActivity(t);

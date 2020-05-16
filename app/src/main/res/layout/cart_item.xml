@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
     <android.support.v7.widget.CardView
      android:padding="10dp"
         android:layout_width="match_parent"
@@ -11,7 +11,7 @@
             android:layout_marginLeft="14dp"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="135dp">
             <ImageView
                 android:src="@drawable/logo"
                 android:id="@+id/imgProduct"
@@ -74,6 +74,13 @@
                         android:background="@drawable/ic_add_quanity_24dp"
                         android:layout_width="30dp"
                         android:layout_height="25dp"/>
+                    <TextView
+                        android:padding="5dp"
+                        android:id="@+id/tvAmount"
+                        android:textColor="#605655"
+                        android:text="Còn lại 100 sản phẩm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
