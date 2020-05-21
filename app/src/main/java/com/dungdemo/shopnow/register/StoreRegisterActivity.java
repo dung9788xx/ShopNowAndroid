@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,6 +89,12 @@ public class StoreRegisterActivity extends AppCompatActivity  implements AsyncRe
                     map.put("storeName",edtStoreName.getText().toString());
                     map.put("description",edtDescription.getText().toString());
                     map.put("method", "post");
+                    map.put("approval",0+"");
+                    map.put("notification",0+"");
+                    if(getIntent().getIntExtra("isAdmin",-1)==1){
+                        map.put("approval",1+"");
+                        map.put("notification",1+"");
+                    }
                     TaskConnect task = new TaskConnect(StoreRegisterActivity.this, HostName.host + "/user");
                     task.setMap(map);
                     progressBar.setVisibility(View.VISIBLE);

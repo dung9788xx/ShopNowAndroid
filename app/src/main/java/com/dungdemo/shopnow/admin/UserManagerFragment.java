@@ -115,7 +115,6 @@ public class UserManagerFragment extends Fragment implements AsyncResponse {
     private void deleteUser(int user_id) {
         OkHttpClient client = new OkHttpClient();
         String url = HostName.host + "/user/" + user_id;
-
         Request request = new Request.Builder()
                 .url(url).addHeader("Authorization", User.getSavedToken(getContext()))
                 .delete().build();

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.dungdemo.shopnow.AsyncResponse;
 import com.dungdemo.shopnow.HostName;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
+import com.dungdemo.shopnow.admin.StoreInfomationActivity;
 import com.dungdemo.shopnow.model.District;
 import com.dungdemo.shopnow.model.Province;
 import com.dungdemo.shopnow.model.Store;
@@ -51,10 +53,12 @@ public class StoreEditActivity extends AppCompatActivity implements AsyncRespons
     List<District> districtList;
     List<Ward> wardList;
     ProgressBar progressBar;
+    User user=new User();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store_edit);
+        user.setUser_id(getIntent().getIntExtra("user_id",-1));
         edtName = findViewById(R.id.edtName);
         edtUsername = findViewById(R.id.edtUsername);
         edtPassword = findViewById(R.id.edtPassword);
@@ -79,16 +83,19 @@ public class StoreEditActivity extends AppCompatActivity implements AsyncRespons
                     map.put("username", edtUsername.getText().toString());
                     map.put("password", edtPassword.getText().toString());
                     map.put("phone", edtPhone.getText().toString());
+                    map.put("location_id",user.getLocation().getLocation_id()+"");
                     map.put("province_id", provinceList.get(spProvince.getSelectedItemPosition()).getProvince_id() + "");
                     map.put("district_id", districtList.get(spDistrict.getSelectedItemPosition()).getDistrict_id() + "");
                     map.put("ward_id", wardList.get(spWard.getSelectedItemPosition()).getId() + "");
                     map.put("street", edtStreet.getText().toString());
                     map.put("level", "2");
                     map.put("active", "1");
+                    map.put("store_id",user.getStore().getStore_id()+"");
                     map.put("storeName",edtStoreName.getText().toString());
                     map.put("description",edtDescription.getText().toString());
-                    map.put("method", "post");
-                    TaskConnect task = new TaskConnect(StoreEditActivity.this, HostName.host + "/user");
+                    map.put("method", "put");
+                    map.put("token", User.getSavedToken(getApplication()));
+                    TaskConnect task = new TaskConnect(StoreEditActivity.this, HostName.host + "/user/"+user.getUser_id());
                     task.setMap(map);
                     progressBar.setVisibility(View.VISIBLE);
                     btnRegister.setEnabled(false);
@@ -97,14 +104,60 @@ public class StoreEditActivity extends AppCompatActivity implements AsyncRespons
             }
         });
         loadToolbarInfo();
+        loadDataFromServer();
+    }
+
+    private void loadDataFromServer() {
+        OkHttpClient client = new OkHttpClient();
+        String url = HostName.host + "/user/" + user.getUser_id();
+
+        Request request = new Request.Builder()
+                .url(url).addHeader("Authorization", User.getSavedToken(this))
+                .build();
+
+        Call call = client.newCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String json = null;
+                    json = response.body().string() + "";
+
+                    user = new Gson().fromJson(json, User.class);
+                    StoreEditActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            loadDataToView();
+                        }
+                    });
+//
+
+                }
+            }
+        });
+    }
+
+    private void loadDataToView() {
         loadProvinceSpinner();
+        edtName.setText(user.getName());
+        edtUsername.setText(user.getUsername());
+        edtPassword.setHint("********");
+        edtRepassword.setHint("********");
+        edtPhone.setText(user.getPhone());
+        edtStreet.setText(user.getLocation().getStreet());
+        edtStoreName.setText(user.getStore().getName());
+        edtDescription.setText(user.getStore().getDescription());
     }
 
     private int validateForm() {
         if (edtName.getText().toString().trim().equals("") ||
                 edtUsername.getText().toString().trim().equals("") ||
-                edtPassword.getText().toString().trim().equals("") ||
-                edtRepassword.getText().toString().trim().equals("") ||
                 edtPhone.getText().toString().trim().equals("") ||
                 edtStoreName.getText().toString().trim().equals("") ||
                 edtStreet.getText().toString().trim().equals("")) {
@@ -175,6 +228,11 @@ public class StoreEditActivity extends AppCompatActivity implements AsyncRespons
                                 }
                             };
                             spProvince.setAdapter(arrayAdapter);
+                            for (int i = 0; i < provinceList.size(); i++) {
+                                if (provinceList.get(i).getProvince_id() == user.getLocation().getProvince().getProvince_id()) {
+                                    spProvince.setSelection(i);
+                                }
+                            }
                         }
                     });
 //
@@ -241,6 +299,11 @@ public class StoreEditActivity extends AppCompatActivity implements AsyncRespons
                             };
                             arrayAdapter.notifyDataSetChanged();
                             spDistrict.setAdapter(arrayAdapter);
+                            for (int i = 0; i < districtList.size(); i++) {
+                                if (districtList.get(i).getDistrict_id() == user.getLocation().getDistrict().getDistrict_id()) {
+                                    spDistrict.setSelection(i);
+                                }
+                            }
                         }
                     });
 //
@@ -306,6 +369,12 @@ public class StoreEditActivity extends AppCompatActivity implements AsyncRespons
                             };
                             arrayAdapter.notifyDataSetChanged();
                             spWard.setAdapter(arrayAdapter);
+                            for (int i = 0; i < wardList.size(); i++) {
+
+                                if (wardList.get(i).getId() == user.getLocation().getWard().getId()) {
+                                    spWard.setSelection(i);
+                                }
+                            }
                         }
                     });
 //
