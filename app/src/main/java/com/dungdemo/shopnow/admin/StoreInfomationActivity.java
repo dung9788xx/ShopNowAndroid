@@ -1,8 +1,11 @@
 package com.dungdemo.shopnow.admin;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,12 +16,13 @@ import com.dungdemo.shopnow.HostName;
 import com.dungdemo.shopnow.model.User;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
+import com.dungdemo.shopnow.register.StoreEditActivity;
 import com.dungdemo.shopnow.utils.ResponeFromServer;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class StoreInfomationActivity extends Activity implements AsyncResponse {
+public class StoreInfomationActivity extends AppCompatActivity implements AsyncResponse {
     Button btActive;
     User user;
     TextView active;
@@ -26,6 +30,19 @@ public class StoreInfomationActivity extends Activity implements AsyncResponse {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store_infomation);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.cart_toolbar);
+        getSupportActionBar().getCustomView().findViewById(R.id.backImg).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        TextView toolbarTitle = getSupportActionBar().getCustomView().findViewById(R.id.tvProductName);
+        toolbarTitle.setText("Thông tin cửa hàng");
+
+
+
         TextView tvStoreName=findViewById(R.id.tvStoreName);
         TextView name=findViewById(R.id.tvName);
         TextView shopAddress=findViewById(R.id.tvShopaddress);
@@ -44,12 +61,7 @@ public class StoreInfomationActivity extends Activity implements AsyncResponse {
                 +", "+user.getLocation().getProvince().getName());
         phone.setText(user.getPhone());
         loadActiveLayout();
-        findViewById(R.id.btBack).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+
         findViewById(R.id.btActive).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,6 +80,14 @@ public class StoreInfomationActivity extends Activity implements AsyncResponse {
                   task.setMap( map );
                   task.execute();
               }
+            }
+        });
+        findViewById(R.id.btnEdit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent t=new Intent(StoreInfomationActivity.this, StoreEditActivity.class);
+                t.putExtra("user_id",user.getUser_id());
+                startActivityForResult(t,1);
             }
         });
     }

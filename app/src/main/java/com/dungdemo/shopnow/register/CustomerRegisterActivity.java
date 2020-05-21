@@ -329,7 +329,7 @@ public class CustomerRegisterActivity extends AppCompatActivity implements Async
         btnRegister.setEnabled(true);
         if(output!=null){
             if(output.code()==200){
-                Toast.makeText(this, "Đăng ký thành công vui lòng đăng nhập ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Đăng ký thành công ", Toast.LENGTH_SHORT).show();
                 finish();
             }
             if (output.code()==403){

@@ -24,6 +24,7 @@ import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
 import com.dungdemo.shopnow.model.District;
 import com.dungdemo.shopnow.model.Province;
+import com.dungdemo.shopnow.model.Store;
 import com.dungdemo.shopnow.model.User;
 import com.dungdemo.shopnow.model.Ward;
 import com.dungdemo.shopnow.utils.ResponeFromServer;
@@ -42,7 +43,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class StoreRegisterActivity extends AppCompatActivity  implements AsyncResponse {
+public class StoreEditActivity extends AppCompatActivity implements AsyncResponse {
     Spinner spProvince, spDistrict, spWard;
     Button btnRegister;
     EditText edtName, edtUsername, edtPassword, edtRepassword, edtPhone, edtStreet,edtStoreName,edtDescription;
@@ -50,11 +51,10 @@ public class StoreRegisterActivity extends AppCompatActivity  implements AsyncRe
     List<District> districtList;
     List<Ward> wardList;
     ProgressBar progressBar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_store_register);
+        setContentView(R.layout.activity_store_edit);
         edtName = findViewById(R.id.edtName);
         edtUsername = findViewById(R.id.edtUsername);
         edtPassword = findViewById(R.id.edtPassword);
@@ -69,9 +69,9 @@ public class StoreRegisterActivity extends AppCompatActivity  implements AsyncRe
             @Override
             public void onClick(View view) {
                 if (validateForm() == 1) {
-                    Toast.makeText(StoreRegisterActivity.this, "Vui lòng nhập đầy đủ thông tin!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(StoreEditActivity.this, "Vui lòng nhập đầy đủ thông tin!", Toast.LENGTH_LONG).show();
                 } else if (validateForm() == 2) {
-                    Toast.makeText(StoreRegisterActivity.this, "Hai mật khẩu không trùng khớp!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StoreEditActivity.this, "Hai mật khẩu không trùng khớp!", Toast.LENGTH_SHORT).show();
 
                 } else {
                     Map<String, String> map = new HashMap<>();
@@ -88,7 +88,7 @@ public class StoreRegisterActivity extends AppCompatActivity  implements AsyncRe
                     map.put("storeName",edtStoreName.getText().toString());
                     map.put("description",edtDescription.getText().toString());
                     map.put("method", "post");
-                    TaskConnect task = new TaskConnect(StoreRegisterActivity.this, HostName.host + "/user");
+                    TaskConnect task = new TaskConnect(StoreEditActivity.this, HostName.host + "/user");
                     task.setMap(map);
                     progressBar.setVisibility(View.VISIBLE);
                     btnRegister.setEnabled(false);
@@ -150,11 +150,11 @@ public class StoreRegisterActivity extends AppCompatActivity  implements AsyncRe
                     Type listType = new TypeToken<List<Province>>() {
                     }.getType();
                     provinceList = new Gson().fromJson(json, listType);
-                    StoreRegisterActivity.this.runOnUiThread(new Runnable() {
+                    StoreEditActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
 
-                            ArrayAdapter<Province> arrayAdapter = new ArrayAdapter<Province>(StoreRegisterActivity.this, R.layout.category_item_spinner, provinceList) {
+                            ArrayAdapter<Province> arrayAdapter = new ArrayAdapter<Province>(StoreEditActivity.this, R.layout.category_item_spinner, provinceList) {
                                 @NonNull
                                 @Override
                                 public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -216,10 +216,10 @@ public class StoreRegisterActivity extends AppCompatActivity  implements AsyncRe
                     Type listType = new TypeToken<List<District>>() {
                     }.getType();
                     districtList = new Gson().fromJson(json, listType);
-                    StoreRegisterActivity.this.runOnUiThread(new Runnable() {
+                    StoreEditActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            ArrayAdapter<District> arrayAdapter = new ArrayAdapter<District>(StoreRegisterActivity.this, R.layout.category_item_spinner, districtList) {
+                            ArrayAdapter<District> arrayAdapter = new ArrayAdapter<District>(StoreEditActivity.this, R.layout.category_item_spinner, districtList) {
                                 @NonNull
                                 @Override
                                 public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -281,10 +281,10 @@ public class StoreRegisterActivity extends AppCompatActivity  implements AsyncRe
                     Type listType = new TypeToken<List<Ward>>() {
                     }.getType();
                     wardList = new Gson().fromJson(json, listType);
-                    StoreRegisterActivity.this.runOnUiThread(new Runnable() {
+                    StoreEditActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            ArrayAdapter<Ward> arrayAdapter = new ArrayAdapter<Ward>(StoreRegisterActivity.this, R.layout.category_item_spinner, wardList) {
+                            ArrayAdapter<Ward> arrayAdapter = new ArrayAdapter<Ward>(StoreEditActivity.this, R.layout.category_item_spinner, wardList) {
                                 @NonNull
                                 @Override
                                 public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -324,7 +324,7 @@ public class StoreRegisterActivity extends AppCompatActivity  implements AsyncRe
             }
         });
         TextView tv = getSupportActionBar().getCustomView().findViewById(R.id.tvProductName);
-        tv.setText("Đăng ký thông tin cửa hàng");
+        tv.setText("Cập nhật thông tin cửa hàng");
     }
 
     @Override
@@ -333,7 +333,7 @@ public class StoreRegisterActivity extends AppCompatActivity  implements AsyncRe
         btnRegister.setEnabled(true);
         if (output != null) {
             if (output.code() == 200) {
-                Toast.makeText(this, "Đăng ký thành công ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Cập nhật thành công ", Toast.LENGTH_SHORT).show();
                 finish();
             }
             if (output.code() == 403) {

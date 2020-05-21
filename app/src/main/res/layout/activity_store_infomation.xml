@@ -169,11 +169,13 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btBack"
-        android:layout_width="75dp"
-        android:layout_height="30dp"
+        android:textColor="#FFF"
+        android:text="Chỉnh sửa"
+        android:id="@+id/btnEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_margin="10dp"
-        android:background="@drawable/back_arrow"
+        android:background="#009688"
         />
 </FrameLayout>

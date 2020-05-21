@@ -25,6 +25,7 @@ import com.dungdemo.shopnow.model.ProductCategory;
 import com.dungdemo.shopnow.model.User;
 import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
+import com.dungdemo.shopnow.register.CustomerRegisterActivity;
 import com.dungdemo.shopnow.store.ActivityAddProduct;
 import com.dungdemo.shopnow.utils.ResponeFromServer;
 import com.google.gson.Gson;
@@ -97,6 +98,12 @@ public class UserManagerFragment extends Fragment implements AsyncResponse {
                     }
                 }
                 arrayAdapter.notifyDataSetChanged();
+            }
+        });
+        view.findViewById(R.id.addUserButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivityForResult(new Intent(getContext(), CustomerRegisterActivity.class),1);
             }
         });
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Quản lý người dùng");
