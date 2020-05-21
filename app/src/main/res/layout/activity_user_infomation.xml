@@ -5,21 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".admin.UserInfomationActivity">
+<FrameLayout
+    android:id="@+id/content"
+    android:visibility="invisible"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@string/font"
-            android:text="Thông tin người dùng"
-            android:textSize="20dp"
-            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -142,13 +138,25 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
     <Button
-        android:id="@+id/btBack"
-        android:layout_width="75dp"
-        android:layout_height="30dp"
+        android:id="@+id/btnEdit"
+        android:background="#009688"
+        android:textColor="#FFFF"
         android:layout_gravity="bottom"
-        android:layout_margin="10dp"
-        android:background="@drawable/back_arrow"
-        />
+        android:text="Chỉnh sửa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</FrameLayout>
+    <ProgressBar
+        android:layout_gravity="center"
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:visibility="invisible"
+        android:layout_gravity="center"
+        android:id="@+id/error"
+        android:text="Kiểm tra lại kết nối mạng !"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 </FrameLayout>

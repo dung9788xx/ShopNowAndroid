@@ -1,5 +1,4 @@
 package com.dungdemo.shopnow.utils;
-
 public class MoneyType {
     public static String toMoney(int n){
         String s=Integer.toString(n);

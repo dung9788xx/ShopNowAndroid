@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".admin.EditCategoryActivity"></activity>
+        <activity android:name=".register.CustomerEditActivity"></activity>
+        <activity android:name=".admin.EditCategoryActivity" />
         <activity android:name=".admin.AddCategoryActivity" />
         <activity android:name=".customer.CustomerOrderDetail" />
         <activity android:name=".customer.OrderActivity" />
@@ -54,7 +55,6 @@
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

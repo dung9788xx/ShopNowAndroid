@@ -28,6 +28,9 @@ public class User implements Serializable {
     @SerializedName("location")
     Location location;
 
+    public User() {
+    }
+
     public Location getLocation() {
         return location;
     }

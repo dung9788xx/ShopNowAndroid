@@ -129,7 +129,7 @@ public class UserManagerFragment extends Fragment implements AsyncResponse {
                           @Override
                           public void onClick(View v) {
                               Intent t = new Intent(getActivity(), UserInfomationActivity.class);
-                              t.putExtra("user", userList.get(position));
+                              t.putExtra("user_id", userList.get(position).getUser_id());
                               startActivityForResult(t, 11);
                           }
                       });

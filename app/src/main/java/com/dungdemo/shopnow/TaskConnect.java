@@ -23,7 +23,6 @@ public class TaskConnect extends AsyncTask<Void,Void,ResponeFromServer> {
         this.output=output;
         this.url=url;
     }
-
     @Override
     protected ResponeFromServer doInBackground(Void... voids) {
         String error;
@@ -55,22 +54,17 @@ public class TaskConnect extends AsyncTask<Void,Void,ResponeFromServer> {
         try {
             response = client.newCall(request).execute();
               return  new ResponeFromServer(response.code(),response.body().string());
-
-
         }catch (Exception e){
             e.printStackTrace();
             error=e.toString();
-            Log.d( "loltask",error );
         }
         return  new ResponeFromServer(0,error);
 
     }
-
     @Override
     protected void onPostExecute(ResponeFromServer s) {
         super.onPostExecute( s );
         output.whenfinish( s );
-
     }
     public static FormBody.Builder makeBuilderFromMap(Map<String, String> map) {
         FormBody.Builder  formBody = new FormBody.Builder();
@@ -83,13 +77,10 @@ public class TaskConnect extends AsyncTask<Void,Void,ResponeFromServer> {
     public void setMap(Map<String,String> map){
         this.map=map;
     }
-
     public String getUrl() {
         return url;
     }
-
     public void setUrl(String url) {
         this.url = url;
     }
-
 }

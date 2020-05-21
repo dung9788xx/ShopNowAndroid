@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.DrawableRes;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -181,7 +182,7 @@ public class ProductDetailActivity extends AppCompatActivity implements AsyncRes
         if(product.getAmount()<=0){
             btnAddToCart.setText("Hết hàng");
             btnAddToCart.setEnabled(false);
-            btnAddToCart.setBackground(getDrawable(R.drawable.button_rounded_disable));
+            btnAddToCart.setBackground(getResources().getDrawable(R.drawable.button_rounded_disable));
         }
     }
 

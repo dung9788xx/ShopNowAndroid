@@ -1,6 +1,4 @@
 package com.dungdemo.shopnow.store;
-
-
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -28,24 +26,17 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-
 public class ShopkeeperAlertService extends Service implements AsyncResponse {
     Handler handler;
     public static final String CHANNEL_ID = "ForegroundServiceChannel";
-
-
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-
         handler = new Handler();
-
         final Runnable r = new Runnable() {
             public void run() {
                 Map<String,String > map=new HashMap<>(  );
@@ -57,7 +48,6 @@ public class ShopkeeperAlertService extends Service implements AsyncResponse {
                 handler.postDelayed(this, 2000);
             }
         };
-
         handler.postDelayed(r, 1000);
         return START_STICKY;
     }
@@ -129,7 +119,6 @@ public class ShopkeeperAlertService extends Service implements AsyncResponse {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("lol","destory");
     }
 
 }

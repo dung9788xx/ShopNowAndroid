@@ -161,6 +161,7 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
         for(int i=0;i<cart_details.size();i++){
             if(cart_details.get(i).getProduct().getAmount()-cart_details.get(i).getQuantity()<0){
                 hasProuductOutAmount=true;
+                continue;
             }
             hasProductEnoughAmount=true;
         }
@@ -277,11 +278,8 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
                 }
             }
         });
-
     }
-
     private List<Cart_Detail_Temp> getListJson() {
-
         List<Cart_Detail_Temp> list = new ArrayList<>();
         for (Cart_Detail cart_detail : cart_details) {
             list.add(new Cart_Detail_Temp(cart_detail.getProduct().getProduct_id(), cart_detail.getPrice(), cart_detail.getQuantity(), cart_detail.getNote()));
@@ -310,7 +308,6 @@ public class CartActivity extends AppCompatActivity implements AsyncResponse {
                 if (response.isSuccessful()) {
                     String json = null;
                     json = response.body().string() + "";
-
                     cart = new Gson().fromJson(json, Cart.class);
                     cart_details = cart.getDetail();
                     CartActivity.this.runOnUiThread(new Runnable() {
