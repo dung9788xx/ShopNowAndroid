@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -35,6 +36,7 @@ import com.dungdemo.shopnow.R;
 import com.dungdemo.shopnow.TaskConnect;
 import com.dungdemo.shopnow.admin.StoreManagerFragment;
 import com.dungdemo.shopnow.admin.UserManagerFragment;
+import com.dungdemo.shopnow.register.CustomerEditActivity;
 import com.dungdemo.shopnow.utils.ResponeFromServer;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -287,6 +289,14 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
                 name.setText(user.getName());
                 TextView phone=headerView.findViewById(R.id.tvPhone);
                 phone.setText(user.getPhone());
+                headerView.findViewById(R.id.headerInfo).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent t=new Intent(CustomerMainActivity.this, CustomerEditActivity.class);
+                        t.putExtra("user_id",user.getUser_id());
+                        startActivityForResult(t,1);
+                    }
+                });
             }
             if(output.code()==401){
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(CustomerMainActivity.this);
@@ -318,4 +328,9 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+            loadUserInfo();
+    }
 }
