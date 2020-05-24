@@ -399,7 +399,6 @@ public class CustomerEditActivity extends AppCompatActivity implements AsyncResp
     public void whenfinish(ResponeFromServer output) {
         progressBar.setVisibility(View.INVISIBLE);
         btnRegister.setEnabled(true);
-        Log.d("lol",output.getBody());
         if (output != null) {
             if (output.code() == 200) {
                 Toast.makeText(this, "Cập nhật thành công! ", Toast.LENGTH_SHORT).show();
