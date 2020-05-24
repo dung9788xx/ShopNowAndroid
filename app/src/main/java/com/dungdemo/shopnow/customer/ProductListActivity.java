@@ -1,6 +1,7 @@
 package com.dungdemo.shopnow.customer;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ public class ProductListActivity extends AppCompatActivity {
     List<Product> products = new ArrayList<>();
     View toolbarView;
     SearchView searchView;
+    User store_info;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +108,67 @@ public class ProductListActivity extends AppCompatActivity {
         });
         recyclerView.setAdapter(recycleViewAdapter);
         loadProduct();
+        if(getIntent().getIntExtra("store_id", -1) != -1){
+            loadStoreInfo();
+
+        }
     }
+
+    private void loadStoreInfo() {
+        OkHttpClient client = new OkHttpClient();
+        String url = HostName.host + "/store/"+getIntent().getIntExtra("store_id", -1);
+
+        Request request = new Request.Builder()
+                .url(url).addHeader("Authorization",User.getSavedToken(this))
+                .build();
+
+        Call call = client.newCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String json = null;
+                    json = response.body().string() + "";
+
+                    store_info = new Gson().fromJson(json, User.class);
+                    ProductListActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                           loadStoreInfoToView();
+                        }
+                    });
+//
+                }
+            }
+        });
+    }
+
+    private void loadStoreInfoToView() {
+            TextView tvDescription=findViewById(R.id.tvDescription);
+            TextView tvAddress=findViewById(R.id.tvAddress);
+            TextView tvPhone=findViewById(R.id.tvPhone);
+            tvDescription.setText(store_info.getStore().getDescription());
+            tvAddress.setText(store_info.getLocation().getStreet() + ", " + store_info.getLocation().getWard().getPrefix() + " " + store_info.getLocation().getWard().getName()
+                    + ", " + store_info.getLocation().getDistrict().getPrefix() + " " + store_info.getLocation().getDistrict().getName()
+                    + ", " + store_info.getLocation().getProvince().getName());
+            tvPhone.setText(store_info.getPhone());
+        findViewById(R.id.store_info).setVisibility(View.VISIBLE);
+        tvPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:"+store_info.getPhone()));
+                startActivity(callIntent);
+            }
+        });
+    }
+
     private void loadProduct() {
         TextView tvName = toolbarView.findViewById(R.id.tvName);
         OkHttpClient client = new OkHttpClient();

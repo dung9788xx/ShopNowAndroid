@@ -6,11 +6,91 @@
     android:layout_height="match_parent"
     android:background="#ECEAEA"
     tools:context=".customer.ProductListActivity">
-    <android.support.v7.widget.RecyclerView
-        android:layout_marginTop="10dp"
-        android:id="@+id/recycleview"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent">
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar_layout"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/store_info"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:contentScrim="@color/colorPrimary"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+               <LinearLayout
+                   android:padding="10dp"
+                   android:orientation="vertical"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+                   <TextView
+                       android:textAlignment="center"
+                       android:layout_gravity="center"
+                       android:textStyle="bold"
+                       android:fontFamily="@string/font"
+                       android:textSize="18sp"
+                       android:paddingLeft="20dp"
+                       android:id="@+id/tvDescription"
+                       android:textColor="#FFEB3B"
+                       android:text="Chuyên kinh doanh quần áo giá rẻ"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"/>
+                    <LinearLayout
+                        android:layout_marginLeft="10dp"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:text="Địa chỉ: "
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:textSize="15sp"
+                            android:textColor="#FFFFFF"
+                            android:textStyle="italic"
+                            android:text="Nga badfâfsâsfâs"
+                            android:id="@+id/tvAddress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                   <LinearLayout
+                       android:layout_marginLeft="10dp"
+                       android:orientation="horizontal"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content">
+                       <TextView
+
+                           android:text="Số điện thoại liên hệ: "
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"/>
+                       <TextView
+                           android:textSize="15sp"
+                           android:textColor="#FFFFFF"
+                           android:text="091449671"
+                           android:id="@+id/tvPhone"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"/>
+                   </LinearLayout>
+
+               </LinearLayout>
+            </android.support.design.widget.CollapsingToolbarLayout>
+        </android.support.design.widget.AppBarLayout>
+       <android.support.v4.widget.NestedScrollView
+           android:fillViewport="true"
+           app:layout_behavior="@string/appbar_scrolling_view_behavior"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent">
+           <android.support.v7.widget.RecyclerView
+               android:layout_marginTop="10dp"
+               android:id="@+id/recycleview"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"/>
+       </android.support.v4.widget.NestedScrollView>
+    </android.support.design.widget.CoordinatorLayout>
     <TextView
         android:id="@+id/tvNotFound"
         android:visibility="invisible"
